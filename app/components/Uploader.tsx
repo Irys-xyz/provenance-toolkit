@@ -91,17 +91,8 @@ export const Uploader: React.FC = () => {
 				for (const file of files) {
 					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
 					const uploadedTx = await fundAndUpload(file.file, tags);
-					const updatedFiles = files.map((f) => {
-						if (f.file === file.file) {
-							return {
-								...f,
-								isUploaded: true,
-								previewUrl: GATEWAY_BASE + uploadedTx,
-							};
-						}
-						return f;
-					});
-					setFiles(updatedFiles);
+					file.isUploaded = true;
+					file.previewUrl = GATEWAY_BASE + uploadedTx;
 				}
 			} catch (e) {
 				console.log("Error on upload: ", e);
