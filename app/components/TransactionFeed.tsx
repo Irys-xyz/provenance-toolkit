@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import Button from "./Button";
+import QueryResultsItem from "./QueryResultsItem";
 import Select from "react-select";
 import Spinner from "./Spinner";
-import QueryResultsItem from "./QueryResultsItem";
 import queryGraphQL from "../utils/queryGraphQL";
 
 interface OptionType {
@@ -107,8 +109,7 @@ export const TransactionFeed: React.FC = () => {
 	};
 
 	return (
-		<div className="bg-background rounded-lg shadow-2xl p-5 w-700 h-700">
-			<h2 className="text-3xl text-center font-bold mb-4 text-text">Transaction Feed</h2>
+		<div className="bg-white border rounded-lg shadow-2xl p-5 w-700 h-700">
 
 			<div className="flex flex-row">
 				<div className="space-y-4 self-end">
@@ -120,10 +121,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleNodeChange}
 						value={selectedNode}
 						placeholder="Select a node..."
-						styles={{
-							control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-							option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						}}
+					// styles={{
+					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+					// }}
 					/>
 					<Select
 						className="mb-4"
@@ -131,10 +132,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleCurrencyChange}
 						value={selectedCurrency}
 						placeholder="Select a currency..."
-						styles={{
-							control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-							option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						}}
+					// styles={{
+					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+					// }}
 					/>
 					<Select
 						className="mb-4"
@@ -142,10 +143,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleContentTypeChange}
 						value={selectedContentType}
 						placeholder="Select a content type..."
-						styles={{
-							control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-							option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						}}
+					// styles={{
+					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+					// }}
 					/>
 					<input
 						type="datetime-local"
@@ -162,37 +163,37 @@ export const TransactionFeed: React.FC = () => {
 						placeholder="To Timestamp"
 					/>
 					<div className="flex">
-						<button
-							className={`ml-auto py-2 px-4 bg-white hover:bg-primary text-text rounded-md transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-								txProcessing
-									? "bg-background-contrast text-white cursor-not-allowed"
-									: "hover:bg-background-contrast hover:text-white"
-							}`}
+						<Button
 							onClick={handleQuery}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Query"}
-						</button>
+
+						</Button>
 					</div>
 				</div>
+				{
+					queryResults && queryResults.length > 0 && (
+						<div className="ml-5 bg-primary h-[320px] w-[340px] overflow-y-auto rounded-lg align-start">
+							{
+								// For each result, render a SearchResultsItem component
+								queryResults &&
+								queryResults.map((result) => (
+									<QueryResultsItem
+										key={result.txID} // Unique key
+										txID={result.txID} // Transaction ID
+										token={result.token} // Token used for payment
+										creationDate={result.creationDate} // Creation date
+										tags={result.tags} // Any associated tags
+									/>
+								))
+							}
+						</div>
+					)
+				}
 
-				<div className="ml-5 mt-5 bg-primary h-[320px] w-[340px] overflow-y-auto rounded-lg align-start">
-					{
-						// For each result, render a SearchResultsItem component
-						queryResults &&
-							queryResults.map((result) => (
-								<QueryResultsItem
-									key={result.txID} // Unique key
-									txID={result.txID} // Transaction ID
-									token={result.token} // Token used for payment
-									creationDate={result.creationDate} // Creation date
-									tags={result.tags} // Any associated tags
-								/>
-							))
-					}
-				</div>
 			</div>
-		</div>
+		</div >
 	);
 };
 

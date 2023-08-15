@@ -40,7 +40,7 @@ const QueryResultsItem: React.FC<QueryResultsItemProps> = ({ txID, creationDate,
 	};
 
 	return (
-		<div className="flex flex-col bg-secondary shadow-2xl m-2 p-4 rounded-lg">
+		<div className="flex flex-col bg-white shadow-2xl m-2 p-4 rounded-lg">
 			{/* Display thumbnail image, if the content type is one of the image ones */}
 			{isImage(tags) && <img className="rounded-xl" src={"https://arweave.net/" + txID} alt="Thumbnail" />}
 			{/* Display truncated Transaction ID */}

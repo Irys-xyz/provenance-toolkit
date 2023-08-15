@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+		"preinstall": "typesync || :",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
@@ -37,5 +38,10 @@
 			"react": "$react",
 			"react-dom": "$react-dom"
 		}
+	},
+	"devDependencies": {
+		"@types/eslint": "8.44.2",
+		"@types/react-input-mask": "^2.0.5",
+		"typesync": "^0.11.1"
 	}
 }

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Switch from "react-switch";
-import getBundlr from "../utils/getBundlr";
+import { useEffect, useRef, useState } from "react";
+
+import Button from "./Button";
 import Spinner from "./Spinner";
+import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
+import getBundlr from "../utils/getBundlr";
 
 export const ProgressBarUploader: React.FC = () => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -107,22 +109,10 @@ export const ProgressBarUploader: React.FC = () => {
 	};
 
 	return (
-		<div className="mt-20 w-[500px] bg-background rounded-lg shadow-2xl p-5">
-			<h2 className="text-3xl text-center font-bold mb-4 text-text">Progress Bar Uploader</h2>
-			<div className="w-full bg-primary h-[300px] rounded-xl">
-				{selectedFile && (
-					<div>
-						<img
-							className="w-full h-[300px] rounded-xl resize-none bg-primary object-cover"
-							src={URL.createObjectURL(selectedFile)}
-							alt="Selected"
-						/>
-					</div>
-				)}
-			</div>
-			<div className="pr-4 mt-5">
+		<div className="mt-20 w-[500px] bg-white rounded-lg shadow-2xl p-5 border">
+			<div className='space-y-6'>
 				<div
-					className="border-2 border-dashed border-background-contrast rounded-lg p-4 mb-4 text-center"
+					className={`border-2 border-dashed border-background-contrast rounded-lg p-4 text-center`}
 					onDragOver={(event) => event.preventDefault()}
 					onDrop={(event) => {
 						event.preventDefault();
@@ -144,32 +134,48 @@ export const ProgressBarUploader: React.FC = () => {
 						Browse Files
 					</button>
 				</div>
-				{files.map((file, index) => (
-					<div key={index} className="flex items-center mb-2 text-background-contrast">
-						<span className="mr-2">{file.name}</span>
+				{selectedFile && (
+					<div className="w-full bg-primary h-[250px] rounded-xl">
+						<div>
+							<img
+								className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
+								src={URL.createObjectURL(selectedFile)}
+								alt="Selected"
+							/>
+						</div>
 					</div>
-				))}
-				<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
-					<div
-						className="h-6 bg-background-contrast rounded-full"
-						style={{ width: `${progress}%` }}
-						id="progress_bar"
-					></div>
-				</div>
-				{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
-				<button
-					className={`mt-5 w-full py-2 px-4 bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-						txProcessing
-							? "bg-background-contrast text-white cursor-not-allowed"
-							: "hover:bg-background-contrast hover:text-white"
-					}`}
-					onClick={handleUpload}
-					disabled={txProcessing}
-				>
-					{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-				</button>
+				)}
+				{
+					selectedFile && (
+
+						<>
+							{files.map((file, index) => (
+								<div key={index} className="flex items-center mb-2 text-background-contrast">
+									<span className="mr-2">{file.name}</span>
+								</div>
+							))}
+							<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
+								<div
+									className="h-6 bg-background-contrast rounded-full"
+									style={{ width: `${progress}%` }}
+									id="progress_bar"
+								></div>
+							</div>
+							{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
+							<Button
+								onClick={handleUpload}
+								disabled={txProcessing}
+							>
+								{txProcessing ? <Spinner color="text-background" /> : "Upload"}
+
+							</Button>
+						</>
+					)
+				}
+
+
 			</div>
-		</div>
+		</div >
 	);
 };
 
