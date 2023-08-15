@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import Switch from "react-switch";
+import Button from "./Button";
+import JSONView from "react-json-view";
 import Spinner from "./Spinner";
+import Switch from "react-switch";
+import fileReaderStream from "filereader-stream";
+import fundAndUpload from "../utils/fundAndUpload";
+import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
+import getBundlr from "../utils/getBundlr";
+import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
-import { useCallback } from "react";
-import getBundlr from "../utils/getBundlr";
-import fileReaderStream from "filereader-stream";
-import JSONView from "react-json-view";
-import fundAndUpload from "../utils/fundAndUpload";
-import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
+import { useState } from "react";
 
 // Define the Tag type
 type Tag = {
@@ -151,10 +152,14 @@ export const Uploader: React.FC = () => {
 	}, [receipt, previewURL]);
 
 	return (
-		<div className="mt-10 bg-background rounded-lg shadow-2xl max-w-7xl mx-auto w-full sm:w-4/5">
-			<h2 className="text-3xl text-center mt-3 font-bold mb-4 font-main">Bundlr Multi-File Uploader</h2>
+		<div className={`mt-10 bg-white rounded-lg border shadow-2xl  mx-auto w-full sm:w-4/5 
+			${memoizedPreviewURL && memoizedReceiptView ? "max-w-7xl" : 'max-w-sm'
+			}
+		`}>
+			{/* <h2 className="text-3xl text-center mt-3 font-bold mb-4 font-main">Bundlr Multi-File Uploader</h2> */}
 			<div className="flex p-5">
-				<div className="w-1/2 pr-4 space-y-4">
+				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : 'w-full'
+					}`}>
 					<div
 						className="border-2 border-dashed bg-primary border-background-contrast rounded-lg p-4 text-center"
 						onDragOver={(event) => event.preventDefault()}
@@ -174,45 +179,51 @@ export const Uploader: React.FC = () => {
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-primary text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing
-									? "bg-background-contrast text-white cursor-not-allowed"
-									: "hover:bg-background-contrast hover:text-white"
-							}`}
+							className={`w-full min-w-full py-2 px-4 bg-primary text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
+								? "bg-background-contrast text-white cursor-not-allowed"
+								: "hover:bg-background-contrast hover:text-white"
+								}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
 						</button>
 					</div>
-					{files.map((file, index) => (
-						<div key={index} className="flex items-center justify-start mb-2">
-							<span className="mr-2 text-text">{file.file.name}</span>
-							{file.isUploaded && (
-								<>
-									<span className="mr-2">
-										<button
-											className="px-1 w-18 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
-											onClick={() => setPreviewURL(file.previewUrl)}
-										>
-											File --&gt;
-										</button>
-									</span>
-									<span className="mr-2">
-										<button
-											className="px-1 w-24 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
-											onClick={() => showReceipt(file.id)}
-										>
-											{receiptQueryProcessing ? (
-												<Spinner color="text-background" />
-											) : (
-												"Receipt -->"
-											)}
-										</button>
-									</span>
-								</>
-							)}
-						</div>
-					))}
+					{
+						files.length > 0 && (
+							<div className="flex flex-col space-y-2">
+								{files.map((file, index) => (
+									<div key={index} className="flex items-center justify-start mb-2">
+										<span className="mr-2 text-text">{file.file.name}</span>
+										{file.isUploaded && (
+											<>
+												<span className="mr-2">
+													<button
+														className="px-1 w-18 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
+														onClick={() => setPreviewURL(file.previewUrl)}
+													>
+														File --&gt;
+													</button>
+												</span>
+												<span className="mr-2">
+													<button
+														className="px-1 w-24 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
+														onClick={() => showReceipt(file.id)}
+													>
+														{receiptQueryProcessing ? (
+															<Spinner color="text-background" />
+														) : (
+															"Receipt -->"
+														)}
+													</button>
+												</span>
+											</>
+										)}
+									</div>
+								))}
+							</div>
+						)
+					}
+
 					<div className="flex items-center justify-start mb-2 mt-5">
 						<Switch
 							onChange={handleIsNestedBundleChange}
@@ -226,22 +237,23 @@ export const Uploader: React.FC = () => {
 							Nested Bundle {isNestedBundle ? "On" : "Off"}
 						</span>
 					</div>
-					<button
-						className={`w-full py-2 px-4 bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-							txProcessing
-								? "bg-background-contrast text-white cursor-not-allowed"
-								: "hover:bg-background-contrast hover:text-white"
-						}`}
+					<Button
 						onClick={handleUpload}
 						disabled={txProcessing}
 					>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-					</button>
+					</Button>
+
 				</div>
-				<div className="w-1/2 h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
-					{memoizedPreviewURL}
-					{memoizedReceiptView}
-				</div>
+				{
+					memoizedPreviewURL && memoizedReceiptView && (
+						<div className="w-1/2 h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
+							{memoizedPreviewURL}
+							{memoizedReceiptView}
+						</div>
+					)
+				}
+
 			</div>
 		</div>
 	);

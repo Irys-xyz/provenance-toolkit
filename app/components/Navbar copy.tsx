@@ -1,9 +1,6 @@
-"use client"
-
 import BundlrIcon from "./BundlrIcon";
 import { FC } from "react";
 import Link from "next/link";
-import { usePathname } from 'next/navigation'
 
 /**
  * NavbarLink properties
@@ -14,12 +11,9 @@ interface NavbarLinkProps {
 }
 
 const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
-	const pathname = usePathname()
-	const isActive = pathname === href;
 	return (
 		<Link
-			className={`font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
-				}`}
+			className="font-robotoMono hover:font-bold"
 			href={href}
 		>
 			{children}
@@ -52,16 +46,15 @@ const Navbar: FC = () => {
 	];
 
 	return (
-		<header className="w-full fixed top-0 left-0 z-50 bg-background text-text border-b">
-			<nav className="">
-				<div className="flex flex-col items-center justify-between">
-					<div className="text-lg font-semibold bg-black w-full h-full py-4 text-white text-center">
-						<Link className="flex items-center gap-4 cursor-pointer justify-center" href="/">
+		<header className="w-full fixed top-0 z-50 bg-background text-text shadow-xl">
+			<nav className="container mx-auto px-6 py-3">
+				<div className="flex items-center justify-between min-h-[90px]">
+					<div className="text-lg font-semibold">
+						<Link className="flex items-center gap-4 cursor-pointer text-text" href="/">
 							<BundlrIcon /> <span className="">Provenance Toolkit</span>
 						</Link>
 					</div>
-					<div className="h-[1px] bg-black w-full" />
-					<div className="flex space-x-8 pt-4">
+					<div className="flex space-x-8">
 						{NAV_LINKS.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.text}

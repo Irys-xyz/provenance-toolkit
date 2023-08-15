@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import Button from "./Button";
 import Select from "react-select";
+import Spinner from "./Spinner";
 import Switch from "react-switch";
 import getBundlr from "../utils/getBundlr";
-import Spinner from "./Spinner";
 
 interface OptionType {
 	value: string;
@@ -104,18 +106,18 @@ export const FundWithdraw: React.FC = () => {
 		setTxProcessing(false);
 	};
 	return (
-		<div className="bg-background rounded-lg shadow-2xl p-5 w-[500px] h-700">
-			<h2 className="text-3xl text-center font-bold mb-4 text-text">Fund / Withdraw</h2>
+		<div className="bg-white rounded-lg p-5 max-w-sm border w-full shadow-xl">
+			{/* <h2 className="text-3xl text-center font-bold mb-4 text-text">Fund / Withdraw</h2> */}
 			<Select
 				className="mb-4"
 				options={nodes}
 				onChange={handleNodeChange}
 				value={selectedNode}
 				placeholder="Select a node..."
-				styles={{
-					control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-				}}
+			// styles={{
+			// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+			// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+			// }}
 			/>
 			<Select
 				className="mb-4"
@@ -123,19 +125,19 @@ export const FundWithdraw: React.FC = () => {
 				onChange={handleCurrencyChange}
 				value={selectedCurrency}
 				placeholder="Select a currency..."
-				styles={{
-					control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-				}}
+			// styles={{
+			// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+			// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+			// }}
 			/>
 			<input
 				type="number"
 				step="0.0000001"
-				className="block w-full mb-4 bg-background text-text rounded-md p-3 border border-gray-300 shadow-sm"
+				className="block w-full mb-4 bg-transparent text-text rounded-md p-3 border border-gray-300 shadow-sm"
 				value={amount}
 				onChange={handleAmountChange}
 			/>
-			<div className="mb-4 text-text">
+			<div className="my-6 text-text">
 				<label>
 					<input
 						type="radio"
@@ -160,19 +162,17 @@ export const FundWithdraw: React.FC = () => {
 				</label>
 			</div>
 			{message && <div className="text-red-500">{message}</div>}
-			<button
-				className={`w-full py-2 px-4 bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-					txProcessing
-						? "bg-background-contrast text-white cursor-not-allowed"
-						: "hover:bg-background-contrast hover:text-white"
-				}`}
+			<Button
 				onClick={handleFundWithdraw}
 				disabled={txProcessing}
 			>
 				{txProcessing ? <Spinner color="text-background" /> : isFunding ? "Fund Node" : "Withdraw From Node"}
-			</button>
+			</Button>
+
 		</div>
 	);
 };
+
+
 
 export default FundWithdraw;

@@ -1,7 +1,12 @@
 import "./globals.css";
+import '@fontsource/roboto-mono'
+import '@fontsource/roboto-mono/600.css'
+import '@fontsource/roboto-mono/700.css'
+
+import { Inter, Roboto } from "next/font/google";
+
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
-import { Inter, Roboto } from "next/font/google";
 
 export const metadata: Metadata = {
 	title: "Bundlr Provenance Toolkit",
