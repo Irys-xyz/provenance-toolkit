@@ -25,12 +25,8 @@ const getBundlr = async (
 	provider.getSigner = () => signer;
 	//@ts-expect-error
 	signer._signTypedData = (domain, types, value) => signer.signTypedData(domain, types, value);
-	console.log("url=", url);
-	console.log("currency=", currency);
-	console.log("providerUrl=", providerUrl);
 
 	const bundlr = new WebBundlr(url, currency, provider, { providerUrl });
-
 	await bundlr.ready();
 	console.log("bundlr=", bundlr);
 
