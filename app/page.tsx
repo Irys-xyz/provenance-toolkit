@@ -4,11 +4,10 @@ export default function Home() {
 	return (
 		<div className="min-h-screen bg-background text-text flex flex-col justify-center items-center p-8">
 			<div className="text-2xl font-semibold mb-6 mt-20 pt-10 leading-relaxed max-w-3xl">
-				The Bundlr Provenance Toolkit is a project built using NextJS, TypeScript, and Tailwind designed to help
-				you rapidly build dApps using Bundlr.
+				The Bundlr Provenance Toolkit is a NextJS project to help you rapidly build dApps using Bundlr.
 			</div>
 			<div className="text-xl mb-6 leading-relaxed max-w-3xl">
-				To build with the toolkit, clone or fork the repository and use the components to create your projects.
+				To build with the toolkit, clone or fork the repository and use the components to build your projects.
 				The simple UI design allows for heavy customization when adding to your own projects.
 			</div>
 			<div className="leading-relaxed max-w-3xl">
