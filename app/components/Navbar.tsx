@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import BundlrIcon from "./BundlrIcon";
 import { FC } from "react";
 import Link from "next/link";
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 
 /**
  * NavbarLink properties
@@ -14,12 +14,13 @@ interface NavbarLinkProps {
 }
 
 const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
-	const pathname = usePathname()
+	const pathname = usePathname();
 	const isActive = pathname === href;
 	return (
 		<Link
-			className={`font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
-				}`}
+			className={`font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${
+				isActive ? "!text-black font-bold border-b-2 border-black" : ""
+			}`}
 			href={href}
 		>
 			{children}
@@ -40,6 +41,10 @@ const Navbar: FC = () => {
 		{
 			href: "/progress-bar-uploader",
 			text: "Progress Bar Uploader",
+		},
+		{
+			href: "/gassless-uploader",
+			text: "Gassless Uploader",
 		},
 		{
 			href: "/udl-uploader",
