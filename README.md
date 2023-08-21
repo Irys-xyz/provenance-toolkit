@@ -1,6 +1,6 @@
 # Bundlr Provenance Toolkit
 
-The Bundlr Provenance Toolkit is a project built using NextJS, TypeScript, and Tailwind designed to help you rapidly build dApps using the Bundlr tech stack.
+The Bundlr Provenance Toolkit is a project built using NextJS, TypeScript, and Tailwind designed to help you rapidly build dApps using Bundlr.
 
 ## Installation
 
