@@ -102,20 +102,21 @@ export const GasslessUploader: React.FC = () => {
 		};
 		console.log("provider.getSigner()=", provider.getSigner());
 
-		// // if your app is lazy-funding uploads, this next section
-		// // can be used. alternatively you can delete this section and
-		// // do a bulk up-front funding of a node.
+		// if your app is lazy-funding uploads, this next section
+		// can be used. alternatively you can delete this section and
+		// do a bulk up-front funding of a node.
 
-		// // 1. first create the datastream and get the size
-		// const dataStream = files[0];
+		// 1. first create the datastream and get the size
+		const dataStream = fileReaderStream(files[0].file);
+		console.log("Calling fund");
 
-		// // 2. then pass the size to the lazyFund API route
-		// const fundTx = await fetch("/api/lazyFund", {
-		// 	method: "POST",
-		// 	body: dataStream.size.toString(),
-		// });
+		// 2. then pass the size to the lazyFund API route
+		const fundTx = await fetch("/api/lazyFund", {
+			method: "POST",
+			body: dataStream.size.toString(),
+		});
 
-		// console.log("Funding successful fundTx=", fundTx);
+		console.log("Funding successful fundTx=", fundTx);
 
 		// Create a new WebBundlr object using the provider created with server info.
 		const bundlr = new WebBundlr("https://devnet.bundlr.network", "matic", provider);
@@ -123,7 +124,6 @@ export const GasslessUploader: React.FC = () => {
 		console.log("bundlr.ready()=", bundlr);
 
 		const tags: Tag[] = [{ name: "Content-Type", value: files[0].file.type }];
-		const dataStream = fileReaderStream(files[0].file);
 		console.log("Uploading...");
 		const tx = await bundlr.uploadWithReceipt(dataStream, {
 			tags,

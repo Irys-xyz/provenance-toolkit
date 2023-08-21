@@ -13,22 +13,13 @@ export async function signDataOnServer(signatureData: Buffer): Promise<Buffer> {
 	return Buffer.from(await signer.sign(signatureData));
 }
 
-// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-// 	const body = JSON.parse(req.body);
-// 	const signatureData = Buffer.from(body.signatureData, "hex");
-// 	const signature = await signDataOnServer(signatureData);
-// 	res.status(200).json({ signature: signature.toString("hex") });
-// }
-
 async function readFromStream(stream: ReadableStream): Promise<string> {
 	const reader = stream.getReader();
 	let result = "";
 
 	while (true) {
 		const { done, value } = await reader.read();
-
 		if (done) break;
-
 		result += new TextDecoder().decode(value);
 	}
 

@@ -1,5 +1,6 @@
 import Bundlr from "@bundlr-network/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 /**
  * Given a file of the specified size, get the cost to upload, then fund a node that amount
@@ -11,11 +12,12 @@ export async function lazyFund(filesize: string): Promise<string> {
 	const key = process.env.PRIVATE_KEY; // your private key
 	const bundlrNodeAddress = "http://devnet.bundlr.network";
 	const rpcUrl = "https://rpc-mumbai.maticvigil.com";
+	const currency = "matic";
 
 	const serverBundlr = new Bundlr(
 		//@ts-ignore
 		bundlrNodeAddress,
-		"matic",
+		currency,
 		key,
 		{
 			providerUrl: rpcUrl,
@@ -28,19 +30,38 @@ export async function lazyFund(filesize: string): Promise<string> {
 	);
 
 	const price = await serverBundlr.getPrice(parseInt(filesize));
-	console.log("price=", price.toString());
-	const fundTx = await serverBundlr.fund(price);
-	console.log("successfully funded fundTx=", fundTx);
+	const balance = await serverBundlr.getLoadedBalance();
+
+	let fundTx;
+	if (price.isGreaterThanOrEqualTo(balance)) {
+		console.log("Funding node.");
+		fundTx = await serverBundlr.fund(price);
+		console.log("Successfully funded fundTx=", fundTx);
+	} else {
+		console.log("Funding not needed, balance sufficient.");
+	}
 
 	// return the transaction id
-	return fundTx.id;
+	return fundTx?.id || "";
 }
-// req: NextApiRequest,
-// res: NextApiResponse,
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const body = JSON.parse(req.body);
-	console.log("lazyFund body=", body);
+
+async function readFromStream(stream: ReadableStream): Promise<string> {
+	const reader = stream.getReader();
+	let result = "";
+
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done) break;
+		result += new TextDecoder().decode(value);
+	}
+
+	return result;
+}
+
+export async function POST(req: NextApiRequest) {
+	const rawData = await readFromStream(req.body);
+	const body = JSON.parse(rawData);
 	const fundTx = await lazyFund(body);
 
-	res.status(200).json({ txResult: fundTx });
+	return NextResponse.json({ txResult: fundTx });
 }
