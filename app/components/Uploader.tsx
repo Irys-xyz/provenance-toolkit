@@ -33,7 +33,6 @@ export const Uploader: React.FC = () => {
 	const [previewURL, setPreviewURL] = useState<string>("");
 	const [receipt, setReceipt] = useState<string>("");
 	const [receiptQueryProcessing, setReceiptQueryProcessing] = useState<boolean>(false);
-	const [isNestedBundle, setIsNestedBundle] = useState(false);
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
 	const GATEWAY_BASE = "https://arweave.net/"; // Set to the base URL of any gateway
@@ -49,10 +48,6 @@ export const Uploader: React.FC = () => {
 			}));
 			setFiles(newUploadedFiles);
 		}
-	};
-
-	const handleIsNestedBundleChange = (checked: boolean) => {
-		setIsNestedBundle(checked);
 	};
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
@@ -72,11 +67,11 @@ export const Uploader: React.FC = () => {
 		setTxProcessing(true);
 		const bundlr = await getBundlr();
 
-		// If isNestedBundle is true, then all files are wrapped together and uploaded in a single tx
-		if (isNestedBundle) {
+		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
+		if (files.length > 1) {
 			// Remove the File objects from the FileWrapper objects
 			const filesToUpload: File[] = files.map((file) => file.file);
-			console.log("Nested bundle upload");
+			console.log("Multi-file upload");
 			const manifestId = await fundAndUploadNestedBundle(filesToUpload);
 
 			// Now that the upload is done, update the FileWrapper objects with the preview URL
@@ -87,7 +82,8 @@ export const Uploader: React.FC = () => {
 			}));
 			setFiles(updatedFiles);
 		} else {
-			// If isNestedBundle is false, each file is uploaded as a separate tx
+			console.log("Single file upload");
+			// This occurs when exactly one file is selected
 			try {
 				for (const file of files) {
 					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
@@ -224,19 +220,6 @@ export const Uploader: React.FC = () => {
 						</div>
 					)}
 
-					<div className="flex items-center justify-start mb-2 mt-5">
-						<Switch
-							onChange={handleIsNestedBundleChange}
-							checked={isNestedBundle}
-							onColor="#81b0ff"
-							offColor="#767577"
-							checkedIcon={false}
-							uncheckedIcon={false}
-						/>
-						<span className="ml-2 text-lg text-text font-xs">
-							Nested Bundle {isNestedBundle ? "On" : "Off"}
-						</span>
-					</div>
 					<Button onClick={handleUpload} disabled={txProcessing}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
