@@ -8,9 +8,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
  */
 export async function lazyFund(filesize: string): Promise<string> {
 	// nodeJS client
-	const key = process.env.PAYMENT_PRIVATE_KEY; // your private key
-	const bundlrNodeAddress = process.env.BUNDLR_NODE_ADDRESS;
-	const rpcUrl = process.env.RPC;
+	const key = process.env.PRIVATE_KEY; // your private key
+	const bundlrNodeAddress = "http://devnet.bundlr.network";
+	const rpcUrl = "https://rpc-mumbai.maticvigil.com";
 
 	const serverBundlr = new Bundlr(
 		//@ts-ignore

@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { useState } from "react";
+import { WebBundlr } from "@bundlr-network/client";
 
 // Define the Tag type
 type Tag = {
@@ -48,6 +49,92 @@ export const GasslessUploader: React.FC = () => {
 			}));
 			setFiles(newUploadedFiles);
 		}
+	};
+
+	/**
+	 * Called when a user clicks the "Upload" button
+	 */
+	const gasslessUpload = async () => {
+		setMessage("");
+		if (!files || files.length === 0) {
+			setMessage("Please select a file first");
+			return;
+		}
+		setTxProcessing(true);
+
+		// obtain the server's public key
+		const pubKeyRes = (await (await fetch("/api/publicKey")).json()) as unknown as {
+			pubKey: string;
+		};
+		const pubKey = Buffer.from(pubKeyRes.pubKey, "hex");
+		console.log("pubKey=", pubKey);
+
+		// create a provider - this mimics the behaviour of the injected provider, i.e metamask
+		const provider = {
+			// for ETH wallets
+			getPublicKey: async () => {
+				return pubKey;
+			},
+			getSigner: () => {
+				return {
+					getAddress: () => pubKey, // pubkey is address for TypedEthereumSigner
+					_signTypedData: async (
+						_domain: never,
+						_types: never,
+						message: { address: string; "Transaction hash": Uint8Array },
+					) => {
+						const convertedMsg = Buffer.from(message["Transaction hash"]).toString("hex");
+						console.log("convertedMsg: ", convertedMsg);
+						const res = await fetch("/api/signData", {
+							method: "POST",
+							body: JSON.stringify({ signatureData: convertedMsg }),
+						});
+						const { signature } = await res.json();
+						const bSig = Buffer.from(signature, "hex");
+						// Pad & convert so it's in the format the signer expects to have to convert from.
+						const pad = Buffer.concat([Buffer.from([0]), Buffer.from(bSig)]).toString("hex");
+						return pad;
+					},
+				};
+			},
+
+			_ready: () => {},
+		};
+		console.log("provider.getSigner()=", provider.getSigner());
+
+		// // if your app is lazy-funding uploads, this next section
+		// // can be used. alternatively you can delete this section and
+		// // do a bulk up-front funding of a node.
+
+		// // 1. first create the datastream and get the size
+		// const dataStream = files[0];
+
+		// // 2. then pass the size to the lazyFund API route
+		// const fundTx = await fetch("/api/lazyFund", {
+		// 	method: "POST",
+		// 	body: dataStream.size.toString(),
+		// });
+
+		// console.log("Funding successful fundTx=", fundTx);
+
+		// Create a new WebBundlr object using the provider created with server info.
+		const bundlr = new WebBundlr("https://devnet.bundlr.network", "matic", provider);
+		await bundlr.ready();
+		console.log("bundlr.ready()=", bundlr);
+
+		const tags: Tag[] = [{ name: "Content-Type", value: files[0].file.type }];
+		const dataStream = fileReaderStream(files[0].file);
+		console.log("Uploading...");
+		const tx = await bundlr.uploadWithReceipt(dataStream, {
+			tags,
+		});
+
+		// and share the results
+		console.log(`File uploaded ==> https://arweave.net/${tx.id}`);
+		files[0].id = tx.id;
+		files[0].isUploaded = true;
+		files[0].previewUrl = GATEWAY_BASE + tx.id;
+		setTxProcessing(false);
 	};
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
@@ -220,7 +307,7 @@ export const GasslessUploader: React.FC = () => {
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing}>
+					<Button onClick={gasslessUpload} disabled={txProcessing}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
