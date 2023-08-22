@@ -61,6 +61,7 @@ const processDataResponse = (data: DataResponse): QueryResult[] => {
 
 	return queryResults;
 };
+
 /**
  * Execute a GraphQL query from the browser using the provided parameters.
  * @param endpoint The URL of the GraphQL endpoint to connect to.
@@ -141,6 +142,6 @@ const queryGraphQL = async (
 };
 
 // Example usage:
-//queryGraphQL("https://example.com/graphql", "image/jpeg", "USD", new Date("2023-08-01"), new Date("2023-08-31"));
+// queryGraphQL("https://devnet.bundlr.network/graphql", "image/jpeg", "matic", new Date("2023-08-01"), new Date("2023-08-31"));
 
 export default queryGraphQL;

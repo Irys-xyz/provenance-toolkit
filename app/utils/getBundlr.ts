@@ -42,9 +42,7 @@ const getBundlr = async (
 	signer._signTypedData = (domain, types, value) => signer.signTypedData(domain, types, value);
 
 	const providerUrl = getRpcUrl(currency);
-	console.log(`getBundlr url=${url}`);
-	console.log(`getBundlr currency=${currency}`);
-	console.log(`getBundlr providerUrl=${providerUrl}`);
+
 	const bundlr = new WebBundlr(url, currency, provider, providerUrl ? { providerUrl } : {});
 
 	bundlr.currencyConfig.createTx = async (amount, to) => {

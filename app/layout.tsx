@@ -1,7 +1,7 @@
 import "./globals.css";
-import '@fontsource/roboto-mono'
-import '@fontsource/roboto-mono/600.css'
-import '@fontsource/roboto-mono/700.css'
+import "@fontsource/roboto-mono";
+import "@fontsource/roboto-mono/600.css";
+import "@fontsource/roboto-mono/700.css";
 
 import { Inter, Roboto } from "next/font/google";
 
@@ -27,7 +27,7 @@ const inter = Inter({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={roboto.className}>
+		<html lang="en" className={`${roboto.className} bg-background`}>
 			<Navbar />
 			<body className={roboto.className}>{children}</body>
 		</html>
