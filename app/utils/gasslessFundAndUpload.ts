@@ -82,7 +82,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 	const tx = await bundlr.uploadWithReceipt(dataStream, {
 		tags,
 	});
-	console.log("Uploaded: ", tx.id);
+	console.log(`Uploaded successfully. https://arweave.net/${tx.id}`);
 
 	return tx.id;
 };

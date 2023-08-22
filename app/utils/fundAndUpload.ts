@@ -34,7 +34,7 @@ const fundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<string> =
 		const tx = await bundlr.uploadWithReceipt(dataStream, {
 			tags,
 		});
-		console.log("Uploaded successfully.");
+		console.log(`Uploaded successfully. https://arweave.net/${tx.id}`);
 
 		return tx.id;
 	} catch (e) {

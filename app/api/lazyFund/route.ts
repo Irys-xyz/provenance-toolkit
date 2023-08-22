@@ -1,7 +1,7 @@
 import Bundlr from "@bundlr-network/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
-
+import getRpcUrl from "@/app/utils/getRpcUrl";
 /**
  * Given a file of the specified size, get the cost to upload, then fund a node that amount
  * @param filesize The size of a file to fund for
@@ -9,19 +9,17 @@ import { NextResponse } from "next/server";
  */
 export async function lazyFund(filesize: string): Promise<string> {
 	// nodeJS client
-	const key = process.env.PRIVATE_KEY; // your private key
-	const bundlrNodeAddress = "http://devnet.bundlr.network";
-	const rpcUrl = "https://rpc-mumbai.maticvigil.com";
-	const currency = "matic";
+	const key = process.env.PRIVATE_KEY;
+	const currency = process.env.NEXT_PUBLIC_CURRENCY;
+	const url = process.env.NEXT_PUBLIC_NODE;
+	const providerUrl = getRpcUrl(currency);
 
 	const serverBundlr = new Bundlr(
 		//@ts-ignore
-		bundlrNodeAddress,
+		url,
 		currency,
 		key,
-		{
-			providerUrl: rpcUrl,
-		},
+		providerUrl ? { providerUrl } : {},
 	);
 	console.log(
 		"serverBundlrPubKey",

@@ -80,7 +80,8 @@ export const FundWithdraw: React.FC = () => {
 		}
 
 		// Validation passed, get a reference to an Bundlr node
-		const bundlr = await getBundlr();
+		const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
+		console.log(bundlr);
 		setTxProcessing(true);
 
 		// If fund mode do fund
@@ -96,6 +97,7 @@ export const FundWithdraw: React.FC = () => {
 		} else {
 			// If withdraw mode, do withdraw
 			try {
+				console.log("calling withdraw with ", bundlr.utils.toAtomic(amount).toString());
 				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(amount));
 				setMessage("Withdraw successful");
 			} catch (e) {
@@ -114,10 +116,10 @@ export const FundWithdraw: React.FC = () => {
 				onChange={handleNodeChange}
 				value={selectedNode}
 				placeholder="Select a node..."
-			// styles={{
-			// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-			// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-			// }}
+				// styles={{
+				// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+				// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+				// }}
 			/>
 			<Select
 				className="mb-4"
@@ -125,10 +127,10 @@ export const FundWithdraw: React.FC = () => {
 				onChange={handleCurrencyChange}
 				value={selectedCurrency}
 				placeholder="Select a currency..."
-			// styles={{
-			// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-			// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-			// }}
+				// styles={{
+				// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+				// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+				// }}
 			/>
 			<input
 				type="number"
@@ -162,17 +164,11 @@ export const FundWithdraw: React.FC = () => {
 				</label>
 			</div>
 			{message && <div className="text-red-500">{message}</div>}
-			<Button
-				onClick={handleFundWithdraw}
-				disabled={txProcessing}
-			>
+			<Button onClick={handleFundWithdraw} disabled={txProcessing}>
 				{txProcessing ? <Spinner color="text-background" /> : isFunding ? "Fund Node" : "Withdraw From Node"}
 			</Button>
-
 		</div>
 	);
 };
-
-
 
 export default FundWithdraw;
