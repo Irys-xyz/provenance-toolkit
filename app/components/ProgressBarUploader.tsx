@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import Button from "./Button";
 import Spinner from "./Spinner";
-import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import getBundlr from "../utils/getBundlr";
 
 export const ProgressBarUploader: React.FC = () => {
-	const [files, setFiles] = useState<File[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 	const [fileType, setFileType] = useState<string>("");
 
 	const [progress, setProgress] = useState<number>(0);
@@ -63,7 +62,7 @@ export const ProgressBarUploader: React.FC = () => {
 		uploader.on("chunkUpload", (chunkInfo) => {
 			console.log(chunkInfo);
 			console.log(
-				`Uploaded Chunk number ${chunkInfo.id}, offset of ${chunkInfo.offset}, size ${chunkInfo.size} Bytes, with a total of ${chunkInfo.totalUploaded} bytes uploaded.`,
+				`Uploaded Chunk number ${chunkInfo.id}, offset of ${chunkInfo.offset}, size ${chunkInfo.size} Bytes, with a total of ${chunkInfo.totalUploaded} bytes uploaded.`
 			);
 
 			const chunkNumber = chunkInfo.id + 1;
@@ -74,7 +73,9 @@ export const ProgressBarUploader: React.FC = () => {
 
 		// Event callback: called if an error happens
 		uploader.on("chunkError", (e) => {
-			console.error(`Error uploading chunk number ${e.id} - ${e.res.statusText}`);
+			console.error(
+				`Error uploading chunk number ${e.id} - ${e.res.statusText}`
+			);
 		});
 
 		// Event callback: called when file is fully uploaded
@@ -93,7 +94,7 @@ export const ProgressBarUploader: React.FC = () => {
 			.then((res) => {
 				console.log(res);
 				setMessage(
-					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
+					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`
 				);
 			})
 			.catch((e) => {
@@ -109,18 +110,20 @@ export const ProgressBarUploader: React.FC = () => {
 	};
 
 	return (
-		<div className="mt-20 w-[500px] bg-white rounded-lg shadow-2xl p-5 border">
-			<div className='space-y-6'>
+		<div className="w-[500px] bg-white rounded-lg shadow-2xl p-5 border">
+			<div className="space-y-6">
 				<div
-					className={`border-2 border-dashed border-background-contrast rounded-lg p-4 text-center`}
+					className={`border-2 border-dashed border-background-contrast rounded-lg p-4 text-center z-50`}
 					onDragOver={(event) => event.preventDefault()}
 					onDrop={(event) => {
 						event.preventDefault();
 						const droppedFiles = Array.from(event.dataTransfer.files);
-						setFiles(droppedFiles);
+						setSelectedFile(droppedFiles);
 					}}
 				>
-					<p className="text-background-contrast mb-2">Drag and drop files here</p>
+					<p className="text-background-contrast mb-2">
+						Drag and drop files here
+					</p>
 					<input type="file" onChange={handleFileUpload} className="hidden" />
 					<button
 						onClick={() => {
@@ -134,48 +137,53 @@ export const ProgressBarUploader: React.FC = () => {
 						Browse Files
 					</button>
 				</div>
-				{selectedFile && (
-					<div className="w-full bg-primary h-[250px] rounded-xl">
-						<div>
-							<img
-								className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
-								src={URL.createObjectURL(selectedFile)}
-								alt="Selected"
-							/>
-						</div>
-					</div>
-				)}
-				{
-					selectedFile && (
-
-						<>
-							{files.map((file, index) => (
-								<div key={index} className="flex items-center mb-2 text-background-contrast">
-									<span className="mr-2">{file.name}</span>
-								</div>
-							))}
-							<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
-								<div
-									className="h-6 bg-background-contrast rounded-full"
-									style={{ width: `${progress}%` }}
-									id="progress_bar"
-								></div>
+				{selectedFile &&
+					selectedFile.length > 0 &&
+					selectedFile.map((file, index) => (
+						<div className="w-full bg-primary h-[250px] rounded-xl">
+							<div>
+								<img
+									className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
+									src={URL.createObjectURL(file)}
+									alt="Selected"
+								/>
 							</div>
-							{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
-							<Button
-								onClick={handleUpload}
-								disabled={txProcessing}
+						</div>
+					))}
+
+				{selectedFile && selectedFile.length > 0 && (
+					<>
+						{selectedFile.map((file, index) => (
+							<div
+								key={index}
+								className="flex items-center mb-2 text-background-contrast"
 							>
-								{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-
-							</Button>
-						</>
-					)
-				}
-
-
+								<span className="mr-2">{file.name}</span>
+							</div>
+						))}
+						<div
+							className="mt-2 h-6 bg-primary rounded-full"
+							id="progress_bar_container"
+						>
+							<div
+								className="h-6 bg-background-contrast rounded-full"
+								style={{ width: `${progress}%` }}
+								id="progress_bar"
+							></div>
+						</div>
+						{message && (
+							<div
+								className="text-red-500"
+								dangerouslySetInnerHTML={{ __html: message }}
+							/>
+						)}{" "}
+						<Button onClick={handleUpload} disabled={txProcessing}>
+							{txProcessing ? <Spinner color="text-background" /> : "Upload"}
+						</Button>
+					</>
+				)}
 			</div>
-		</div >
+		</div>
 	);
 };
 

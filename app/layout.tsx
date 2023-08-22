@@ -25,11 +25,17 @@ const inter = Inter({
 	display: "swap",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	return (
-		<html lang="en" className={`${roboto.className} bg-background`}>
-			<Navbar />
-			<body className={roboto.className}>{children}</body>
+		<html lang="en" className={`${roboto.className} bg-background relative`}>
+			<body className={roboto.className}>
+				<Navbar />
+				{children}
+			</body>
 		</html>
 	);
 }

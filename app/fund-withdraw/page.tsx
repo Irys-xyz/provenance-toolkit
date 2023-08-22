@@ -1,16 +1,18 @@
 "use client";
+
 import React, { FC } from "react";
+
 import FundWithdraw from "../components/FundWithdraw";
 
 const Page: FC = () => {
 	return (
-		<div className="min-h-screen bg-background text-text flex flex-col md:flex-row justify-center items-center mt-24 space-x-1">
+		<div className="py-10 bg-background text-text flex flex-col md:flex-row justify-center items-center space-x-1">
 			<div className="w-2/5">
 				<FundWithdraw />{" "}
 			</div>
 
 			<div className="w-2/5 flex flex-col text-xs space-y-1 items-start">
-				<p className="text-xl bg-gray-100 rounded-xl px-2">Usage example:</p>
+				<h1 className="text-xl bg-gray-100 rounded-xl px-2">Usage example:</h1>
 
 				<p>- To fix the node:</p>
 				<code className="bg-gray-100 rounded">

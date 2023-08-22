@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
 	return (
-		<div className="min-h-screen bg-background text-text flex flex-col justify-center items-center p-8">
+		<div className="py-10 bg-background text-text flex flex-col justify-center items-center p-8">
 			<div className="text-2xl font-semibold mb-6 mt-20 pt-10 leading-relaxed max-w-3xl">
 				The Bundlr Provenance Toolkit is a NextJS project to help you rapidly build dApps using Bundlr.
 			</div>

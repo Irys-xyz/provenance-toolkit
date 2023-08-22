@@ -18,9 +18,8 @@ const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
 	const isActive = pathname === href;
 	return (
 		<Link
-			className={`font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${
-				isActive ? "!text-black font-bold border-b-2 border-black" : ""
-			}`}
+			className={`font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
+				}`}
 			href={href}
 		>
 			{children}
@@ -57,7 +56,7 @@ const Navbar: FC = () => {
 	];
 
 	return (
-		<header className="w-full fixed top-0 left-0 z-50 bg-background text-text border-b">
+		<header className="w-full top-0 left-0 bg-background text-text border-b">
 			<nav className="">
 				<div className="flex flex-col items-center justify-between">
 					<div className="text-lg font-semibold bg-black w-full h-full py-4 text-white text-center">
