@@ -4,13 +4,13 @@ import FundWithdraw from "../components/FundWithdraw";
 
 const Page: FC = () => {
 	return (
-		<div className="min-h-screen bg-background text-text flex flex-col justify-center items-center space-y-8 px-4 mt-24">
-			<div className="w-3/5">
+		<div className="min-h-screen bg-background text-text flex flex-col md:flex-row justify-center items-center mt-24 space-x-1">
+			<div className="w-2/5">
 				<FundWithdraw />{" "}
 			</div>
 
-			<div className="w-3/5 flex flex-col text-xs space-y-4">
-				<p className="text-sm">Usage example:</p>
+			<div className="w-2/5 flex flex-col text-xs space-y-1 items-start">
+				<p className="text-xl bg-gray-100 rounded-xl px-2">Usage example:</p>
 
 				<p>- To fix the node:</p>
 				<code className="bg-gray-100 rounded">

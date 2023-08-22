@@ -71,7 +71,7 @@ export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
 				// Show currently funded balance iff we're in withdraw mode
 				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance));
 			} catch (error) {
-				console.log("Error fetching Bundlr:", error);
+				console.log("Error connecting to Bundlr:", error);
 			}
 		};
 		if (selectedNode && selectedCurrency) getCurBalance();
@@ -119,6 +119,7 @@ export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
 		}
 		setTxProcessing(false);
 	};
+
 	return (
 		<div className="bg-white rounded-lg p-5 max-w-sm border w-full shadow-xl">
 			{!config.node && (
