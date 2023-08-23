@@ -54,18 +54,18 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config
 		const chunkSize = 2000000;
 		uploader.setChunkSize(chunkSize);
 
-		// get a create a streamed reader
+		// Get a create a streamed reader
 		const dataStream = fileReaderStream(selectedFile);
 		// save a reference to the file size
-		// setFileSize(dataStream.size);
-		// divide the total file size by the size of each chunk we'll upload
+
+		// Divide the total file size by the size of each chunk we'll upload
 		if (dataStream.size < chunkSize) totalChunks.current = 1;
 		else {
 			totalChunks.current = Math.floor(dataStream.size / chunkSize);
 		}
 
 		/** Register Event Callbacks */
-		// Event callback: called for every chunk uploaded
+		// Event callback chunkUpload: called for every chunk uploaded
 		uploader.on("chunkUpload", (chunkInfo) => {
 			console.log(chunkInfo);
 			console.log(

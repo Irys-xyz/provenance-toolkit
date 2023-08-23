@@ -78,11 +78,6 @@ const queryGraphQL = async (
 	from: Date | null,
 	to: Date | null,
 ): Promise<QueryResult[]> => {
-	console.log("endpoint", endpoint);
-	console.log("contentType", contentType);
-	console.log("currency", currency);
-	console.log("from", from);
-	console.log("to", to);
 	// Start building the GraphQL query string
 	let query = "query getData { transactions";
 

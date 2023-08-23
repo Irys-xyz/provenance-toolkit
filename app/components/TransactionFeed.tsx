@@ -76,6 +76,7 @@ export const TransactionFeed: React.FC = () => {
 	const handleToTimestampChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setToTimestamp(e.target.value);
 	};
+
 	const handleQuery = async () => {
 		setTxProcessing(true);
 		setQueryResults([]);
@@ -110,7 +111,6 @@ export const TransactionFeed: React.FC = () => {
 
 	return (
 		<div className="bg-white border rounded-lg shadow-2xl p-5 w-700 h-700">
-
 			<div className="flex flex-row">
 				<div className="space-y-4 self-end">
 					{error && <div className="text-red-500">{error}</div>}
@@ -121,10 +121,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleNodeChange}
 						value={selectedNode}
 						placeholder="Select a node..."
-					// styles={{
-					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-					// }}
+						// styles={{
+						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+						// }}
 					/>
 					<Select
 						className="mb-4"
@@ -132,10 +132,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleCurrencyChange}
 						value={selectedCurrency}
 						placeholder="Select a currency..."
-					// styles={{
-					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-					// }}
+						// styles={{
+						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+						// }}
 					/>
 					<Select
 						className="mb-4"
@@ -143,10 +143,10 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleContentTypeChange}
 						value={selectedContentType}
 						placeholder="Select a content type..."
-					// styles={{
-					// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-					// }}
+						// styles={{
+						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
+						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
+						// }}
 					/>
 					<input
 						type="datetime-local"
@@ -163,21 +163,16 @@ export const TransactionFeed: React.FC = () => {
 						placeholder="To Timestamp"
 					/>
 					<div className="flex">
-						<Button
-							onClick={handleQuery}
-							disabled={txProcessing}
-						>
+						<Button onClick={handleQuery} disabled={txProcessing}>
 							{txProcessing ? <Spinner color="text-background" /> : "Query"}
-
 						</Button>
 					</div>
 				</div>
-				{
-					queryResults && queryResults.length > 0 && (
-						<div className="ml-5 bg-primary h-[320px] w-[340px] overflow-y-auto rounded-lg align-start">
-							{
-								// For each result, render a SearchResultsItem component
-								queryResults &&
+				{queryResults && queryResults.length > 0 && (
+					<div className="ml-5 bg-primary h-[320px] w-[340px] overflow-y-auto rounded-lg align-start">
+						{
+							// For each result, render a SearchResultsItem component
+							queryResults &&
 								queryResults.map((result) => (
 									<QueryResultsItem
 										key={result.txID} // Unique key
@@ -187,13 +182,11 @@ export const TransactionFeed: React.FC = () => {
 										tags={result.tags} // Any associated tags
 									/>
 								))
-							}
-						</div>
-					)
-				}
-
+						}
+					</div>
+				)}
 			</div>
-		</div >
+		</div>
 	);
 };
 
