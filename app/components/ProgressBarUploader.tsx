@@ -7,17 +7,24 @@ import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
 import getBundlr from "../utils/getBundlr";
 
-export const ProgressBarUploader: React.FC = () => {
+interface ProgressBarUploaderProps {
+	config?: {
+		showPreview?: boolean;
+	};
+}
+
+export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config }) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
 	const [fileType, setFileType] = useState<string>("");
-
+	const [fileUrl, setFileUrl] = useState<string>("");
 	const [progress, setProgress] = useState<number>(0);
 	const [curBalance, setCurBalance] = useState<number>(0);
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
 	const totalChunks = useRef<number>(0);
+	const showPreview = config?.showPreview !== undefined ? config.showPreview : true;
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files[0]) {
@@ -62,7 +69,7 @@ export const ProgressBarUploader: React.FC = () => {
 		uploader.on("chunkUpload", (chunkInfo) => {
 			console.log(chunkInfo);
 			console.log(
-				`Uploaded Chunk number ${chunkInfo.id}, offset of ${chunkInfo.offset}, size ${chunkInfo.size} Bytes, with a total of ${chunkInfo.totalUploaded} bytes uploaded.`
+				`Uploaded Chunk number ${chunkInfo.id}, offset of ${chunkInfo.offset}, size ${chunkInfo.size} Bytes, with a total of ${chunkInfo.totalUploaded} bytes uploaded.`,
 			);
 
 			const chunkNumber = chunkInfo.id + 1;
@@ -73,9 +80,7 @@ export const ProgressBarUploader: React.FC = () => {
 
 		// Event callback: called if an error happens
 		uploader.on("chunkError", (e) => {
-			console.error(
-				`Error uploading chunk number ${e.id} - ${e.res.statusText}`
-			);
+			console.error(`Error uploading chunk number ${e.id} - ${e.res.statusText}`);
 		});
 
 		// Event callback: called when file is fully uploaded
@@ -93,8 +98,9 @@ export const ProgressBarUploader: React.FC = () => {
 			})
 			.then((res) => {
 				console.log(res);
+				setFileUrl(`https://arweave.net/${res.data.id}`);
 				setMessage(
-					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`
+					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
 				);
 			})
 			.catch((e) => {
@@ -103,10 +109,6 @@ export const ProgressBarUploader: React.FC = () => {
 			});
 
 		setTxProcessing(false);
-	};
-
-	const handleStrongProvenanceChange = (checked: boolean) => {
-		setIsStrongProvenance(checked);
 	};
 
 	return (
@@ -121,9 +123,7 @@ export const ProgressBarUploader: React.FC = () => {
 						setSelectedFile(droppedFiles);
 					}}
 				>
-					<p className="text-background-contrast mb-2">
-						Drag and drop files here
-					</p>
+					<p className="text-background-contrast mb-2">Drag and drop files here</p>
 					<input type="file" onChange={handleFileUpload} className="hidden" />
 					<button
 						onClick={() => {
@@ -137,7 +137,8 @@ export const ProgressBarUploader: React.FC = () => {
 						Browse Files
 					</button>
 				</div>
-				{selectedFile &&
+				{showPreview &&
+					selectedFile &&
 					selectedFile.length > 0 &&
 					selectedFile.map((file, index) => (
 						<div className="w-full bg-primary h-[250px] rounded-xl">
@@ -154,29 +155,18 @@ export const ProgressBarUploader: React.FC = () => {
 				{selectedFile && selectedFile.length > 0 && (
 					<>
 						{selectedFile.map((file, index) => (
-							<div
-								key={index}
-								className="flex items-center mb-2 text-background-contrast"
-							>
+							<div key={index} className="flex items-center mb-2 text-background-contrast">
 								<span className="mr-2">{file.name}</span>
 							</div>
 						))}
-						<div
-							className="mt-2 h-6 bg-primary rounded-full"
-							id="progress_bar_container"
-						>
+						<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
 							<div
 								className="h-6 bg-background-contrast rounded-full"
 								style={{ width: `${progress}%` }}
 								id="progress_bar"
 							></div>
 						</div>
-						{message && (
-							<div
-								className="text-red-500"
-								dangerouslySetInnerHTML={{ __html: message }}
-							/>
-						)}{" "}
+						{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
 						<Button onClick={handleUpload} disabled={txProcessing}>
 							{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 						</Button>
@@ -188,3 +178,15 @@ export const ProgressBarUploader: React.FC = () => {
 };
 
 export default ProgressBarUploader;
+
+/* 
+USAGE:
+- Default (shows the preview): 
+  <ProgressBarUploader />
+
+- To hide the preview:
+  <ProgressBarUploader config={{ showPreview: false }} />
+
+Note:
+* If `showPreview` is not provided, the component defaults to showing the preview.
+*/
