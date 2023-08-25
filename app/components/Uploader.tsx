@@ -1,7 +1,9 @@
 "use client";
 
+import { AiOutlineFileSearch } from "react-icons/ai";
 import Button from "./Button";
 import JSONView from "react-json-view";
+import { PiReceiptLight } from "react-icons/pi";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
@@ -176,11 +178,10 @@ export const Uploader: React.FC = () => {
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-primary text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing
-									? "bg-background-contrast text-white cursor-not-allowed"
-									: "hover:bg-background-contrast hover:text-white"
-							}`}
+							className={`w-full min-w-full py-2 px-4 bg-primary text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
+								? "bg-background-contrast text-white cursor-not-allowed"
+								: "hover:bg-background-contrast hover:text-white"
+								}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -193,23 +194,24 @@ export const Uploader: React.FC = () => {
 									<span className="mr-2 text-text">{file.file.name}</span>
 									{file.isUploaded && (
 										<>
-											<span className="mr-2">
+											<span className="ml-auto">
 												<button
-													className="px-1 w-18 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
+													className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
 													onClick={() => setPreviewURL(file.previewUrl)}
 												>
-													File --&gt;
+													<AiOutlineFileSearch className="white-2xl" />
 												</button>
 											</span>
-											<span className="mr-2">
+											<span className="ml-2">
 												<button
-													className="px-1 w-24 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
+													className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
 													onClick={() => showReceipt(file.id)}
 												>
 													{receiptQueryProcessing ? (
 														<Spinner color="text-background" />
 													) : (
-														"Receipt -->"
+
+														<PiReceiptLight className="text-2xl" />
 													)}
 												</button>
 											</span>

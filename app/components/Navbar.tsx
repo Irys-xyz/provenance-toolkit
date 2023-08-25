@@ -66,7 +66,7 @@ const Navbar: FC = () => {
 					</div>
 					<div className="h-[1px] bg-black w-full" />
 					{/* Wrap the navigation links in a container */}
-					<div className="flex pt-4 overflow-scroll w-full justify-center">
+					<div className="flex pt-4 lg:overflow-hidden overflow-x-scroll w-full justify-center">
 						<div className="flex space-x-8 justify-center">
 							{NAV_LINKS.map((link, index) => (
 								<NavbarLink key={index} href={link.href}>

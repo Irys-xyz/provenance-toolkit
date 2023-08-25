@@ -25,6 +25,7 @@
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-dropzone": "^14.2.3",
+		"react-icons": "^4.10.1",
 		"react-input-mask": "^2.0.4",
 		"react-json-prettify": "^0.2.0",
 		"react-json-view": "^1.21.3",
