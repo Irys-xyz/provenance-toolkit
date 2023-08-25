@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
  *
  * @returns A signed version of the data, signatureData, as sent by the client.
  */
-export async function signDataOnServer(signatureData: Buffer): Promise<Buffer> {
+async function signDataOnServer(signatureData: Buffer): Promise<Buffer> {
 	const key = process.env.PRIVATE_KEY; // your private key
 	if (!key) throw new Error("Private key is undefined!");
 	const signer = new TypedEthereumSigner(key);
@@ -26,7 +26,7 @@ async function readFromStream(stream: ReadableStream): Promise<string> {
 	return result;
 }
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
 	const rawData = await readFromStream(req.body);
 	const body = JSON.parse(rawData);
 

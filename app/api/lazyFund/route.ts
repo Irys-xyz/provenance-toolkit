@@ -1,13 +1,13 @@
 import Bundlr from "@bundlr-network/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
 import getRpcUrl from "@/app/utils/getRpcUrl";
+import { NextResponse } from "next/server";
+
 /**
  * Given a file of the specified size, get the cost to upload, then fund a node that amount
  * @param filesize The size of a file to fund for
  * @returns
  */
-export async function lazyFund(filesize: string): Promise<string> {
+async function lazyFund(filesize: string): Promise<string> {
 	// nodeJS client
 	const key = process.env.PRIVATE_KEY;
 	const currency = process.env.NEXT_PUBLIC_CURRENCY;
@@ -56,7 +56,7 @@ async function readFromStream(stream: ReadableStream): Promise<string> {
 	return result;
 }
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
 	const rawData = await readFromStream(req.body);
 	const body = JSON.parse(rawData);
 	const fundTx = await lazyFund(body);
