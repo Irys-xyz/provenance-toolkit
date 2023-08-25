@@ -83,7 +83,7 @@ export const UDLUploader: React.FC = () => {
 			<div className="pr-4 mt-5 space-y-4">
 				<div className="rounded-lg ">
 					<div
-						className="border-2 border-dashed border-background-contrast rounded-lg p-4 mb-4 text-center"
+						className={`border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center z-50`}
 						onDragOver={(event) => event.preventDefault()}
 						onDrop={(event) => {
 							event.preventDefault();
@@ -92,6 +92,8 @@ export const UDLUploader: React.FC = () => {
 							setFileType(droppedFiles[0]?.type || "");
 						}}
 					>
+						<p className="text-gray-400 mb-2">Drag and drop a file here</p>
+
 						{!selectedFile ? (
 							<div className="relative inline-block">
 								<button
@@ -101,7 +103,8 @@ export const UDLUploader: React.FC = () => {
 											input.click();
 										}
 									}}
-									className="px-4 py-2 bg-primary text-text rounded-md border-1 border-background-contrast hover:border-background hover:bg-primary hover:text-background-contrast transition-all duration-500 ease-in-out"
+									className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out`}
+
 								>
 									Select A File
 								</button>
@@ -135,7 +138,7 @@ export const UDLUploader: React.FC = () => {
 								id="license-fee-type"
 								value={licenseFeeType}
 								onChange={(e) => setLicenseFeeType(e.target.value)}
-								className="bg-primary px-2 py-1 text-text rounded-md text-xs"
+								className="bg-[#EEF0F6] px-2 py-1 text-text rounded-md text-xs"
 							>
 								<option value="None">None</option>
 								<option value="One-Time">One-Time</option>
@@ -146,7 +149,7 @@ export const UDLUploader: React.FC = () => {
 								id="license-fee-unit"
 								value={licenseFeeUnit}
 								onChange={(e) => setLicenseFeeUnit(Number(e.target.value))}
-								className="bg-primary text-text rounded-md ml-3 text-xs pl-2"
+								className="bg-[#EEF0F6] text-text rounded-md ml-3 text-xs pl-2"
 							/>
 						</div>
 						<label
@@ -159,7 +162,7 @@ export const UDLUploader: React.FC = () => {
 							id="commercial-use"
 							value={commercialUse}
 							onChange={(e) => setCommercialUse(e.target.value)}
-							className="bg-primary px-2 py-1 text-text rounded-md text-xs"
+							className="bg-[#EEF0F6] px-2 py-1 text-text rounded-md text-xs"
 						>
 							<option value="None">None</option>
 							<option value="Allowed">Allowed</option>
@@ -172,7 +175,7 @@ export const UDLUploader: React.FC = () => {
 							id="currency"
 							value={currency}
 							onChange={(e) => setCurrency(e.target.value)}
-							className="bg-primary px-2 py-1 text-text rounded-md text-xs"
+							className="bg-[#EEF0F6] px-2 py-1 text-text rounded-md text-xs"
 						>
 							<option value="U">U</option>
 							<option value="AR">Arweave</option>
@@ -190,7 +193,7 @@ export const UDLUploader: React.FC = () => {
 							id="payment-address"
 							value={paymentAddress}
 							onChange={(e) => setPaymentAddress(e.target.value)}
-							className="bg-primary text-text rounded-md text-xs pl-2 px-2 py-1"
+							className="bg-[#EEF0F6] text-text rounded-md text-xs pl-2 px-2 py-1"
 						/>
 						<label
 							htmlFor="derivation"
@@ -202,7 +205,7 @@ export const UDLUploader: React.FC = () => {
 							id="derivation"
 							value={derivation}
 							onChange={(e) => setDerivation(e.target.value)}
-							className="bg-primary px-2 py-1 text-text rounded-md text-xs"
+							className="bg-[#EEF0F6] px-2 py-1 text-text rounded-md text-xs"
 						>
 							<option value="None">None</option>
 							<option value="Allowed-With-Credit">Allowed-With-Credit</option>

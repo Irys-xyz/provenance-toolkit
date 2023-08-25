@@ -115,7 +115,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config
 		<div className="w-[500px] bg-white rounded-lg shadow-2xl p-5 border">
 			<div className="space-y-6">
 				<div
-					className={`border-2 border-dashed border-background-contrast rounded-lg p-4 text-center z-50`}
+					className={`border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center z-50`}
 					onDragOver={(event) => event.preventDefault()}
 					onDrop={(event) => {
 						event.preventDefault();
@@ -123,7 +123,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config
 						setSelectedFile(droppedFiles);
 					}}
 				>
-					<p className="text-background-contrast mb-2">Drag and drop files here</p>
+					<p className="text-gray-400 mb-2">Drag and drop files here</p>
 					<input type="file" onChange={handleFileUpload} className="hidden" />
 					<button
 						onClick={() => {
@@ -132,7 +132,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config
 								input.click();
 							}
 						}}
-						className="px-4 py-2 bg-background-contrast text-background rounded-md border-2 border-background-contrast hover:border-background hover:bg-primary hover:text-background-contrast transition-all duration-500 ease-in-out"
+						className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out`}
 					>
 						Browse Files
 					</button>

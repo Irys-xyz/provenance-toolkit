@@ -160,7 +160,7 @@ export const Uploader: React.FC = () => {
 			<div className="flex p-5">
 				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
 					<div
-						className="border-2 border-dashed bg-primary border-background-contrast rounded-lg p-4 text-center"
+						className="border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center"
 						onDragOver={(event) => event.preventDefault()}
 						onDrop={(event) => {
 							event.preventDefault();
@@ -178,9 +178,9 @@ export const Uploader: React.FC = () => {
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-primary text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
-								? "bg-background-contrast text-white cursor-not-allowed"
-								: "hover:bg-background-contrast hover:text-white"
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
+								? "bg-[#DBDEE9] cursor-not-allowed"
+								: "hover:bg-[#DBDEE9] hover:font-bold"
 								}`}
 							disabled={txProcessing}
 						>
