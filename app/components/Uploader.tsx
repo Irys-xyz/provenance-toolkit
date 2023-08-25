@@ -2,10 +2,10 @@
 
 import { AiOutlineFileSearch } from "react-icons/ai";
 import Button from "./Button";
-import JSONView from "react-json-view";
 import { PiReceiptLight } from "react-icons/pi";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
+import ReceiptJSONView from "./ReceiptJSONView";
 import fileReaderStream from "filereader-stream";
 import fundAndUpload from "../utils/fundAndUpload";
 import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
@@ -39,6 +39,10 @@ export const Uploader: React.FC = () => {
 	const [message, setMessage] = useState<string>("");
 	const GATEWAY_BASE = "https://arweave.net/"; // Set to the base URL of any gateway
 
+	useEffect(() => {
+		setMessage("");
+	}, []);
+
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const files = Array.from(event.target.files);
@@ -54,7 +58,8 @@ export const Uploader: React.FC = () => {
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
-		const input = document.querySelector('input[type="file"]');
+		console.log("document=", document);
+		const input = document?.querySelector('input[type="file"]');
 		if (input) {
 			input.click();
 		}
@@ -106,6 +111,7 @@ export const Uploader: React.FC = () => {
 		try {
 			const bundlr = await getBundlr();
 			const receipt = await bundlr.utils.getReceipt(id);
+			console.log(receipt);
 			setReceipt(receipt);
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
@@ -135,15 +141,7 @@ export const Uploader: React.FC = () => {
 		if (receipt && !previewURL) {
 			return (
 				<div className="w-full">
-					<JSONView
-						src={receipt}
-						name={null}
-						enableClipboard={false}
-						displayDataTypes={false}
-						displayObjectSize={false}
-						collapsed={false}
-						style={{ fontSize: 14 }}
-					/>
+					<ReceiptJSONView data={receipt} />
 				</div>
 			);
 		}
@@ -156,7 +154,6 @@ export const Uploader: React.FC = () => {
 			${memoizedPreviewURL && memoizedReceiptView ? "max-w-7xl" : "max-w-sm"}
 		`}
 		>
-			{/* <h2 className="text-3xl text-center mt-3 font-bold mb-4 font-main">Bundlr Multi-File Uploader</h2> */}
 			<div className="flex p-5">
 				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
 					<div
@@ -178,10 +175,9 @@ export const Uploader: React.FC = () => {
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
-								? "bg-[#DBDEE9] cursor-not-allowed"
-								: "hover:bg-[#DBDEE9] hover:font-bold"
-								}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+							}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -210,7 +206,6 @@ export const Uploader: React.FC = () => {
 													{receiptQueryProcessing ? (
 														<Spinner color="text-background" />
 													) : (
-
 														<PiReceiptLight className="text-2xl" />
 													)}
 												</button>
@@ -226,8 +221,10 @@ export const Uploader: React.FC = () => {
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
+
 				{memoizedPreviewURL && memoizedReceiptView && (
 					<div className="w-1/2 h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
+						This is receipt seciton
 						{memoizedPreviewURL}
 						{memoizedReceiptView}
 					</div>

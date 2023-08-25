@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "./Button";
-import JSONView from "react-json-view";
+import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
 import { WebBundlr } from "@bundlr-network/client";
@@ -113,15 +113,7 @@ export const GasslessUploader: React.FC = () => {
 		if (receipt && !previewURL) {
 			return (
 				<div className="w-full">
-					<JSONView
-						src={receipt}
-						name={null}
-						enableClipboard={false}
-						displayDataTypes={false}
-						displayObjectSize={false}
-						collapsed={false}
-						style={{ fontSize: 14 }}
-					/>
+					<ReceiptJSONView data={receipt} />
 				</div>
 			);
 		}
@@ -156,10 +148,9 @@ export const GasslessUploader: React.FC = () => {
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing
-								? "bg-[#DBDEE9] cursor-not-allowed"
-								: "hover:bg-[#DBDEE9] hover:font-bold"
-								}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+							}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
