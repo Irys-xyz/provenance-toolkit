@@ -41,14 +41,16 @@ interface FundWithdrawConfigProps {
 	withdrawOnly?: boolean;
 }
 
-interface FundWithdrawProps {
-	config?: FundWithdrawConfigProps;
-}
-
-export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
-	const initialSelectedNode = config.node ? nodes.find((n) => n.value === config.node) : null;
-	const initialSelectedCurrency = config.currency ? currencies.find((c) => c.value === config.currency) : null;
-	const initialIsFunding = config.fundOnly || !config.withdrawOnly;
+export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
+	node = "",
+	currency = "",
+	fundOnly = false,
+	withdrawOnly = false,
+}) => {
+	const initialSelectedNode = node ? nodes.find((n) => n.value === node) : null;
+	const initialSelectedCurrency = currency ? currencies.find((c) => c.value === currency) : null;
+	let initialIsFunding = fundOnly || !withdrawOnly;
+	if (withdrawOnly) initialIsFunding = false;
 
 	const [selectedNode, setSelectedNode] = useState<OptionType | null>(initialSelectedNode);
 	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(initialSelectedCurrency);
@@ -122,7 +124,7 @@ export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
 
 	return (
 		<div className="bg-white rounded-lg p-5 border w-full shadow-xl">
-			{!config.node && (
+			{!node && (
 				<Select
 					className="mb-4"
 					options={nodes}
@@ -131,7 +133,7 @@ export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
 					placeholder="Select a node..."
 				/>
 			)}
-			{!config.currency && (
+			{!currency && (
 				<Select
 					className="mb-4"
 					options={currencies}
@@ -147,7 +149,7 @@ export const FundWithdraw: React.FC<FundWithdrawProps> = ({ config = {} }) => {
 				value={amount}
 				onChange={handleAmountChange}
 			/>
-			{!config.fundOnly && !config.withdrawOnly && (
+			{!fundOnly && !withdrawOnly && (
 				<div className="my-6 text-text flex items-center space-x-4">
 					<label className="inline-flex items-center">
 						<input
@@ -189,16 +191,16 @@ USAGE:
   <FundWithdraw />
 
 - To fix the node:
-  <FundWithdraw config={{ node: "https://node1.bundlr.network" }} />
+  <FundWithdraw node = "https://node1.bundlr.network" />
 
 - To fix the currency:
-  <FundWithdraw config={{ currency: "ethereum" }} />
+  <FundWithdraw currency= "ethereum"  />
 
 - To set component to fund-only:
-  <FundWithdraw config={{ fundOnly: true }} />
+  <FundWithdraw fundOnly ={ true } />
 
 - To set the component to withdraw-only:
-  <FundWithdraw config={{ withdrawOnly: true }} />
+  <FundWithdraw withdrawOnly ={ true } />
 
 Note:
 * One of fundOnly and withdrawOnly must be true. In case both are set to false, the component defaults to fund only mode.
