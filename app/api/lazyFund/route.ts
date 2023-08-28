@@ -1,6 +1,7 @@
 import Bundlr from "@bundlr-network/client";
 import getRpcUrl from "@/app/utils/getRpcUrl";
 import { NextResponse } from "next/server";
+import { ReadableStream } from "stream/web";
 
 /**
  * Given a file of the specified size, get the cost to upload, then fund a node that amount
@@ -12,7 +13,7 @@ async function lazyFund(filesize: string): Promise<string> {
 	const key = process.env.PRIVATE_KEY;
 	const currency = process.env.NEXT_PUBLIC_CURRENCY;
 	const url = process.env.NEXT_PUBLIC_NODE;
-	const providerUrl = getRpcUrl(currency);
+	const providerUrl = getRpcUrl(currency || "");
 
 	const serverBundlr = new Bundlr(
 		//@ts-ignore
@@ -43,7 +44,8 @@ async function lazyFund(filesize: string): Promise<string> {
 	return fundTx?.id || "";
 }
 
-async function readFromStream(stream: ReadableStream): Promise<string> {
+async function readFromStream(stream: ReadableStream<Uint8Array> | null): Promise<string> {
+	if (!stream) return "";
 	const reader = stream.getReader();
 	let result = "";
 
@@ -57,7 +59,9 @@ async function readFromStream(stream: ReadableStream): Promise<string> {
 }
 
 export async function POST(req: Request) {
-	const rawData = await readFromStream(req.body);
+	//@ts-ignore
+	const rawData = await readFromStream(req.body as ReadableStream<Uint8Array> | null);
+
 	const body = JSON.parse(rawData);
 	const fundTx = await lazyFund(body);
 

@@ -5,14 +5,14 @@ import ReceiptJSONView from "../components/ReceiptJSONView";
 import getBundlr from "../utils/getBundlr";
 
 const Page: FC = () => {
-	const [receipt, setReceipt] = useState(null);
+	const [receipt, setReceipt] = useState<string>("");
 
 	useEffect(() => {
 		async function fetchData() {
 			const id = "27Di9a-xYMFgMVGX3Gkiz5WCkH_kA0f7sx_ulCNQ0cQ";
 			const bundlr = await getBundlr();
 			const fetchedReceipt = await bundlr.utils.getReceipt(id);
-			setReceipt(fetchedReceipt);
+			setReceipt(JSON.stringify(fetchedReceipt));
 		}
 
 		fetchData();

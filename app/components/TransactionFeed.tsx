@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 import Button from "./Button";
 import QueryResultsItem from "./QueryResultsItem";
-import Select from "react-select";
+import Select, { SingleValue, ActionMeta } from "react-select";
+
 import Spinner from "./Spinner";
 import queryGraphQL from "../utils/queryGraphQL";
 
@@ -59,9 +60,16 @@ export const TransactionFeed: React.FC = () => {
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [queryResults, setQueryResults] = useState<QueryResult[]>([]);
 
-	const handleNodeChange = (selectedOption: OptionType) => setSelectedNode(selectedOption);
-	const handleCurrencyChange = (selectedOption: OptionType) => setSelectedCurrency(selectedOption);
-	const handleContentTypeChange = (selectedOption: OptionType) => setSelectedContentType(selectedOption);
+	const handleNodeChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+		setSelectedNode(selectedOption as OptionType);
+	};
+	const handleCurrencyChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+		setSelectedCurrency(selectedOption as OptionType);
+	};
+
+	const handleContentTypeChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+		setSelectedContentType(selectedOption as OptionType);
+	};
 
 	const [error, setError] = useState("");
 
@@ -95,8 +103,8 @@ export const TransactionFeed: React.FC = () => {
 		try {
 			const results = await queryGraphQL(
 				selectedNode.value,
-				selectedContentType?.value,
-				selectedCurrency?.value,
+				selectedContentType?.value ?? null,
+				selectedCurrency?.value ?? null,
 				fromDate, // Use the converted Date object
 				toDate, // Use the converted Date object
 			);

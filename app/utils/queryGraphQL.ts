@@ -17,8 +17,10 @@ interface Edge {
 }
 
 interface DataResponse {
-	transactions: {
-		edges: Edge[];
+	data: {
+		transactions: {
+			edges: Edge[];
+		};
 	};
 }
 
@@ -37,8 +39,8 @@ interface QueryResult {
 const processDataResponse = (data: DataResponse): QueryResult[] => {
 	const queryResults: QueryResult[] = [];
 
-	if (data && data.transactions && data.transactions.edges) {
-		const edges: Edge[] = data.transactions.edges;
+	if (data && data.data && data.data.transactions && data.data.transactions.edges) {
+		const edges: Edge[] = data.data.transactions.edges;
 
 		for (const edge of edges) {
 			const node: Node = edge.node;
@@ -127,7 +129,7 @@ const queryGraphQL = async (
 		const data: DataResponse = await response.json();
 		console.log("data=", data);
 
-		const processedData = processDataResponse(data.data);
+		const processedData = processDataResponse(data);
 		console.log(processedData);
 		return processedData;
 	} catch (error) {

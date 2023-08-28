@@ -68,15 +68,9 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 	console.log("pre /api/lazyFund");
 	const fundTx = await fetch("/api/lazyFund", {
 		method: "POST",
-		body: dataStream.size.toString(),
+		body: selectedFile.size.toString(),
 	});
 
-	console.log("Post /api/lazyFund");
-
-	console.log("Creating WebBundlr");
-	console.log("process.env.NEXT_PUBLIC_NODE=", process.env.NEXT_PUBLIC_NODE);
-	console.log("process.env.NEXT_PUBLIC_CURRENCY=", process.env.NEXT_PUBLIC_CURRENCY);
-	console.log("provider=", provider);
 	// Create a new WebBundlr object using the provider created with server info.
 	const bundlr = new WebBundlr(process.env.NEXT_PUBLIC_NODE || "", process.env.NEXT_PUBLIC_CURRENCY || "", provider);
 	await bundlr.ready();

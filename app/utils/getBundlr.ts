@@ -20,8 +20,9 @@ const getBundlr = async (
 	url: string = process.env.NEXT_PUBLIC_NODE || "",
 	currency: string = process.env.NEXT_PUBLIC_CURRENCY || "",
 ): Promise<WebBundlr> => {
-	await window.ethereum.enable();
-	const provider = new providers.Web3Provider(window.ethereum);
+	await (window as WindowWithEthereum).ethereum.enable();
+	const provider = new providers.Web3Provider((window as WindowWithEthereum).ethereum);
+
 	const bundlr = new WebBundlr(url, currency, provider);
 	await bundlr.ready();
 	return bundlr;

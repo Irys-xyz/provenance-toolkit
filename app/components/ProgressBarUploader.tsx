@@ -56,9 +56,9 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 		// save a reference to the file size
 
 		// Divide the total file size by the size of each chunk we'll upload
-		if (dataStream.size < chunkSize) totalChunks.current = 1;
+		if (selectedFile?.size < chunkSize) totalChunks.current = 1;
 		else {
-			totalChunks.current = Math.floor(dataStream.size / chunkSize);
+			totalChunks.current = Math.floor((selectedFile?.size || 0) / chunkSize);
 		}
 
 		/** Register Event Callbacks */
@@ -71,7 +71,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 
 			const chunkNumber = chunkInfo.id + 1;
 			// update the progress bar based on how much has been uploaded
-			if (chunkNumber >= totalChunks) setProgress(100);
+			if (chunkNumber >= totalChunks.current) setProgress(100);
 			else setProgress((chunkNumber / totalChunks.current) * 100);
 		});
 
@@ -117,14 +117,14 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 					onDrop={(event) => {
 						event.preventDefault();
 						const droppedFiles = Array.from(event.dataTransfer.files);
-						setSelectedFile(droppedFiles);
+						setSelectedFile(droppedFiles[0]);
 					}}
 				>
 					<p className="text-gray-400 mb-2">Drag and drop files here</p>
 					<input type="file" onChange={handleFileUpload} className="hidden" />
 					<button
 						onClick={() => {
-							const input = document.querySelector('input[type="file"]');
+							const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 							if (input) {
 								input.click();
 							}
@@ -134,28 +134,23 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 						Browse Files
 					</button>
 				</div>
-				{showPreview &&
-					selectedFile &&
-					selectedFile.length > 0 &&
-					selectedFile.map((file, index) => (
-						<div className="w-full bg-primary h-[250px] rounded-xl">
-							<div>
-								<img
-									className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
-									src={URL.createObjectURL(file)}
-									alt="Selected"
-								/>
-							</div>
+				{showPreview && selectedFile && (
+					<div className="w-full bg-primary h-[250px] rounded-xl">
+						<div>
+							<img
+								className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
+								src={URL.createObjectURL(selectedFile)}
+								alt="Selected"
+							/>
 						</div>
-					))}
+					</div>
+				)}
 
-				{selectedFile && selectedFile.length > 0 && (
+				{selectedFile && (
 					<>
-						{selectedFile.map((file, index) => (
-							<div key={index} className="flex items-center mb-2 text-background-contrast">
-								<span className="mr-2">{file.name}</span>
-							</div>
-						))}
+						<div key="1" className="flex items-center mb-2 text-background-contrast">
+							<span className="mr-2">{selectedFile.name}</span>
+						</div>
 						<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
 							<div
 								className="h-6 bg-background-contrast rounded-full"

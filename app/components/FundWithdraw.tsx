@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 
 import Button from "./Button";
-import Select from "react-select";
+import Select, { SingleValue, ActionMeta } from "react-select";
 import Spinner from "./Spinner";
 import getBundlr from "../utils/getBundlr";
+import BigNumber from "bignumber.js";
 
 interface OptionType {
 	value: string;
@@ -47,31 +48,39 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 	fundOnly = false,
 	withdrawOnly = false,
 }) => {
-	const initialSelectedNode = node ? nodes.find((n) => n.value === node) : null;
-	const initialSelectedCurrency = currency ? currencies.find((c) => c.value === currency) : null;
+	const initialSelectedNode = node ? nodes.find((n) => n.value === node) || null : null;
+	const initialSelectedCurrency = currency ? currencies.find((c) => c.value === currency) || null : null;
+
 	let initialIsFunding = fundOnly || !withdrawOnly;
 	if (withdrawOnly) initialIsFunding = false;
 
 	const [selectedNode, setSelectedNode] = useState<OptionType | null>(initialSelectedNode);
 	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(initialSelectedCurrency);
-	const [amount, setAmount] = useState<number>(0.0);
+	const [amount, setAmount] = useState<string>("0.0");
 	const [isFunding, setIsFunding] = useState<boolean>(initialIsFunding);
 	const [message, setMessage] = useState<string>("");
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 
-	const handleNodeChange = (selectedOption: OptionType) => setSelectedNode(selectedOption);
-	const handleCurrencyChange = (selectedOption: OptionType) => setSelectedCurrency(selectedOption);
-	const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => setAmount(parseFloat(e.target.value));
+	const handleNodeChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
+		setSelectedNode(selectedOption as OptionType);
+	};
+
+	const handleCurrencyChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
+		setSelectedCurrency(selectedOption as OptionType);
+	};
+
+	const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
+
 	const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => setIsFunding(e.target.value === "fund");
 
 	useEffect(() => {
-		setAmount(0);
+		setAmount("0");
 		const getCurBalance = async () => {
 			try {
 				const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
 				const loadedBalance = await bundlr.getLoadedBalance();
 				// Show currently funded balance iff we're in withdraw mode
-				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance));
+				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance).toString());
 			} catch (error) {
 				console.log("Error connecting to Bundlr:", error);
 			}
@@ -90,7 +99,7 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 			setMessage("Please select to currency to use when funding");
 			return;
 		}
-		if (amount === 0) {
+		if (amount === "0") {
 			setMessage("Please enter an amount greater than 0");
 			return;
 		}
@@ -103,19 +112,19 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 		// If fund mode do fund
 		if (isFunding) {
 			try {
-				const fundTx = await bundlr.fund(bundlr.utils.toAtomic(amount));
+				const fundTx = await bundlr.fund(bundlr.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Funding successful");
 			} catch (e) {
-				setMessage("Error while funding: ", e);
+				setMessage("Error while funding: " + e);
 				console.log(e);
 			}
 		} else {
 			// If withdraw mode, do withdraw
 			try {
-				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(amount));
+				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Withdraw successful");
 			} catch (e) {
-				setMessage("Error while withdrawing: ", e);
+				setMessage("Error while withdrawing: " + e);
 				console.log(e);
 			}
 		}

@@ -84,7 +84,7 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
-		const input = document.querySelector('input[type="file"]');
+		const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 		if (input) {
 			input.click();
 		}
@@ -95,7 +95,8 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 		try {
 			const bundlr = await getBundlr();
 			const receipt = await bundlr.utils.getReceipt(id);
-			setReceipt(receipt);
+			setReceipt(JSON.stringify(receipt));
+
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
 			console.log("Error fetching receipt: " + e);

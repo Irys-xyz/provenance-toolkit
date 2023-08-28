@@ -63,7 +63,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
-		const input = document?.querySelector('input[type="file"]');
+		const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 		if (input) {
 			input.click();
 		}
@@ -80,18 +80,22 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
 		if (files.length > 1) {
-			// Remove the File objects from the FileWrapper objects
-			const filesToUpload: File[] = files.map((file) => file.file);
-			console.log("Multi-file upload");
-			const manifestId = await fundAndUploadNestedBundle(filesToUpload);
+			try {
+				// Remove the File objects from the FileWrapper objects
+				const filesToUpload: File[] = files.map((file) => file.file);
+				console.log("Multi-file upload");
+				const manifestId = await fundAndUploadNestedBundle(filesToUpload);
 
-			// Now that the upload is done, update the FileWrapper objects with the preview URL
-			const updatedFiles = files.map((file) => ({
-				...file,
-				isUploaded: true,
-				previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
-			}));
-			setFiles(updatedFiles);
+				// Now that the upload is done, update the FileWrapper objects with the preview URL
+				const updatedFiles = files.map((file) => ({
+					...file,
+					isUploaded: true,
+					previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
+				}));
+				setFiles(updatedFiles);
+			} catch (e) {
+				console.log("Error on upload: ", e);
+			}
 		} else {
 			console.log("Single file upload");
 			// This occurs when exactly one file is selected
@@ -116,7 +120,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			const bundlr = await getBundlr();
 			const receipt = await bundlr.utils.getReceipt(id);
 			console.log(receipt);
-			setReceipt(receipt);
+			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
 			console.log("Error fetching receipt: " + e);
