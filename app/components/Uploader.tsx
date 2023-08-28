@@ -29,7 +29,15 @@ interface FileWrapper {
 	previewUrl: string;
 }
 
-export const Uploader: React.FC = () => {
+interface UploaderConfigProps {
+	showImageView?: boolean;
+	showReceiptView?: boolean;
+}
+
+export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
+	console.log("showImageView=", showImageView);
+	console.log("showReceiptView=", showReceiptView);
+
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -58,7 +66,6 @@ export const Uploader: React.FC = () => {
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
-		console.log("document=", document);
 		const input = document?.querySelector('input[type="file"]');
 		if (input) {
 			input.click();
@@ -191,24 +198,29 @@ export const Uploader: React.FC = () => {
 									{file.isUploaded && (
 										<>
 											<span className="ml-auto">
-												<button
-													className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-													onClick={() => setPreviewURL(file.previewUrl)}
-												>
-													<AiOutlineFileSearch className="white-2xl" />
-												</button>
+												{showImageView && (
+													<button
+														className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+														onClick={() => setPreviewURL(file.previewUrl)}
+													>
+														<AiOutlineFileSearch className="white-2xl" />
+													</button>
+												)}
 											</span>
+
 											<span className="ml-2">
-												<button
-													className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-													onClick={() => showReceipt(file.id)}
-												>
-													{receiptQueryProcessing ? (
-														<Spinner color="text-background" />
-													) : (
-														<PiReceiptLight className="text-2xl" />
-													)}
-												</button>
+												{showReceiptView && (
+													<button
+														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+														onClick={() => showReceipt(file.id)}
+													>
+														{receiptQueryProcessing ? (
+															<Spinner color="text-background" />
+														) : (
+															<PiReceiptLight className="text-2xl" />
+														)}
+													</button>
+												)}
 											</span>
 										</>
 									)}
@@ -235,3 +247,18 @@ export const Uploader: React.FC = () => {
 };
 
 export default Uploader;
+
+/* 
+USAGE:
+- Default: 
+  <Uploader />
+
+- To hide the image view button:
+  <Uploader showImageView={false} />
+
+- To hide the receipt view button:
+<Uploader showReceiptView={false} />
+
+Note:
+* Default behavior is to show both image view and receipt view
+*/
