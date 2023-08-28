@@ -1,5 +1,8 @@
 "use client";
 
+import { PiReceiptLight } from "react-icons/pi";
+import { AiOutlineFileSearch } from "react-icons/ai";
+
 import Button from "./Button";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
@@ -27,7 +30,15 @@ interface FileWrapper {
 	previewUrl: string;
 }
 
-export const GasslessUploader: React.FC = () => {
+interface GasslessUploaderConfigProps {
+	showImageView?: boolean;
+	showReceiptView?: boolean;
+}
+
+export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
+	showImageView = true,
+	showReceiptView = true,
+}) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -163,25 +174,30 @@ export const GasslessUploader: React.FC = () => {
 									<span className="mr-2 text-text">{file.file.name}</span>
 									{file.isUploaded && (
 										<>
-											<span className="mr-2">
-												<button
-													className="px-1 w-18 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
-													onClick={() => setPreviewURL(file.previewUrl)}
-												>
-													File --&gt;
-												</button>
+											<span className="ml-auto">
+												{showImageView && (
+													<button
+														className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+														onClick={() => setPreviewURL(file.previewUrl)}
+													>
+														<AiOutlineFileSearch className="white-2xl" />
+													</button>
+												)}
 											</span>
-											<span className="mr-2">
-												<button
-													className="px-1 w-24 h-7 font-xs bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast hover:bg-background-contrast hover:text-white"
-													onClick={() => showReceipt(file.id)}
-												>
-													{receiptQueryProcessing ? (
-														<Spinner color="text-background" />
-													) : (
-														"Receipt -->"
-													)}
-												</button>
+
+											<span className="ml-2">
+												{showReceiptView && (
+													<button
+														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+														onClick={() => showReceipt(file.id)}
+													>
+														{receiptQueryProcessing ? (
+															<Spinner color="text-background" />
+														) : (
+															<PiReceiptLight className="text-2xl" />
+														)}
+													</button>
+												)}
 											</span>
 										</>
 									)}
@@ -206,3 +222,18 @@ export const GasslessUploader: React.FC = () => {
 };
 
 export default GasslessUploader;
+
+/* 
+USAGE:
+- Default: 
+  <GasslessUploader />
+
+- To hide the image view button:
+  <GasslessUploader showImageView={false} />
+
+- To hide the receipt view button:
+<GasslessUploader showReceiptView={false} />
+
+Note:
+* Default behavior is to show both image view and receipt view
+*/

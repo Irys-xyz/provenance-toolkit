@@ -8,12 +8,10 @@ import fileReaderStream from "filereader-stream";
 import getBundlr from "../utils/getBundlr";
 
 interface ProgressBarUploaderProps {
-	config?: {
-		showPreview?: boolean;
-	};
+	showPreview?: boolean;
 }
 
-export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config }) => {
+export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPreview = true }) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
 	const [fileType, setFileType] = useState<string>("");
@@ -24,7 +22,6 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ config
 	const [message, setMessage] = useState<string>("");
 
 	const totalChunks = useRef<number>(0);
-	const showPreview = config?.showPreview !== undefined ? config.showPreview : true;
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files[0]) {
@@ -185,7 +182,7 @@ USAGE:
   <ProgressBarUploader />
 
 - To hide the preview:
-  <ProgressBarUploader config={{ showPreview: false }} />
+  <ProgressBarUploader showPreview={false} />
 
 Note:
 * If `showPreview` is not provided, the component defaults to showing the preview.

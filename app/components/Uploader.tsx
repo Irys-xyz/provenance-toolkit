@@ -35,9 +35,6 @@ interface UploaderConfigProps {
 }
 
 export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
-	console.log("showImageView=", showImageView);
-	console.log("showReceiptView=", showReceiptView);
-
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
