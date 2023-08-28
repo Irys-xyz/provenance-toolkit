@@ -31,7 +31,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 		},
 		getSigner: () => {
 			return {
-				getAddress: () => pubKey, // pubkey is address for TypedEthereumSigner
+				getAddress: () => pubKey.toString(), // pubkey is address for TypedEthereumSigner
 				_signTypedData: async (
 					_domain: never,
 					_types: never,
@@ -70,9 +70,16 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 		method: "POST",
 		body: selectedFile.size.toString(),
 	});
+	console.log("post /api/lazyFund");
 
 	// Create a new WebBundlr object using the provider created with server info.
 	const bundlr = new WebBundlr(process.env.NEXT_PUBLIC_NODE || "", process.env.NEXT_PUBLIC_CURRENCY || "", provider);
+
+	const w3signer = await provider.getSigner();
+	console.log();
+	const address = (await w3signer.getAddress()).toLowerCase();
+
+	console.log(bundlr);
 	await bundlr.ready();
 	console.log("bundlr.ready()=", bundlr);
 
