@@ -6,9 +6,9 @@ import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
-import { WebBundlr } from "@bundlr-network/client";
 import fileReaderStream from "filereader-stream";
 import gasslessFundAndUpload from "../utils/gasslessFundAndUpload";
+import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
 import getBundlr from "../utils/getBundlr";
 import { useCallback } from "react";
 import { useEffect } from "react";
@@ -27,17 +27,15 @@ interface FileWrapper {
 	isUploaded: boolean;
 	id: string;
 	previewUrl: string;
+	loadingReceipt: boolean;
 }
 
-interface GasslessUploaderConfigProps {
+interface UploaderConfigProps {
 	showImageView?: boolean;
 	showReceiptView?: boolean;
 }
 
-export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
-	showImageView = true,
-	showReceiptView = true,
-}) => {
+export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -45,7 +43,12 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 	const [receiptQueryProcessing, setReceiptQueryProcessing] = useState<boolean>(false);
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
+
 	const GATEWAY_BASE = "https://arweave.net/"; // Set to the base URL of any gateway
+
+	useEffect(() => {
+		setMessage("");
+	}, []);
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
@@ -55,52 +58,63 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 				isUploaded: false,
 				id: "",
 				previewUrl: "",
+				loadingReceipt: false,
 			}));
 			setFiles(newUploadedFiles);
 		}
 	};
 
-	/**
-	 * Called when a user clicks the "Upload" button
-	 */
-	const gasslessUpload = async () => {
-		setMessage("");
-		if (!files || files.length === 0) {
-			setMessage("Please select a file first");
-			return;
-		}
-		setTxProcessing(true);
-
-		const tags: Tag[] = [{ name: "Content-Type", value: files[0].file.type }];
-		const uploadTxId = await gasslessFundAndUpload(files[0].file, tags);
-
-		console.log(`File uploaded ==> https://arweave.net/${uploadTxId}`);
-		files[0].id = uploadTxId;
-		files[0].isUploaded = true;
-		files[0].previewUrl = GATEWAY_BASE + uploadTxId;
-		setTxProcessing(false);
-	};
-
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
+		setReceipt("");
+		setPreviewURL("");
 		const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 		if (input) {
 			input.click();
 		}
 	}, []);
 
-	const showReceipt = async (id: string) => {
-		setReceiptQueryProcessing(true);
+	const handleUpload = async () => {
+		setMessage("");
+
+		if (!files || files.length === 0) {
+			setMessage("Please select a file first");
+			return;
+		}
+		setTxProcessing(true);
+		try {
+			for (const file of files) {
+				const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
+				const uploadTxId = await gasslessFundAndUpload(file.file, tags);
+
+				file.id = uploadTxId;
+				file.isUploaded = true;
+				file.previewUrl = GATEWAY_BASE + uploadTxId;
+				console.log("set previewURL=", file.previewUrl);
+			}
+			setFiles([...files]);
+		} catch (e) {
+			console.log("Error on upload: ", e);
+		}
+		setTxProcessing(false);
+	};
+
+	const showReceipt = async (fileIndex: number) => {
+		let updatedFiles = [...files];
+		updatedFiles[fileIndex].loadingReceipt = true;
+		setFiles(updatedFiles);
 		try {
 			const bundlr = await getBundlr();
-			const receipt = await bundlr.utils.getReceipt(id);
+			const receipt = await bundlr.utils.getReceipt(files[fileIndex].id);
 			setReceipt(JSON.stringify(receipt));
-
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
 			console.log("Error fetching receipt: " + e);
 		}
-		setReceiptQueryProcessing(false);
+		// For some reason we need to reset updatedFiles, probably a React state timing thing.
+		updatedFiles = [...files];
+		updatedFiles[fileIndex].loadingReceipt = false;
+		setFiles(updatedFiles);
 	};
 
 	// Display only the last selected file's preview.
@@ -121,6 +135,7 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 
 	// Display only the receipt JSON when available.
 	const memoizedReceiptView = useMemo(() => {
+		console.log("memoizedReceiptView called");
 		if (receipt && !previewURL) {
 			return (
 				<div className="w-full">
@@ -132,14 +147,11 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 	}, [receipt, previewURL]);
 
 	return (
-		<div
-			className={`bg-white rounded-lg border shadow-2xl  mx-auto min-w-full`}
-		>
-			{/* <h2 className="text-3xl text-center mt-3 font-bold mb-4 font-main">Bundlr Multi-File Uploader</h2> */}
+		<div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
 			<div className="flex p-5">
 				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
 					<div
-						className={`border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center z-50`}
+						className="border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center"
 						onDragOver={(event) => event.preventDefault()}
 						onDrop={(event) => {
 							event.preventDefault();
@@ -149,6 +161,7 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 								isUploaded: false,
 								id: "",
 								previewUrl: "",
+								loadingReceipt: false,
 							}));
 							setFiles(newUploadedFiles);
 						}}
@@ -157,8 +170,9 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-								}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+							}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -186,9 +200,9 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 												{showReceiptView && (
 													<button
 														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => showReceipt(file.id)}
+														onClick={() => showReceipt(index)}
 													>
-														{receiptQueryProcessing ? (
+														{file.loadingReceipt ? (
 															<Spinner color="text-background" />
 														) : (
 															<PiReceiptLight className="text-2xl" />
@@ -203,16 +217,21 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 						</div>
 					)}
 
-					<Button onClick={gasslessUpload} disabled={txProcessing}>
+					{memoizedReceiptView && (
+						<div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+							{memoizedReceiptView}
+						</div>
+					)}
+					{memoizedPreviewURL && (
+						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+							{memoizedPreviewURL}
+						</div>
+					)}
+
+					<Button onClick={handleUpload} disabled={txProcessing} checkConnect={false}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
-				{memoizedPreviewURL && memoizedReceiptView && (
-					<div className="w-1/2 h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
-						{memoizedPreviewURL}
-						{memoizedReceiptView}
-					</div>
-				)}
 			</div>
 		</div>
 	);
@@ -223,13 +242,13 @@ export default GasslessUploader;
 /* 
 USAGE:
 - Default: 
-  <GasslessUploader />
+  <Uploader />
 
 - To hide the image view button:
-  <GasslessUploader showImageView={false} />
+  <Uploader showImageView={false} />
 
 - To hide the receipt view button:
-<GasslessUploader showReceiptView={false} />
+<Uploader showReceiptView={false} />
 
 Note:
 * Default behavior is to show both image view and receipt view

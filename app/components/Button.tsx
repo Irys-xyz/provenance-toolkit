@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Spinner from "./Spinner";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children?: React.ReactNode;
 	scheme?: ButtonScheme;
+	checkConnect?: boolean;
 }
 
 export enum ButtonScheme {
@@ -11,20 +13,22 @@ export enum ButtonScheme {
 	white = "white",
 }
 
-const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, checkConnect = true, ...props }) => {
 	const [connected, setConnected] = useState(false);
 	const [connecting, setConnecting] = useState(false);
 
 	useEffect(() => {
-		const checkConnection = async () => {
-			//@ts-ignore
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const accounts = await provider.listAccounts();
-			setConnected(accounts && accounts.length > 0);
-		};
+		if (checkConnect) {
+			const checkConnection = async () => {
+				//@ts-ignore
+				const provider = new ethers.providers.Web3Provider(window.ethereum);
+				const accounts = await provider.listAccounts();
+				setConnected(accounts && accounts.length > 0);
+			};
 
-		checkConnection();
-	}, []);
+			checkConnection();
+		}
+	}, [checkConnect]);
 
 	const handleConnect = async (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -41,8 +45,8 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, ...props }) 
 	};
 
 	const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		if (connected && onClick) {
-			onClick(event);
+		if (!checkConnect || (connected && onClick)) {
+			onClick && onClick(event);
 		} else {
 			handleConnect(event);
 		}
@@ -65,7 +69,15 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, ...props }) 
 			`}
 			onClick={handleButtonClick}
 		>
-			{!connected ? connecting ? <Spinner color="text-background" /> : "Connect Wallet" : children}
+			{checkConnect && !connected ? (
+				connecting ? (
+					<Spinner color="text-background" />
+				) : (
+					"Connect Wallet"
+				)
+			) : (
+				children
+			)}
 		</button>
 	);
 }; // Button

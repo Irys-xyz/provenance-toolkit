@@ -21,9 +21,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 		pubKey: string;
 	};
 	const pubKey = Buffer.from(pubKeyRes.pubKey, "hex");
-	console.log("pubKey=", pubKey);
-
-	// create a provider - this mimics the behaviour of the injected provider, i.e metamask
+	// Create a provider - this mimics the behaviour of the injected provider, i.e metamask
 	const provider = {
 		// for ETH wallets
 		getPublicKey: async () => {
@@ -54,34 +52,22 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 
 		_ready: () => {},
 	};
-	console.log("provider.getSigner()=", provider.getSigner());
-
-	// if your app is lazy-funding uploads, this next section
-	// can be used. alternatively you can delete this section and
-	// do a bulk up-front funding of a node.
 
 	// 1. first create the datastream and get the size
 	const dataStream = fileReaderStream(selectedFile);
-	console.log("Calling fund");
 
+	// You can delete the lazyFund route if you're prefunding all uploads
 	// 2. then pass the size to the lazyFund API route
-	console.log("pre /api/lazyFund");
 	const fundTx = await fetch("/api/lazyFund", {
 		method: "POST",
 		body: selectedFile.size.toString(),
 	});
-	console.log("post /api/lazyFund");
 
 	// Create a new WebBundlr object using the provider created with server info.
 	const bundlr = new WebBundlr(process.env.NEXT_PUBLIC_NODE || "", process.env.NEXT_PUBLIC_CURRENCY || "", provider);
-
 	const w3signer = await provider.getSigner();
-	console.log();
 	const address = (await w3signer.getAddress()).toLowerCase();
-
-	console.log(bundlr);
 	await bundlr.ready();
-	console.log("bundlr.ready()=", bundlr);
 
 	console.log("Uploading...");
 	const tx = await bundlr.uploadWithReceipt(dataStream, {

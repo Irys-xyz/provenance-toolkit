@@ -7,8 +7,8 @@ interface JSONNodeProps {
 }
 
 const truncateValue = (value: string): string => {
-	if (value.length > 50) {
-		return `${value.slice(0, 20)}...${value.slice(-20)}`;
+	if (value.length > 20) {
+		return `${value.slice(0, 10)}...${value.slice(-10)}`;
 	}
 	return value;
 };
@@ -45,7 +45,7 @@ interface ReceiptJSONViewProps {
 
 const ReceiptJSONView: React.FC<ReceiptJSONViewProps> = ({ data }) => {
 	const handleCopy = () => {
-		navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+		navigator.clipboard.writeText(data);
 	};
 
 	return (
@@ -56,7 +56,7 @@ const ReceiptJSONView: React.FC<ReceiptJSONViewProps> = ({ data }) => {
 			>
 				<FaCopy size={20} className="transition-colors duration-150 hover:text-blue-500" />
 			</div>
-			<JSONNode data={data} depth={1} />
+			<JSONNode data={JSON.parse(data)} depth={1} />
 		</div>
 	);
 };

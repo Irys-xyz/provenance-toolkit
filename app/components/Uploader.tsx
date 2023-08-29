@@ -27,6 +27,7 @@ interface FileWrapper {
 	isUploaded: boolean;
 	id: string;
 	previewUrl: string;
+	loadingReceipt: boolean;
 }
 
 interface UploaderConfigProps {
@@ -57,6 +58,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 				isUploaded: false,
 				id: "",
 				previewUrl: "",
+				loadingReceipt: false,
 			}));
 			setFiles(newUploadedFiles);
 		}
@@ -64,6 +66,8 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 	const resetFilesAndOpenFileDialog = useCallback(() => {
 		setFiles([]);
+		setReceipt("");
+		setPreviewURL("");
 		const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 		if (input) {
 			input.click();
@@ -72,6 +76,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 	const handleUpload = async () => {
 		setMessage("");
+
 		if (!files || files.length === 0) {
 			setMessage("Please select a file first");
 			return;
@@ -85,11 +90,12 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 				// Remove the File objects from the FileWrapper objects
 				const filesToUpload: File[] = files.map((file) => file.file);
 				console.log("Multi-file upload");
-				const manifestId = await fundAndUploadNestedBundle(filesToUpload);
+				const [manifestId, receiptId] = await fundAndUploadNestedBundle(filesToUpload);
 
 				// Now that the upload is done, update the FileWrapper objects with the preview URL
 				const updatedFiles = files.map((file) => ({
 					...file,
+					id: receiptId,
 					isUploaded: true,
 					previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
 				}));
@@ -115,18 +121,22 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 		setTxProcessing(false);
 	};
 
-	const showReceipt = async (id: string) => {
-		setReceiptQueryProcessing(true);
+	const showReceipt = async (fileIndex: number) => {
+		let updatedFiles = [...files];
+		updatedFiles[fileIndex].loadingReceipt = true;
+		setFiles(updatedFiles);
 		try {
 			const bundlr = await getBundlr();
-			const receipt = await bundlr.utils.getReceipt(id);
-			console.log(receipt);
+			const receipt = await bundlr.utils.getReceipt(files[fileIndex].id);
 			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
 			console.log("Error fetching receipt: " + e);
 		}
-		setReceiptQueryProcessing(false);
+		// For some reason we need to reset updatedFiles, probably a React state timing thing.
+		updatedFiles = [...files];
+		updatedFiles[fileIndex].loadingReceipt = false;
+		setFiles(updatedFiles);
 	};
 
 	// Display only the last selected file's preview.
@@ -173,6 +183,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 								isUploaded: false,
 								id: "",
 								previewUrl: "",
+								loadingReceipt: false,
 							}));
 							setFiles(newUploadedFiles);
 						}}
@@ -181,8 +192,9 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-								}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+							}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -210,9 +222,9 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 												{showReceiptView && (
 													<button
 														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => showReceipt(file.id)}
+														onClick={() => showReceipt(index)}
 													>
-														{receiptQueryProcessing ? (
+														{file.loadingReceipt ? (
 															<Spinner color="text-background" />
 														) : (
 															<PiReceiptLight className="text-2xl" />
@@ -228,7 +240,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 					)}
 
 					{memoizedReceiptView && (
-						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+						<div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
 							{memoizedReceiptView}
 						</div>
 					)}
@@ -238,13 +250,10 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						</div>
 					)}
 
-
 					<Button onClick={handleUpload} disabled={txProcessing}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
-
-
 			</div>
 		</div>
 	);
