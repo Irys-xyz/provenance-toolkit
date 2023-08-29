@@ -14,14 +14,34 @@ export default function Home() {
 				The toolkit contains the following components. To learn about how they're built, we have per-component
 				tutorials on our docs site.
 				<ul className="list-disc mt-4 ml-4">
-					<li>Fund / Withdraw:<span className="text-neutral-600"> Fund nodes and withdraw excess funds.</span></li>
-					<li>Uploader:<span className="text-neutral-600"> Upload single files or groups of files.</span></li>
-					<li>Progress Bar Uploader:<span className="text-neutral-600"> Upload large files, and provide feedback with a progress bar.</span></li>
-					<li>UDL Uploader:<span className="text-neutral-600"> Upload files and attach a UDL.</span></li>
-					<li>Gasless Uploader:<span className="text-neutral-600"> Pay for user uploads server-side.</span></li>
-					<li>Transaction Feed:<span className="text-neutral-600"> Query Bundlr nodes for transactions that meet your criteria.</span></li>
+					<li>
+						Fund / Withdraw:<span className="text-neutral-600"> Fund nodes and withdraw excess funds.</span>
+					</li>
+					<li>
+						Uploader:<span className="text-neutral-600"> Upload single files or groups of files.</span>
+					</li>
+					<li>
+						Progress Bar Uploader:
+						<span className="text-neutral-600">
+							{" "}
+							Upload large files, and provide feedback with a progress bar.
+						</span>
+					</li>
+					<li>
+						UDL Uploader:<span className="text-neutral-600"> Upload files and attach a UDL.</span>
+					</li>
+					<li>
+						Gasless Uploader:<span className="text-neutral-600"> Pay for user uploads server-side.</span>
+					</li>
+					<li>
+						Transaction Feed:
+						<span className="text-neutral-600">
+							{" "}
+							Query Bundlr nodes for transactions that meet your criteria.
+						</span>
+					</li>
 				</ul>
 			</div>
 		</div>
 	);
-} // Home
+} // Hom

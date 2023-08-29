@@ -42,6 +42,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 	const [receiptQueryProcessing, setReceiptQueryProcessing] = useState<boolean>(false);
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
+
 	const GATEWAY_BASE = "https://arweave.net/"; // Set to the base URL of any gateway
 
 	useEffect(() => {
