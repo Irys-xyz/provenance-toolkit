@@ -146,6 +146,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 	// Display only the receipt JSON when available.
 	const memoizedReceiptView = useMemo(() => {
+		console.log("memoizedReceiptView called");
 		if (receipt && !previewURL) {
 			return (
 				<div className="w-full">
@@ -157,9 +158,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 	}, [receipt, previewURL]);
 
 	return (
-		<div
-			className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}
-		>
+		<div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
 			<div className="flex p-5">
 				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
 					<div
@@ -181,8 +180,9 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-								}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+							}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -232,11 +232,14 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 					</Button>
 				</div>
 
-				{memoizedPreviewURL && memoizedReceiptView && (
-					<div className="w-1/2 h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
-						This is receipt seciton
-						{memoizedPreviewURL}
+				{memoizedReceiptView && (
+					<div className="h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
 						{memoizedReceiptView}
+					</div>
+				)}
+				{memoizedPreviewURL && (
+					<div className="h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
+						{memoizedPreviewURL}
 					</div>
 				)}
 			</div>
