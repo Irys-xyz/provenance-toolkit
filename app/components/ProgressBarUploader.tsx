@@ -109,7 +109,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 	};
 
 	return (
-		<div className="w-[500px] bg-white rounded-lg shadow-2xl p-5 border">
+		<div className="min-w-full bg-white rounded-lg shadow-2xl p-5 border">
 			<div className="space-y-6">
 				<div
 					className={`border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center z-50`}

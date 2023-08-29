@@ -3,9 +3,9 @@
 import { AiOutlineFileSearch } from "react-icons/ai";
 import Button from "./Button";
 import { PiReceiptLight } from "react-icons/pi";
+import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
-import ReceiptJSONView from "./ReceiptJSONView";
 import fileReaderStream from "filereader-stream";
 import fundAndUpload from "../utils/fundAndUpload";
 import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
@@ -158,9 +158,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 
 	return (
 		<div
-			className={`mt-10 bg-white rounded-lg border shadow-2xl  mx-auto w-full sm:w-4/5 
-			${memoizedPreviewURL && memoizedReceiptView ? "max-w-7xl" : "max-w-sm"}
-		`}
+			className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}
 		>
 			<div className="flex p-5">
 				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
@@ -183,9 +181,8 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-							}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+								}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}

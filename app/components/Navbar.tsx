@@ -64,7 +64,6 @@ const Navbar: FC = () => {
 							<BundlrIcon /> <span className="">Provenance Toolkit</span>
 						</Link>
 					</div>
-					<div className="h-[1px] bg-black w-full" />
 					{/* Wrap the navigation links in a container */}
 					<div className="flex pt-4 lg:overflow-hidden overflow-x-scroll w-full justify-center">
 						<div className="flex space-x-8 justify-center">

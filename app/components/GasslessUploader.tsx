@@ -1,9 +1,8 @@
 "use client";
 
-import { PiReceiptLight } from "react-icons/pi";
 import { AiOutlineFileSearch } from "react-icons/ai";
-
 import Button from "./Button";
+import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
@@ -134,9 +133,7 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 
 	return (
 		<div
-			className={`mt-10 bg-white rounded-lg border shadow-2xl  mx-auto w-full sm:w-4/5 
-			${memoizedPreviewURL && memoizedReceiptView ? "max-w-7xl" : "max-w-sm"}
-		`}
+			className={`bg-white rounded-lg border shadow-2xl  mx-auto min-w-full`}
 		>
 			{/* <h2 className="text-3xl text-center mt-3 font-bold mb-4 font-main">Bundlr Multi-File Uploader</h2> */}
 			<div className="flex p-5">
@@ -160,9 +157,8 @@ export const GasslessUploader: React.FC<GasslessUploaderConfigProps> = ({
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-							}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+								}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
