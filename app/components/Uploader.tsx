@@ -180,9 +180,8 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
 						<button
 							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-							}`}
+							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
+								}`}
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
@@ -227,21 +226,24 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						</div>
 					)}
 
+					{memoizedReceiptView && (
+						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+							{memoizedReceiptView}
+						</div>
+					)}
+					{memoizedPreviewURL && (
+						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+							{memoizedPreviewURL}
+						</div>
+					)}
+
+
 					<Button onClick={handleUpload} disabled={txProcessing}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
 
-				{memoizedReceiptView && (
-					<div className="h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
-						{memoizedReceiptView}
-					</div>
-				)}
-				{memoizedPreviewURL && (
-					<div className="h-96 flex justify-center space-y-4 bg-primary rounded-xl overflow-auto">
-						{memoizedPreviewURL}
-					</div>
-				)}
+
 			</div>
 		</div>
 	);
