@@ -1,19 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 
 import Button from "./Button";
 import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
 import getBundlr from "../utils/getBundlr";
 
+import { AiOutlineFileSearch } from "react-icons/ai";
+import { PiReceiptLight } from "react-icons/pi";
+import ReceiptJSONView from "./ReceiptJSONView";
+
 interface ProgressBarUploaderProps {
-	showPreview?: boolean;
+	showImageView?: boolean;
+	showReceiptView?: boolean;
 }
 
-export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPreview = true }) => {
+export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
+	showImageView = true,
+	showReceiptView = true,
+}) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
 	const [fileType, setFileType] = useState<string>("");
 	const [fileUrl, setFileUrl] = useState<string>("");
 	const [progress, setProgress] = useState<number>(0);
@@ -21,12 +28,45 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
+	const [shouldShowFile, setShouldShowFile] = useState<boolean>(false);
+	const [shouldShowReceipt, setShouldShowReceipt] = useState<boolean>(false);
+	const [receipt, setReceipt] = useState<string>("");
+	const [uploadTxId, setUploadTxId] = useState<string | null>(null);
+
 	const totalChunks = useRef<number>(0);
 
+	const updatePreviewZone = async (sFile: boolean, sReceipt: boolean) => {
+		setShouldShowFile(sFile);
+		setShouldShowReceipt(sReceipt);
+
+		if (showReceipt) {
+			await showReceipt();
+		}
+	};
+
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setMessage("");
+		setShouldShowFile(false);
+		setShouldShowReceipt(false);
+		setProgress(0);
+		setSelectedFile(null);
+		setFileUrl("");
+
 		if (event.target.files && event.target.files[0]) {
 			setSelectedFile(event.target.files[0]);
 			setFileType(event.target.files[0].type);
+		}
+	};
+
+	const showReceipt = async () => {
+		if (uploadTxId) {
+			try {
+				const bundlr = await getBundlr();
+				const receipt = await bundlr.utils.getReceipt(uploadTxId);
+				setReceipt(JSON.stringify(receipt));
+			} catch (e) {
+				console.log("Error fetching receipt: " + e);
+			}
 		}
 	};
 
@@ -95,10 +135,11 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 			})
 			.then((res) => {
 				console.log(res);
+				setUploadTxId(res.data.id);
 				setFileUrl(`https://arweave.net/${res.data.id}`);
-				setMessage(
-					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
-				);
+				// setMessage(
+				// 	`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
+				// );
 			})
 			.catch((e) => {
 				setMessage("Upload error " + e.message);
@@ -134,22 +175,48 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 						Browse Files
 					</button>
 				</div>
-				{showPreview && selectedFile && (
+				{shouldShowFile && (
 					<div className="w-full bg-primary h-[250px] rounded-xl">
-						<div>
-							<img
-								className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
-								src={URL.createObjectURL(selectedFile)}
-								alt="Selected"
-							/>
-						</div>
+						<img
+							className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
+							src={fileUrl}
+							alt="Selected"
+						/>
 					</div>
 				)}
-
+				{shouldShowReceipt && (
+					<div className="w-full bg-primary h-[230px] rounded-xl px-3 pt-1">
+						<ReceiptJSONView data={receipt} />
+					</div>
+				)}
 				{selectedFile && (
 					<>
-						<div key="1" className="flex items-center mb-2 text-background-contrast">
-							<span className="mr-2">{selectedFile.name}</span>
+						<div className="flex flex-row justify-between">
+							<div key="1" className="flex items-center mb-2 text-background-contrast">
+								<span className="mr-2">{selectedFile.name}</span>
+							</div>
+							<div className="flex flex-row">
+								{fileUrl && (
+									<>
+										{showImageView && (
+											<button
+												className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+												onClick={() => updatePreviewZone(true, false)}
+											>
+												<AiOutlineFileSearch className="white-2xl" />
+											</button>
+										)}
+										{showReceiptView && (
+											<button
+												className="ml-2 p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+												onClick={() => updatePreviewZone(false, true)}
+											>
+												<PiReceiptLight className="white-2xl" />
+											</button>
+										)}
+									</>
+								)}
+							</div>
 						</div>
 						<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
 							<div
@@ -158,12 +225,12 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPr
 								id="progress_bar"
 							></div>
 						</div>
-						{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
-						<Button onClick={handleUpload} disabled={txProcessing}>
-							{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-						</Button>
 					</>
 				)}
+				{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
+				<Button onClick={handleUpload} disabled={txProcessing}>
+					{txProcessing ? <Spinner color="text-background" /> : "Upload"}
+				</Button>
 			</div>
 		</div>
 	);
