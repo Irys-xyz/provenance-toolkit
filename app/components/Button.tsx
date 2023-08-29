@@ -28,8 +28,6 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, ...props }) 
 
 	const handleConnect = async (event: React.MouseEvent) => {
 		event.preventDefault();
-		console.log("handleConnect called");
-
 		setConnecting(true);
 		try {
 			//@ts-ignore
