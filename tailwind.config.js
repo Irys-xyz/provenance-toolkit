@@ -16,7 +16,10 @@ module.exports = {
 			transitionTimingFunction: {
 				"ease-in-out": "cubic-bezier(0.4, 0, 0.2, 1)",
 			},
-			fontFamily: {},
+			fontFamily: {
+				robotoMono: ["Roboto Mono", "monospace"],
+				fkDisplay: ["FKDisplay", "sans-serif"],
+			},
 			colors: {
 				background: "#FEF4EE",
 				"background-contrast": "#005792",

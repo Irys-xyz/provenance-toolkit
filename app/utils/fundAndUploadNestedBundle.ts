@@ -70,7 +70,7 @@ async function bundleItems(itemMap: Map<string, DataItem>, ephemeralSigner: Arwe
  * @param {Bundle} bundle - The bundle to be uploaded.
  * @returns {Promise<string>} - The transaction ID of the upload.
  */
-async function uploadBundle(bundle: Bundle): Promise<string> {
+async function uploadBundle(bundle: Bundle): Promise<string[]> {
 	const bundlr = await getBundlr();
 
 	const tx = bundlr.createTransaction(bundle.getRaw(), {
@@ -80,11 +80,10 @@ async function uploadBundle(bundle: Bundle): Promise<string> {
 		],
 	});
 	await tx.sign();
-	const res = await tx.upload();
-	console.log(res);
+	const res = await tx.uploadWithReceipt();
 	const manifestId = bundle.items[bundle.items.length - 1].id;
 	//   console.log(`Manifest ID: ${manifestId}`);
-	return manifestId;
+	return [manifestId, res.id];
 }
 
 /**
@@ -93,32 +92,19 @@ async function uploadBundle(bundle: Bundle): Promise<string> {
  * @param {File[]} files - The files to be uploaded.
  * @returns {Promise<string>} - The transaction ID of the upload.
  */
-const fundAndUploadNestedBundle = async (files: File[]): Promise<string> => {
+const fundAndUploadNestedBundle = async (files: File[]): Promise<string[]> => {
 	try {
-		console.log("about to generate ephemeralSigner");
 		const ephemeralSigner = new ArweaveSigner(await Arweave.crypto.generateJWK());
-		console.log("ephemeralSigner=", ephemeralSigner);
-
 		const preppedFiles = await prepareFiles(files, ephemeralSigner);
-		console.log("preppedFiles=", preppedFiles);
-
 		const bundle = await bundleItems(preppedFiles, ephemeralSigner);
-		console.log("bundle=", bundle);
-
-		const manifestId = await uploadBundle(bundle);
-		console.log("Files uploaded");
-
-		for (let i = 0; i < files.length; i++) {
-			console.log(`File ${i} URL is https://arweave.net/${manifestId}/${files[i].name}`);
-		}
-
-		return manifestId;
+		const [manifestId, receiptId] = await uploadBundle(bundle);
+		return [manifestId, receiptId];
 	} catch (e) {
 		console.log("Error on upload:", e);
 	}
 
 	// Ends up getting called ONLY if an error is thrown
-	return "";
+	return ["", ""];
 };
 
 export default fundAndUploadNestedBundle;

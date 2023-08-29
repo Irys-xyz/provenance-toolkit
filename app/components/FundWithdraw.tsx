@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Select from "react-select";
-import Switch from "react-switch";
-import getBundlr from "../utils/getBundlr";
+import { useEffect, useState } from "react";
+
+import Button from "./Button";
+import Select, { SingleValue, ActionMeta } from "react-select";
 import Spinner from "./Spinner";
+import getBundlr from "../utils/getBundlr";
+import BigNumber from "bignumber.js";
 
 interface OptionType {
 	value: string;
@@ -33,29 +35,54 @@ const currencies: OptionType[] = [
 	{ value: "solana", label: "Solana" },
 ];
 
-export const FundWithdraw: React.FC = () => {
-	const [selectedNode, setSelectedNode] = useState<OptionType | null>(null);
-	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(null);
-	const [amount, setAmount] = useState<number>(0.0);
-	const [isFunding, setIsFunding] = useState<boolean>(true);
+interface FundWithdrawConfigProps {
+	node?: string;
+	currency?: string;
+	fundOnly?: boolean;
+	withdrawOnly?: boolean;
+}
+
+export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
+	node = "",
+	currency = "",
+	fundOnly = false,
+	withdrawOnly = false,
+}) => {
+	const initialSelectedNode = node ? nodes.find((n) => n.value === node) || null : null;
+	const initialSelectedCurrency = currency ? currencies.find((c) => c.value === currency) || null : null;
+
+	let initialIsFunding = fundOnly || !withdrawOnly;
+	if (withdrawOnly) initialIsFunding = false;
+
+	const [selectedNode, setSelectedNode] = useState<OptionType | null>(initialSelectedNode);
+	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(initialSelectedCurrency);
+	const [amount, setAmount] = useState<string>("0.0");
+	const [isFunding, setIsFunding] = useState<boolean>(initialIsFunding);
 	const [message, setMessage] = useState<string>("");
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 
-	const handleNodeChange = (selectedOption: OptionType) => setSelectedNode(selectedOption);
-	const handleCurrencyChange = (selectedOption: OptionType) => setSelectedCurrency(selectedOption);
+	const handleNodeChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
+		setSelectedNode(selectedOption as OptionType);
+	};
+
+	const handleCurrencyChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
+		setSelectedCurrency(selectedOption as OptionType);
+	};
+
 	const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
+
 	const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => setIsFunding(e.target.value === "fund");
 
 	useEffect(() => {
-		setAmount(0);
+		setAmount("0");
 		const getCurBalance = async () => {
 			try {
 				const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
 				const loadedBalance = await bundlr.getLoadedBalance();
 				// Show currently funded balance iff we're in withdraw mode
-				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance));
+				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance).toString());
 			} catch (error) {
-				console.log("Error fetching Bundlr:", error);
+				console.log("Error connecting to Bundlr:", error);
 			}
 		};
 		if (selectedNode && selectedCurrency) getCurBalance();
@@ -72,107 +99,118 @@ export const FundWithdraw: React.FC = () => {
 			setMessage("Please select to currency to use when funding");
 			return;
 		}
-		if (amount === 0) {
+		if (amount === "0") {
 			setMessage("Please enter an amount greater than 0");
 			return;
 		}
 
 		// Validation passed, get a reference to an Bundlr node
-		const bundlr = await getBundlr();
+		const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
+		console.log(bundlr);
 		setTxProcessing(true);
 
 		// If fund mode do fund
 		if (isFunding) {
 			try {
-				console.log("calling fund with ", bundlr.utils.toAtomic(amount).toString());
-				const fundTx = await bundlr.fund(bundlr.utils.toAtomic(amount));
+				const fundTx = await bundlr.fund(bundlr.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Funding successful");
 			} catch (e) {
-				setMessage("Error while funding: ", e);
+				setMessage("Error while funding: " + e);
 				console.log(e);
 			}
 		} else {
 			// If withdraw mode, do withdraw
 			try {
-				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(amount));
+				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Withdraw successful");
 			} catch (e) {
-				setMessage("Error while withdrawing: ", e);
+				setMessage("Error while withdrawing: " + e);
 				console.log(e);
 			}
 		}
 		setTxProcessing(false);
 	};
+
 	return (
-		<div className="bg-background rounded-lg shadow-2xl p-5 w-[500px] h-700">
-			<h2 className="text-3xl text-center font-bold mb-4 text-text">Fund / Withdraw</h2>
-			<Select
-				className="mb-4"
-				options={nodes}
-				onChange={handleNodeChange}
-				value={selectedNode}
-				placeholder="Select a node..."
-				styles={{
-					control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-				}}
-			/>
-			<Select
-				className="mb-4"
-				options={currencies}
-				onChange={handleCurrencyChange}
-				value={selectedCurrency}
-				placeholder="Select a currency..."
-				styles={{
-					control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-					option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-				}}
-			/>
+		<div className="bg-white rounded-lg p-5 border w-full shadow-xl">
+			{!node && (
+				<Select
+					className="mb-4"
+					options={nodes}
+					onChange={handleNodeChange}
+					value={selectedNode}
+					placeholder="Select a node..."
+				/>
+			)}
+			{!currency && (
+				<Select
+					className="mb-4"
+					options={currencies}
+					onChange={handleCurrencyChange}
+					value={selectedCurrency}
+					placeholder="Select a currency..."
+				/>
+			)}
 			<input
 				type="number"
 				step="0.0000001"
-				className="block w-full mb-4 bg-background text-text rounded-md p-3 border border-gray-300 shadow-sm"
+				className="block w-full mb-4 bg-transparent text-text rounded-md p-3 border border-gray-300 shadow-sm"
 				value={amount}
 				onChange={handleAmountChange}
 			/>
-			<div className="mb-4 text-text">
-				<label>
-					<input
-						type="radio"
-						className="mr-1"
-						name="fundWithdraw"
-						value="fund"
-						checked={isFunding}
-						onChange={handleOptionChange}
-					/>
-					Fund
-				</label>
-				<label>
-					<input
-						type="radio"
-						className="ml-5 mr-1"
-						name="fundWithdraw"
-						value="withdraw"
-						checked={!isFunding}
-						onChange={handleOptionChange}
-					/>
-					Withdraw
-				</label>
-			</div>
+			{!fundOnly && !withdrawOnly && (
+				<div className="my-6 text-text flex items-center space-x-4">
+					<label className="inline-flex items-center">
+						<input
+							type="radio"
+							className="form-radio"
+							name="transactionType"
+							value="fund"
+							checked={isFunding}
+							onChange={handleOptionChange}
+						/>
+						<span className="ml-2">Fund</span>
+					</label>
+					<label className="inline-flex items-center">
+						<input
+							type="radio"
+							className="form-radio"
+							name="transactionType"
+							value="withdraw"
+							checked={!isFunding}
+							onChange={handleOptionChange}
+						/>
+						<span className="ml-2">Withdraw</span>
+					</label>
+				</div>
+			)}
 			{message && <div className="text-red-500">{message}</div>}
-			<button
-				className={`w-full py-2 px-4 bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-					txProcessing
-						? "bg-background-contrast text-white cursor-not-allowed"
-						: "hover:bg-background-contrast hover:text-white"
-				}`}
-				onClick={handleFundWithdraw}
-				disabled={txProcessing}
-			>
+			<Button onClick={handleFundWithdraw} disabled={txProcessing}>
 				{txProcessing ? <Spinner color="text-background" /> : isFunding ? "Fund Node" : "Withdraw From Node"}
-			</button>
+			</Button>
 		</div>
 	);
 };
 
-export default FundWithdraw;
+export default FundWithdraw; // FundWithdraw
+
+/* 
+USAGE:
+- Default: 
+  <FundWithdraw />
+
+- To fix the node:
+  <FundWithdraw node = "https://node1.bundlr.network" />
+
+- To fix the currency:
+  <FundWithdraw currency= "ethereum"  />
+
+- To set component to fund-only:
+  <FundWithdraw fundOnly ={ true } />
+
+- To set the component to withdraw-only:
+  <FundWithdraw withdrawOnly ={ true } />
+
+Note:
+* One of fundOnly and withdrawOnly must be true. In case both are set to false, the component defaults to fund only mode.
+*/

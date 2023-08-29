@@ -7,7 +7,7 @@ import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
-import fundAndUpload from "../utils/fundAndUpload";
+import gasslessFundAndUpload from "../utils/gasslessFundAndUpload";
 import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
 import getBundlr from "../utils/getBundlr";
 import { useCallback } from "react";
@@ -35,7 +35,7 @@ interface UploaderConfigProps {
 	showReceiptView?: boolean;
 }
 
-export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
+export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -82,41 +82,19 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			return;
 		}
 		setTxProcessing(true);
-		const bundlr = await getBundlr();
+		try {
+			for (const file of files) {
+				const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
+				const uploadTxId = await gasslessFundAndUpload(file.file, tags);
 
-		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
-		if (files.length > 1) {
-			try {
-				// Remove the File objects from the FileWrapper objects
-				const filesToUpload: File[] = files.map((file) => file.file);
-				console.log("Multi-file upload");
-				const [manifestId, receiptId] = await fundAndUploadNestedBundle(filesToUpload);
-
-				// Now that the upload is done, update the FileWrapper objects with the preview URL
-				const updatedFiles = files.map((file) => ({
-					...file,
-					id: receiptId,
-					isUploaded: true,
-					previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
-				}));
-				setFiles(updatedFiles);
-			} catch (e) {
-				console.log("Error on upload: ", e);
+				file.id = uploadTxId;
+				file.isUploaded = true;
+				file.previewUrl = GATEWAY_BASE + uploadTxId;
+				console.log("set previewURL=", file.previewUrl);
 			}
-		} else {
-			console.log("Single file upload");
-			// This occurs when exactly one file is selected
-			try {
-				for (const file of files) {
-					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
-					const uploadedTx = await fundAndUpload(file.file, tags);
-					file.id = uploadedTx;
-					file.isUploaded = true;
-					file.previewUrl = GATEWAY_BASE + uploadedTx;
-				}
-			} catch (e) {
-				console.log("Error on upload: ", e);
-			}
+			setFiles([...files]);
+		} catch (e) {
+			console.log("Error on upload: ", e);
 		}
 		setTxProcessing(false);
 	};
@@ -250,7 +228,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing}>
+					<Button onClick={handleUpload} disabled={txProcessing} checkConnect={false}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
@@ -259,7 +237,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 	);
 };
 
-export default Uploader;
+export default GasslessUploader;
 
 /* 
 USAGE:

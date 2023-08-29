@@ -1,16 +1,21 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Switch from "react-switch";
-import getBundlr from "../utils/getBundlr";
+import { useRef, useState } from "react";
+
+import Button from "./Button";
 import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
+import getBundlr from "../utils/getBundlr";
 
-export const ProgressBarUploader: React.FC = () => {
-	const [files, setFiles] = useState<File[]>([]);
+interface ProgressBarUploaderProps {
+	showPreview?: boolean;
+}
+
+export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({ showPreview = true }) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-	const [fileType, setFileType] = useState<string>("");
 
+	const [fileType, setFileType] = useState<string>("");
+	const [fileUrl, setFileUrl] = useState<string>("");
 	const [progress, setProgress] = useState<number>(0);
 	const [curBalance, setCurBalance] = useState<number>(0);
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
@@ -46,18 +51,18 @@ export const ProgressBarUploader: React.FC = () => {
 		const chunkSize = 2000000;
 		uploader.setChunkSize(chunkSize);
 
-		// get a create a streamed reader
+		// Get a create a streamed reader
 		const dataStream = fileReaderStream(selectedFile);
 		// save a reference to the file size
-		// setFileSize(dataStream.size);
-		// divide the total file size by the size of each chunk we'll upload
-		if (dataStream.size < chunkSize) totalChunks.current = 1;
+
+		// Divide the total file size by the size of each chunk we'll upload
+		if (selectedFile?.size < chunkSize) totalChunks.current = 1;
 		else {
-			totalChunks.current = Math.floor(dataStream.size / chunkSize);
+			totalChunks.current = Math.floor((selectedFile?.size || 0) / chunkSize);
 		}
 
 		/** Register Event Callbacks */
-		// Event callback: called for every chunk uploaded
+		// Event callback chunkUpload: called for every chunk uploaded
 		uploader.on("chunkUpload", (chunkInfo) => {
 			console.log(chunkInfo);
 			console.log(
@@ -66,7 +71,7 @@ export const ProgressBarUploader: React.FC = () => {
 
 			const chunkNumber = chunkInfo.id + 1;
 			// update the progress bar based on how much has been uploaded
-			if (chunkNumber >= totalChunks) setProgress(100);
+			if (chunkNumber >= totalChunks.current) setProgress(100);
 			else setProgress((chunkNumber / totalChunks.current) * 100);
 		});
 
@@ -90,6 +95,7 @@ export const ProgressBarUploader: React.FC = () => {
 			})
 			.then((res) => {
 				console.log(res);
+				setFileUrl(`https://arweave.net/${res.data.id}`);
 				setMessage(
 					`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
 				);
@@ -102,75 +108,77 @@ export const ProgressBarUploader: React.FC = () => {
 		setTxProcessing(false);
 	};
 
-	const handleStrongProvenanceChange = (checked: boolean) => {
-		setIsStrongProvenance(checked);
-	};
-
 	return (
-		<div className="mt-20 w-[500px] bg-background rounded-lg shadow-2xl p-5">
-			<h2 className="text-3xl text-center font-bold mb-4 text-text">Progress Bar Uploader</h2>
-			<div className="w-full bg-primary h-[300px] rounded-xl">
-				{selectedFile && (
-					<div>
-						<img
-							className="w-full h-[300px] rounded-xl resize-none bg-primary object-cover"
-							src={URL.createObjectURL(selectedFile)}
-							alt="Selected"
-						/>
-					</div>
-				)}
-			</div>
-			<div className="pr-4 mt-5">
+		<div className="min-w-full bg-white rounded-lg shadow-2xl p-5 border">
+			<div className="space-y-6">
 				<div
-					className="border-2 border-dashed border-background-contrast rounded-lg p-4 mb-4 text-center"
+					className={`border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center z-50`}
 					onDragOver={(event) => event.preventDefault()}
 					onDrop={(event) => {
 						event.preventDefault();
 						const droppedFiles = Array.from(event.dataTransfer.files);
-						setFiles(droppedFiles);
+						setSelectedFile(droppedFiles[0]);
 					}}
 				>
-					<p className="text-background-contrast mb-2">Drag and drop files here</p>
+					<p className="text-gray-400 mb-2">Drag and drop files here</p>
 					<input type="file" onChange={handleFileUpload} className="hidden" />
 					<button
 						onClick={() => {
-							const input = document.querySelector('input[type="file"]');
+							const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 							if (input) {
 								input.click();
 							}
 						}}
-						className="px-4 py-2 bg-background-contrast text-background rounded-md border-2 border-background-contrast hover:border-background hover:bg-primary hover:text-background-contrast transition-all duration-500 ease-in-out"
+						className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out`}
 					>
 						Browse Files
 					</button>
 				</div>
-				{files.map((file, index) => (
-					<div key={index} className="flex items-center mb-2 text-background-contrast">
-						<span className="mr-2">{file.name}</span>
+				{showPreview && selectedFile && (
+					<div className="w-full bg-primary h-[250px] rounded-xl">
+						<div>
+							<img
+								className="w-full h-[250px] rounded-xl resize-none bg-primary object-cover"
+								src={URL.createObjectURL(selectedFile)}
+								alt="Selected"
+							/>
+						</div>
 					</div>
-				))}
-				<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
-					<div
-						className="h-6 bg-background-contrast rounded-full"
-						style={{ width: `${progress}%` }}
-						id="progress_bar"
-					></div>
-				</div>
-				{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
-				<button
-					className={`mt-5 w-full py-2 px-4 bg-background text-text rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out border-2 border-background-contrast ${
-						txProcessing
-							? "bg-background-contrast text-white cursor-not-allowed"
-							: "hover:bg-background-contrast hover:text-white"
-					}`}
-					onClick={handleUpload}
-					disabled={txProcessing}
-				>
-					{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-				</button>
+				)}
+
+				{selectedFile && (
+					<>
+						<div key="1" className="flex items-center mb-2 text-background-contrast">
+							<span className="mr-2">{selectedFile.name}</span>
+						</div>
+						<div className="mt-2 h-6 bg-primary rounded-full" id="progress_bar_container">
+							<div
+								className="h-6 bg-background-contrast rounded-full"
+								style={{ width: `${progress}%` }}
+								id="progress_bar"
+							></div>
+						</div>
+						{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
+						<Button onClick={handleUpload} disabled={txProcessing}>
+							{txProcessing ? <Spinner color="text-background" /> : "Upload"}
+						</Button>
+					</>
+				)}
 			</div>
 		</div>
 	);
 };
 
 export default ProgressBarUploader;
+
+/* 
+USAGE:
+- Default (shows the preview): 
+  <ProgressBarUploader />
+
+- To hide the preview:
+  <ProgressBarUploader showPreview={false} />
+
+Note:
+* If `showPreview` is not provided, the component defaults to showing the preview.
+*/

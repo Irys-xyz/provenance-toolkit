@@ -1,9 +1,10 @@
 import React, { FC } from "react";
+
 import UDLUploader from "../components/UDLUploader";
 
 const Page: FC = () => {
 	return (
-		<div className="min-h-screen bg-gray-200 text-text flex justify-center items-center mt-10">
+		<div className="py-10 bg-background text-text flex justify-center items-center">
 			<UDLUploader />
 		</div>
 	);

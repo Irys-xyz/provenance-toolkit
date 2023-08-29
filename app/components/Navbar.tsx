@@ -1,5 +1,9 @@
+"use client";
+
+import BundlrIcon from "./BundlrIcon";
 import { FC } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 /**
  * NavbarLink properties
@@ -9,15 +13,13 @@ interface NavbarLinkProps {
 	children: React.ReactNode;
 }
 
-/**
- * NavbarLink component
- * @param props NavbarLink properties
- * @returns NavbarLink component
- */
 const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
+	const pathname = usePathname();
+	const isActive = pathname === href;
 	return (
 		<Link
-			className="cursor-pointer px-2 py-1 rounded-md border-2 border-background-contrast hover:bg-background-contrast hover:text-background transition-all duration-500 ease-in-out"
+			className={`whitespace-nowrap font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
+				}`}
 			href={href}
 		>
 			{children}
@@ -26,25 +28,56 @@ const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
 };
 
 const Navbar: FC = () => {
+	const NAV_LINKS = [
+		{
+			href: "/fund-withdraw",
+			text: "Fund / Withdraw",
+		},
+		{
+			href: "/uploader",
+			text: "Uploader",
+		},
+		{
+			href: "/progress-bar-uploader",
+			text: "Progress Bar Uploader",
+		},
+		{
+			href: "/gassless-uploader",
+			text: "Gassless Uploader",
+		},
+		{
+			href: "/udl-uploader",
+			text: "UDL Uploader",
+		},
+		{
+			href: "/transaction-feed",
+			text: "Transaction Feed",
+		},
+	];
+
 	return (
-		<header className="w-full fixed top-0 z-50 bg-background text-text shadow-xl">
-			<nav className="container mx-auto px-6 py-3">
-				<div className="flex items-center justify-between">
-					<div className="text-lg font-semibold">
-						<Link className="cursor-pointer text-text" href="/">
-							Bundlr Provenance Toolkit
+		<header className="w-full bg-background text-text border-b">
+			<nav>
+				<div className="flex flex-col items-center justify-between w-full">
+					<div className="text-lg font-semibold bg-black w-full h-full py-4 text-white text-center">
+						<Link className="flex items-center gap-4 cursor-pointer justify-center" href="/">
+							<BundlrIcon /> <span className="">Provenance Toolkit</span>
 						</Link>
 					</div>
-					<div className="flex space-x-4">
-						<NavbarLink href="/fund-withdraw">Fund / Withdraw</NavbarLink>
-						<NavbarLink href="/uploader">Uploader</NavbarLink>
-						<NavbarLink href="/progress-bar-uploader">Progress Bar Uploader</NavbarLink>
-						<NavbarLink href="/udl-uploader">UDL Uploader</NavbarLink>
-						<NavbarLink href="/transaction-feed">Transaction Feed</NavbarLink>
+					{/* Wrap the navigation links in a container */}
+					<div className="flex pt-4 lg:overflow-hidden overflow-x-scroll w-full justify-center">
+						<div className="flex space-x-8 justify-center">
+							{NAV_LINKS.map((link, index) => (
+								<NavbarLink key={index} href={link.href}>
+									{link.text}
+								</NavbarLink>
+							))}
+						</div>
 					</div>
 				</div>
 			</nav>
 		</header>
+
 	);
 };
 

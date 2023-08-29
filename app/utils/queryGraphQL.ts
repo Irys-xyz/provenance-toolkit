@@ -17,8 +17,10 @@ interface Edge {
 }
 
 interface DataResponse {
-	transactions: {
-		edges: Edge[];
+	data: {
+		transactions: {
+			edges: Edge[];
+		};
 	};
 }
 
@@ -37,8 +39,8 @@ interface QueryResult {
 const processDataResponse = (data: DataResponse): QueryResult[] => {
 	const queryResults: QueryResult[] = [];
 
-	if (data && data.transactions && data.transactions.edges) {
-		const edges: Edge[] = data.transactions.edges;
+	if (data && data.data && data.data.transactions && data.data.transactions.edges) {
+		const edges: Edge[] = data.data.transactions.edges;
 
 		for (const edge of edges) {
 			const node: Node = edge.node;
@@ -61,6 +63,7 @@ const processDataResponse = (data: DataResponse): QueryResult[] => {
 
 	return queryResults;
 };
+
 /**
  * Execute a GraphQL query from the browser using the provided parameters.
  * @param endpoint The URL of the GraphQL endpoint to connect to.
@@ -77,11 +80,6 @@ const queryGraphQL = async (
 	from: Date | null,
 	to: Date | null,
 ): Promise<QueryResult[]> => {
-	console.log("endpoint", endpoint);
-	console.log("contentType", contentType);
-	console.log("currency", currency);
-	console.log("from", from);
-	console.log("to", to);
 	// Start building the GraphQL query string
 	let query = "query getData { transactions";
 
@@ -131,7 +129,7 @@ const queryGraphQL = async (
 		const data: DataResponse = await response.json();
 		console.log("data=", data);
 
-		const processedData = processDataResponse(data.data);
+		const processedData = processDataResponse(data);
 		console.log(processedData);
 		return processedData;
 	} catch (error) {
@@ -141,6 +139,6 @@ const queryGraphQL = async (
 };
 
 // Example usage:
-//queryGraphQL("https://example.com/graphql", "image/jpeg", "USD", new Date("2023-08-01"), new Date("2023-08-31"));
+// queryGraphQL("https://devnet.bundlr.network/graphql", "image/jpeg", "matic", new Date("2023-08-01"), new Date("2023-08-31"));
 
 export default queryGraphQL;

@@ -23,6 +23,15 @@
 			"@/*": ["./*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"app/api/apple/route.ts",
+		"app/api/lazyFund/route.ts",
+		"app/api/publicKey/route.ts",
+		"app/api/signData/route.ts"
+	],
 	"exclude": ["node_modules"]
 }
