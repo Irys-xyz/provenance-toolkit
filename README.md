@@ -58,7 +58,7 @@ Upload single files or groups of files.
 
 Upload large files, and provide feedback with a progress bar.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/progress-bar-uploader.png?raw=true)
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/progress-bar-uploader2.png?raw=true)
 
 ### UDL uploader
 
@@ -76,4 +76,4 @@ Pay for user uploads server-side.
 
 Query Bundlr transactions.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/transaction-feed.png?raw=true)
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/transanaction-feed.png?raw=true)
