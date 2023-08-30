@@ -22,7 +22,9 @@
 	/>
 </div>
 
-The Bundlr Provenance Toolkit is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
+[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/Bundlr-Provenance-Toolkit.png?raw=true)](https://www.youtube.com/watch?v=RWLKUa34VMQ)
+
+The [Bundlr Provenance Toolkit](https://docs.bundlr.network/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
 
 The toolkit is fully open source, you are welcome to use it any way you want with or without attribution.
 
@@ -32,7 +34,7 @@ You can interact with the provenance toolkit at https://provenance-toolkit.bundl
 
 ## Prerequisites
 
-The Provenance Toolkit is designed for intermediate to advanced developers and assumes you have a working knowledge of NextJS, TypeScript, and Tailwind. Beginning developers may want to start with our [tutorials](/hands-on/tutorials) and [quests](/hands-on/quests) which are designed for a broader audience.
+The Provenance Toolkit is designed for intermediate to advanced developers and assumes you have a working knowledge of NextJS, TypeScript, and Tailwind. Beginning developers may want to start with our [tutorials](https://docs.bundlr.network/hands-on/tutorials) and [quests](https://docs.bundlr.network/hands-on/quests) which are designed for a broader audience.
 
 This guide gives an introduction to the entire toolkit, including how to use and customize the components. To learn more about how each component is built, we have separate tutorials for each.
 
@@ -46,10 +48,7 @@ This guide gives an introduction to the entire toolkit, including how to use and
 
 ## Project layout
 
-<img
-	className="border border-[#FEF4EE] rounded mt-5 md:w-4/6 w-full"
-	src="/img/provenance-toolkit/provenace-toolkit-layout.png"
-/>
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/provenace-toolkit-layout.png?raw=true)
 
 The project is broken into three main categories:
 
@@ -57,30 +56,39 @@ The project is broken into three main categories:
 -   Navigation routes: NextJS navigation routing. If you’re building your own project on top of the Provenance Toolkit, you can delete these routes and create your own.
 -   Utils: Utility functions used by the UI components.
 
+These are further detailed in our [docs](https://docs.bundlr.network/developer-docs/provenance-toolkit).
+
 ## Components
 
 Included within the Provenance Toolkit are the following components:
 
--   [Fund / Withdraw](./provenance-toolkit/fund-withdraw): Manage node balances.
--   [Uploader](./provenance-toolkit/uploader): Upload single files or groups of files.
--   [Progress Bar Uploader](./provenance-toolkit/progress-bar-uploader): Upload large files, and provide feedback with a progress bar.
--   [UDL Uploader](./provenance-toolkit/udl-uploader): Upload files and attach a UDL.
--   [Gasless Uploader](./provenance-toolkit/gassless-uploader): Pay for user uploads server-side.
--   [Transaction Feed](./provenance-toolkit/transaction-feed): Query Bundlr transactions.
+### Fund / withdaw
 
-## Customization
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/fund-withdraw1.png?raw=true)
 
-The components are designed with a minimal UI that can be easily incorporated into any design. If you need to make significant UI customizations, the docs for each component contain a description of the code.
+Manage node balances.
 
-To change colors, modify the values in `tailwind.config.js`.
+### Uploader
 
-## Utility Functions
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/uploader.png?raw=true)
+Upload single files or groups of files.
 
-The following utility functions are used internally by the components. If you're using the components as-is, you can safely ignore the utility functions. For users customizing the components, these functions provide an additional abstraction layer over our SDK.
+### Progress bar uploader
 
--   `titleCase.ts`: Converts a string to title case
--   `getRpcUrl.ts`: Returns the RPC URL for the chain associated with the specified currency.
--   `getBundlr.ts`: Instantiates a Bundlr object using the parameters in `.env.local`. Currently designed to work with the Ethers 5 provider. Yo use a different provider, modify code here.
--   `fundAndUpload.ts`: Determines the upload cost for the specified data, funds the node if needed, and then uploads the file.
--   `gasslessFundAndUpload.ts`: Using the private key supplied in `.env.local`, determines the upload cost for the specified data, funds the node if needed, and then uploads the file.
--   `queryGraphQL.ts`: Builds and executes a Bundlr GraphQL query using the specified parameters.
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/progress-bar-uploader.png?raw=true)
+Upload large files, and provide feedback with a progress bar.
+
+### UDL uploader
+
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/udl-uploader.png?raw=true)
+Upload files and attach a UDL.
+
+### Gassless uploader
+
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/uploader.png?raw=true)
+Pay for user uploads server-side.
+
+### Transaction feed
+
+![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/transaction-feed.png?raw=true)
+Query Bundlr transactions.
