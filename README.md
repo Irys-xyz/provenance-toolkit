@@ -1,6 +1,6 @@
 # Provenance Toolkit
 
-[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/Bundlr-Provenance-Toolkit.png?raw=true)](https://www.youtube.com/watch?v=RWLKUa34VMQ)
+[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/Bundlr-Provenance-Toolkit.png?raw=true)](https://www.youtube.com/watch?v=wFBy_rAIXo4)
 
 The [Bundlr Provenance Toolkit](https://docs.bundlr.network/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
 

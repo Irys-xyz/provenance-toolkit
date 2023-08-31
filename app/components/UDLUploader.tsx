@@ -14,6 +14,7 @@ type Tag = {
 export const UDLUploader: React.FC = () => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [fileType, setFileType] = useState<string>("");
+	const [paymentType, setPaymentType] = useState<string>("Payment-Address");
 
 	const [licenseFeeType, setLicenseFeeType] = useState<string>("None");
 	const [licenseFeeUnit, setLicenseFeeUnit] = useState<number>();
@@ -41,13 +42,8 @@ export const UDLUploader: React.FC = () => {
 		}
 		setTxProcessing(true);
 
-		if (
-			licenseFeeType !== "None" &&
-			(!licenseFeeUnit || licenseFeeUnit === 0)
-		) {
-			setMessage(
-				`When selecting a License-Fee of "${licenseFeeType}" you must provide a unit.`
-			);
+		if (licenseFeeType !== "None" && (!licenseFeeUnit || licenseFeeUnit === 0)) {
+			setMessage(`When selecting a License-Fee of "${licenseFeeType}" you must provide a unit.`);
 			setTxProcessing(false);
 			return;
 		}
@@ -63,18 +59,14 @@ export const UDLUploader: React.FC = () => {
 				name: "License-Fee",
 				value: licenseFeeType + "-" + licenseFeeUnit,
 			});
-		if (commercialUse !== "None")
-			tags.push({ name: "Commerical-Use", value: commercialUse });
+		if (commercialUse !== "None") tags.push({ name: "Commerical-Use", value: commercialUse });
 		tags.push({ name: "Currency", value: currency });
-		if (paymentAddress)
-			tags.push({ name: "Payment-Address", value: paymentAddress });
+		if (paymentAddress) tags.push({ name: paymentType, value: paymentAddress });
 		if (derivation) tags.push({ name: "Derivation", value: derivation });
 
 		const txId = await fundAndUpload(selectedFile, tags);
 		console.log(`File uploaded ==> https://arweave.net/${txId}`);
-		setMessage(
-			`File <a class="underline" target="_blank" href="https://arweave.net/${txId}">uploaded</a>`
-		);
+		setMessage(`File <a class="underline" target="_blank" href="https://arweave.net/${txId}">uploaded</a>`);
 		setTxProcessing(false);
 	};
 
@@ -104,16 +96,10 @@ export const UDLUploader: React.FC = () => {
 										}
 									}}
 									className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out`}
-
 								>
 									Select A File
 								</button>
-								<input
-									type="file"
-									id="fileInput"
-									onChange={handleFileUpload}
-									className="hidden"
-								/>
+								<input type="file" id="fileInput" onChange={handleFileUpload} className="hidden" />
 							</div>
 						) : (
 							<span className="px-4 py-2 bg-primary text-text rounded-md border-1">
@@ -123,14 +109,9 @@ export const UDLUploader: React.FC = () => {
 					</div>
 				</div>
 				<div className="border rounded-md">
-					<p className="text-background-contrast rounded-md py-4 text-left pl-5">
-						Configure UDL
-					</p>
+					<p className="text-background-contrast rounded-md py-4 text-left pl-5">Configure UDL</p>
 					<div className="flex flex-col bg-neutral-50 rounded-lg p-5">
-						<label
-							htmlFor="license-fee-type"
-							className="text-text text-xs mb-1"
-						>
+						<label htmlFor="license-fee-type" className="text-text text-xs mb-1">
 							License Fee
 						</label>
 						<div className="flex flex-row">
@@ -152,10 +133,7 @@ export const UDLUploader: React.FC = () => {
 								className="bg-[#EEF0F6] text-text rounded-md ml-3 text-xs pl-2"
 							/>
 						</div>
-						<label
-							htmlFor="commercial-use"
-							className="mb-1 text-text mt-3  text-xs"
-						>
+						<label htmlFor="commercial-use" className="mb-1 text-text mt-3  text-xs">
 							Commercial Use
 						</label>
 						<select
@@ -183,22 +161,7 @@ export const UDLUploader: React.FC = () => {
 							<option value="ETH">Ethereum</option>
 							<option value="SOl">Solana</option>
 						</select>
-						<label
-							htmlFor="payment-address"
-							className="mb-1 text-text mt-3  text-xs"
-						>
-							Payment Address
-						</label>
-						<input
-							id="payment-address"
-							value={paymentAddress}
-							onChange={(e) => setPaymentAddress(e.target.value)}
-							className="bg-[#EEF0F6] text-text rounded-md text-xs pl-2 px-2 py-1"
-						/>
-						<label
-							htmlFor="derivation"
-							className="mb-1 text-text mt-3  text-xs"
-						>
+						<label htmlFor="derivation" className="mb-1 text-text mt-3 text-xs">
 							Derivation
 						</label>
 						<select
@@ -209,33 +172,32 @@ export const UDLUploader: React.FC = () => {
 						>
 							<option value="None">None</option>
 							<option value="Allowed-With-Credit">Allowed-With-Credit</option>
-							<option value="Allowed-With-Indication">
-								Allowed-With-Indication
-							</option>
-							<option value="Allowed-With-License-Passthrough">
-								Allowed-With-License-Passthrough
-							</option>
-							<option value="Allowed-With-RevenueShare-25%">
-								Allowed-With-RevenueShare-25%
-							</option>
-							<option value="Allowed-With-RevenueShare-50%">
-								Allowed-With-RevenueShare-50%
-							</option>
-							<option value="Allowed-With-RevenueShare-75%">
-								Allowed-With-RevenueShare-75%
-							</option>
-							<option value="Allowed-With-RevenueShare-100%">
-								Allowed-With-RevenueShare-100%
-							</option>
+							<option value="Allowed-With-Indication">Allowed-With-Indication</option>
+							<option value="Allowed-With-License-Passthrough">Allowed-With-License-Passthrough</option>
+							<option value="Allowed-With-RevenueShare-25%">Allowed-With-RevenueShare-25%</option>
+							<option value="Allowed-With-RevenueShare-50%">Allowed-With-RevenueShare-50%</option>
+							<option value="Allowed-With-RevenueShare-75%">Allowed-With-RevenueShare-75%</option>
+							<option value="Allowed-With-RevenueShare-100%">Allowed-With-RevenueShare-100%</option>
 						</select>
+						<select
+							id="address-type"
+							className="bg-[#EEF0F6] px-2 mt-3 py-1 text-text rounded-md text-xs max-w-[200px]"
+							onChange={(e) => {
+								setPaymentType(e.target.value);
+							}}
+						>
+							<option value="Payment-Address">Payment Address</option>
+							<option value="Contract">Contract</option>
+						</select>
+						<input
+							id="payment-address"
+							value={paymentAddress}
+							onChange={(e) => setPaymentAddress(e.target.value)}
+							className="bg-[#EEF0F6] text-text rounded-md text-xs pl-2 px-2 py-1 mt-1"
+						/>
 					</div>
 				</div>
-				{message && (
-					<div
-						className="text-red-500 mt-2"
-						dangerouslySetInnerHTML={{ __html: message }}
-					/>
-				)}
+				{message && <div className="text-red-500 mt-2" dangerouslySetInnerHTML={{ __html: message }} />}
 				<Button onClick={handleUpload} disabled={txProcessing}>
 					{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 				</Button>
