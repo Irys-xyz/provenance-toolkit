@@ -8,8 +8,8 @@ import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
-import fundAndUpload from "../utils/fundAndUpload";
-import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
+import { fundAndUploadFolder, fundAndUploadFile } from "../utils/fundAndUpload";
+
 import getBundlr from "../utils/getBundlr";
 import { useCallback } from "react";
 import { useEffect } from "react";
@@ -91,8 +91,8 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 				// Remove the File objects from the FileWrapper objects
 				const filesToUpload: File[] = files.map((file) => file.file);
 				console.log("Multi-file upload");
-				const [manifestId, receiptId] = await fundAndUploadNestedBundle(filesToUpload);
-
+				const [manifestId, receiptId] = await fundAndUploadFolder(filesToUpload, []);
+				console.log(`Upload success manifestId=${manifestId} receiptId=${receiptId}`);
 				// Now that the upload is done, update the FileWrapper objects with the preview URL
 				const updatedFiles = files.map((file) => ({
 					...file,
@@ -110,7 +110,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			try {
 				for (const file of files) {
 					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
-					const uploadedTx = await fundAndUpload(file.file, tags);
+					const uploadedTx = await fundAndUploadFile(file.file, tags);
 					file.id = uploadedTx;
 					file.isUploaded = true;
 					file.previewUrl = GATEWAY_BASE + uploadedTx;
