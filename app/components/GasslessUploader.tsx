@@ -8,7 +8,6 @@ import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import gasslessFundAndUpload from "../utils/gasslessFundAndUpload";
-import fundAndUploadNestedBundle from "../utils/fundAndUploadNestedBundle";
 import getBundlr from "../utils/getBundlr";
 import { useCallback } from "react";
 import { useEffect } from "react";
