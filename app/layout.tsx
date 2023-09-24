@@ -9,8 +9,8 @@ import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
 
 export const metadata: Metadata = {
-	title: "Bundlr Provenance Toolkit",
-	description: "Components to rapidly develop strong provenance applications",
+	title: "Irys Provenance Toolkit",
+	description: "UI toolkit to kickstart your next projet",
 };
 
 const roboto = Roboto({
@@ -25,11 +25,7 @@ const inter = Inter({
 	display: "swap",
 });
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" className={`${roboto.className} bg-background relative`}>
 			<body className={roboto.className}>

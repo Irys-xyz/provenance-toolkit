@@ -1,101 +1,79 @@
-import { WebBundlr } from "@bundlr-network/client";
+import { WebIrys } from "@irys/sdk";
 import fileReaderStream from "filereader-stream";
-import getBundlr from "../utils/getBundlr";
+import getIrys from "../utils/getIrys";
 
-// Define the Tag type
 type Tag = {
 	name: string;
 	value: string;
 };
 
-/**
- * Uploads the selected folder and tags after funding if necessary.
- *
- * @param {File} selectedFile - The file to be uploaded.
- * @param {Tag[]} tags - An array of tags associated with the file.
- * @returns {Promise<string>} - The transaction ID of the upload.
- */
-// const fundAndUpload = async (file: File, tags: Tag[]): Promise<string> => {
-async function fundAndUploadFolder(files: File[], tags: Tag[]): Promise<string[]> {
-	const bundlr = await getBundlr();
+// Function Overloading
+async function fundAndUpload(file: File, tags: Tag[]): Promise<string>;
+async function fundAndUpload(files: File[], tags: Tag[]): Promise<string[]>;
+async function fundAndUpload(files: File | File[], tags: Tag[]): Promise<string | string[]> {
+	if (Array.isArray(files)) {
+		return await fundAndUploadMultipleFiles(files, tags);
+	} else {
+		return await fundAndUploadSingleFile(files, tags);
+	}
+}
+
+async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<string[]> {
+	const irys = await getIrys();
 
 	try {
-		const fileCount = files.length;
-		let totalBytes = 0;
+		let size = 0;
 		for (const file of files) {
-			totalBytes += file.size;
+			size += file.size;
 		}
-
-		// Get the total size of all files in the folder
-		const price = await bundlr.utils.estimateFolderPrice({ fileCount, totalBytes });
-		const balance = await bundlr.getLoadedBalance();
-		console.log(
-			`Cost to upload ${fileCount} files containing ${totalBytes} bytes is ${bundlr.utils.fromAtomic(price)}`,
-		);
+		const price = await irys.getPrice(size);
+		const balance = await irys.getLoadedBalance();
 
 		if (price.isGreaterThanOrEqualTo(balance)) {
 			console.log("Funding node.");
-			await bundlr.fund(price);
+			await irys.fund(price);
 		} else {
 			console.log("Funding not needed, balance sufficient.");
 		}
 
-		console.log("Uploading folder...");
-		console.log(files);
-		const tx = await bundlr.uploadFolder(files, {
-			getReceiptSignature: true,
+		const receipt = await irys.uploadFolder(files, {
+			tags,
 		});
-		console.log("tx:", tx);
+		console.log("folder uploaded ", receipt);
+		console.log(`Uploaded successfully. https://arweave.net/${receipt.manifestId}`);
 
-		const manifestId = tx?.manifestId;
-		const receiptId = tx?.id;
-		console.log("manifestId=", manifestId);
-		console.log("receiptId=", receiptId);
-
-		console.log(`Uploaded successfully. https://arweave.net/${manifestId}`);
-		//@ts-ignore
-		return [manifestId, receiptId];
+		return [receipt.manifestId, receipt.id];
 	} catch (e) {
-		console.log("Error on upload:", e);
+		console.log("Error uploading single file ", e);
 	}
 	return ["", ""];
 }
 
-/**
- * Checks the cost to upload a file, funds if needed and finally uploads.
- *
- * @param file A file to upload
- * @param tags Tags to attach to the file
- * @returns
- */
-async function fundAndUploadFile(file: File, tags: Tag[]): Promise<string> {
-	const bundlr = await getBundlr();
+async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string> {
+	const irys = await getIrys();
 
 	try {
 		const dataStream = fileReaderStream(file);
-		const price = await bundlr.getPrice(file?.size);
-		const balance = await bundlr.getLoadedBalance();
+		const price = await irys.getPrice(file?.size);
+		const balance = await irys.getLoadedBalance();
 
 		if (price.isGreaterThanOrEqualTo(balance)) {
 			console.log("Funding node.");
-			await bundlr.fund(price);
+			await irys.fund(price);
 		} else {
 			console.log("Funding not needed, balance sufficient.");
 		}
 
-		console.log("Uploading...");
-		const tx = await bundlr.uploadWithReceipt(dataStream, {
+		const receipt = await irys.upload(dataStream, {
 			tags,
 		});
-		console.log(`Uploaded successfully. https://arweave.net/${tx.id}`);
+		console.log(`Uploaded successfully. https://arweave.net/${receipt.id}`);
 
-		return tx.id;
+		return receipt.id;
 	} catch (e) {
-		console.log("Error on upload:", e);
+		console.log("Error uploading single file ", e);
 	}
-
-	// Ends up getting called ONLY if an error is thrown
 	return "";
 }
 
-export { fundAndUploadFolder, fundAndUploadFile };
+export { fundAndUpload };

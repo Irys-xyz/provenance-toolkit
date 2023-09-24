@@ -1,6 +1,6 @@
 "use client";
 
-import BundlrIcon from "./BundlrIcon";
+import IrysIcon from "./IrysIcon";
 import { FC } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,8 +18,9 @@ const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
 	const isActive = pathname === href;
 	return (
 		<Link
-			className={`whitespace-nowrap font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
-				}`}
+			className={`whitespace-nowrap font-robotoMono hover:font-bold pb-4 px-3 text-neutral-500 ${
+				isActive ? "!text-black font-bold border-b-2 border-black" : ""
+			}`}
 			href={href}
 		>
 			{children}
@@ -59,9 +60,9 @@ const Navbar: FC = () => {
 		<header className="w-full bg-background text-text border-b">
 			<nav>
 				<div className="flex flex-col items-center justify-between w-full">
-					<div className="text-lg font-semibold bg-black w-full h-full py-4 text-white text-center">
-						<Link className="flex items-center gap-4 cursor-pointer justify-center" href="/">
-							<BundlrIcon /> <span className="">Provenance Toolkit</span>
+					<div className="text-lg font-semibold bg-black w-full h-full py-2 text-white text-center">
+						<Link className="flex items-center gap-4 cursor-pointer justify-center items-center" href="/">
+							<IrysIcon /> <span className="">Provenance Toolkit</span>
 						</Link>
 					</div>
 					{/* Wrap the navigation links in a container */}
@@ -77,7 +78,6 @@ const Navbar: FC = () => {
 				</div>
 			</nav>
 		</header>
-
 	);
 };
 

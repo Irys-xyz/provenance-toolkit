@@ -1,4 +1,4 @@
-import { WebBundlr } from "@bundlr-network/client";
+import { WebIrys } from "@irys/sdk";
 import { providers } from "ethers";
 
 import BigNumber from "bignumber.js";
@@ -9,23 +9,24 @@ interface WindowWithEthereum extends Window {
 }
 
 /**
- * Creates a new Bundlr object with the specified configuration.
+ * Creates a new Irys object with the specified configuration.
  *
- * @param {string} url - The Bundlr network URL.
+ * @param {string} url - The Irys network URL.
  * @param {string} currency - The currency to use (e.g., "matic").
  * @param {string} providerUrl - The provider URL for the Ethereum network.
- * @returns {Promise<WebBundlr>} - A reference to the initialized Bundlr object.
+ * @returns {Promise<WebIrys>} - A reference to the initialized Irys object.
  */
-const getBundlr = async (
+const getIrys = async (
 	url: string = process.env.NEXT_PUBLIC_NODE || "",
-	currency: string = process.env.NEXT_PUBLIC_CURRENCY || "",
-): Promise<WebBundlr> => {
+	token: string = process.env.NEXT_PUBLIC_TOKEN || "",
+): Promise<WebIrys> => {
 	await (window as WindowWithEthereum).ethereum.enable();
 	const provider = new providers.Web3Provider((window as WindowWithEthereum).ethereum);
-
-	const bundlr = new WebBundlr(url, currency, provider);
-	await bundlr.ready();
-	return bundlr;
+	const providerName = "ethersv5";
+	const irys = new WebIrys({ url, token, provider, providerName });
+	await irys.ready();
+	console.log("Irys=", irys);
+	return irys;
 };
 
-export default getBundlr;
+export default getIrys;

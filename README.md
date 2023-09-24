@@ -2,21 +2,21 @@
 
 [![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/Bundlr-Provenance-Toolkit.png?raw=true)](https://www.youtube.com/watch?v=wFBy_rAIXo4)
 
-The [Bundlr Provenance Toolkit](https://docs.bundlr.network/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
+The [Bundlr Provenance Toolkit](https://docs.irys.xyz/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
 
 The toolkit is fully open source, you are welcome to use it any way you want with or without attribution.
 
 ## Docs
 
-For details on how to use (and customize) each component, [refer to our docs](https://docs.bundlr.network/developer-docs/provenance-toolkit).
+For details on how to use (and customize) each component, [refer to our docs](https://docs.irys.xyz/developer-docs/provenance-toolkit).
 
 ## Demo
 
-You can interact with the provenance toolkit at https://provenance-toolkit.bundlr.network
+You can interact with the provenance toolkit at https://provenance-toolkit.irys.xyz
 
 ## Prerequisites
 
-The Provenance Toolkit is designed for intermediate to advanced developers and assumes you have a working knowledge of NextJS, TypeScript, and Tailwind. Beginning developers may want to start with our [tutorials](https://docs.bundlr.network/hands-on/tutorials) and [quests](https://docs.bundlr.network/hands-on/quests) which are designed for a broader audience.
+The Provenance Toolkit is designed for intermediate to advanced developers and assumes you have a working knowledge of NextJS, TypeScript, and Tailwind. Beginning developers may want to start with our [tutorials](https://docs.irys.xyz/hands-on/tutorials) and [quests](https://docs.irys.xyz/hands-on/quests) which are designed for a broader audience.
 
 ## Setup
 
@@ -36,7 +36,7 @@ The project is broken into three main categories:
 -   Navigation routes: NextJS navigation routing. If you’re building your own project on top of the Provenance Toolkit, you can delete these routes and create your own.
 -   Utils: Utility functions used by the UI components.
 
-These are further detailed in our [docs](https://docs.bundlr.network/developer-docs/provenance-toolkit).
+These are further detailed in our [docs](https://docs.irys.xyz/developer-docs/provenance-toolkit).
 
 ## Components
 

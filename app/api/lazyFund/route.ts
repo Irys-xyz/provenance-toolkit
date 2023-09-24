@@ -1,4 +1,4 @@
-import Bundlr from "@bundlr-network/client";
+import Irys from "@irys/sdk";
 import getRpcUrl from "@/app/utils/getRpcUrl";
 import { NextResponse } from "next/server";
 import { ReadableStream } from "stream/web";
@@ -11,30 +11,29 @@ import { ReadableStream } from "stream/web";
 async function lazyFund(filesize: string): Promise<string> {
 	// nodeJS client
 	const key = process.env.PRIVATE_KEY;
-	const currency = process.env.NEXT_PUBLIC_CURRENCY;
-	const url = process.env.NEXT_PUBLIC_NODE;
-	const providerUrl = getRpcUrl(currency || "");
+	const token = process.env.NEXT_PUBLIC_TOKEN || "";
+	const url = process.env.NEXT_PUBLIC_NODE || "";
+	const providerUrl = getRpcUrl(token || "");
 
-	const serverBundlr = new Bundlr(
-		//@ts-ignore
-		url,
-		currency,
-		key,
-		providerUrl ? { providerUrl } : {},
-	);
+	const serverIrys = new Irys({
+		url, // URL of the node you want to connect to
+		token, // Token used for payment and signing
+		key: key,
+		config: { providerUrl }, // Optional provider URL, only required when using Devnet
+	});
 	console.log(
-		"serverBundlrPubKey",
+		"serverIrysPubKey",
 		//@ts-ignore
-		serverBundlr.currencyConfig.getPublicKey().toJSON(),
+		serverIrys.currencyConfig.getPublicKey().toJSON(),
 	);
 
-	const price = await serverBundlr.getPrice(parseInt(filesize));
-	const balance = await serverBundlr.getLoadedBalance();
+	const price = await serverIrys.getPrice(parseInt(filesize));
+	const balance = await serverIrys.getLoadedBalance();
 
 	let fundTx;
 	if (price.isGreaterThanOrEqualTo(balance)) {
 		console.log("Funding node.");
-		fundTx = await serverBundlr.fund(price);
+		fundTx = await serverIrys.fund(price);
 		console.log("Successfully funded fundTx=", fundTx);
 	} else {
 		console.log("Funding not needed, balance sufficient.");

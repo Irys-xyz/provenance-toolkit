@@ -16,11 +16,11 @@ export default function Home() {
 			</div>
 			<div className="text-2xl font-semibold mt-10 leading-relaxed max-w-3xl">
 				<a
-					href="http://docs.bundlr.network/developer-docs/provenance-toolkit"
+					href="http://docs.irys.xyz/developer-docs/provenance-toolkit"
 					target="_blank"
 					className="text-blue-500 hover:text-blue-700 underline"
 				>
-					The Bundlr Provenance Toolkit
+					The Irys Provenance Toolkit
 				</a>{" "}
 				is a set of UI components to help kickstart your next project.
 			</div>
@@ -54,7 +54,7 @@ export default function Home() {
 					</li>
 					<li>
 						Transaction Feed:
-						<span className=""> Query Bundlr transactions.</span>
+						<span className=""> Query Irys transactions.</span>
 					</li>
 				</ul>
 			</div>

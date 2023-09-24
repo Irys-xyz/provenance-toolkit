@@ -2,7 +2,7 @@
 
 import Button from "./Button";
 import Spinner from "./Spinner";
-import { fundAndUploadFile } from "../utils/fundAndUpload";
+import { fundAndUpload } from "../utils/fundAndUpload";
 import { useState } from "react";
 
 // Define the Tag type
@@ -64,7 +64,7 @@ export const UDLUploader: React.FC = () => {
 		if (paymentAddress) tags.push({ name: paymentType, value: paymentAddress });
 		if (derivation) tags.push({ name: "Derivation", value: derivation });
 
-		const txId = await fundAndUploadFile(selectedFile, tags);
+		const txId = await fundAndUpload(selectedFile, tags);
 		console.log(`File uploaded ==> https://arweave.net/${txId}`);
 		setMessage(`File <a class="underline" target="_blank" href="https://arweave.net/${txId}">uploaded</a>`);
 		setTxProcessing(false);

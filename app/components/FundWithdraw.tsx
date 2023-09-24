@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import Select, { SingleValue, ActionMeta } from "react-select";
 import Spinner from "./Spinner";
-import getBundlr from "../utils/getBundlr";
+import getIrys from "../utils/getIrys";
 import BigNumber from "bignumber.js";
 
 interface OptionType {
@@ -14,9 +14,9 @@ interface OptionType {
 }
 
 const nodes: OptionType[] = [
-	{ value: "https://node1.bundlr.network", label: "node1.bundlr.network" },
-	{ value: "https://node2.bundlr.network", label: "node2.bundlr.network" },
-	{ value: "https://devnet.bundlr.network", label: "devnet.bundlr.network" },
+	{ value: "https://node1.irys.xyz", label: "node1.irys.xyz" },
+	{ value: "https://node2.irys.xyz", label: "node2.irys.xyz" },
+	{ value: "https://devnet.irys.xyz", label: "devnet.irys.xyz" },
 ];
 
 const currencies: OptionType[] = [
@@ -77,12 +77,12 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 		setAmount("0");
 		const getCurBalance = async () => {
 			try {
-				const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
-				const loadedBalance = await bundlr.getLoadedBalance();
+				const irys = await getIrys(selectedNode?.value, selectedCurrency?.value);
+				const loadedBalance = await irys.getLoadedBalance();
 				// Show currently funded balance iff we're in withdraw mode
-				if (!isFunding) setAmount(bundlr.utils.fromAtomic(loadedBalance).toString());
+				if (!isFunding) setAmount(irys.utils.fromAtomic(loadedBalance).toString());
 			} catch (error) {
-				console.log("Error connecting to Bundlr:", error);
+				console.log("Error connecting to Irys:", error);
 			}
 		};
 		if (selectedNode && selectedCurrency) getCurBalance();
@@ -104,15 +104,15 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 			return;
 		}
 
-		// Validation passed, get a reference to an Bundlr node
-		const bundlr = await getBundlr(selectedNode?.value, selectedCurrency?.value);
-		console.log(bundlr);
+		// Validation passed, get a reference to an Irys node
+		const irys = await getIrys(selectedNode?.value, selectedCurrency?.value);
+		console.log(irys);
 		setTxProcessing(true);
 
 		// If fund mode do fund
 		if (isFunding) {
 			try {
-				const fundTx = await bundlr.fund(bundlr.utils.toAtomic(new BigNumber(amount)));
+				const fundTx = await irys.fund(irys.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Funding successful");
 			} catch (e) {
 				setMessage("Error while funding: " + e);
@@ -121,7 +121,7 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 		} else {
 			// If withdraw mode, do withdraw
 			try {
-				const fundTx = await bundlr.withdrawBalance(bundlr.utils.toAtomic(new BigNumber(amount)));
+				const fundTx = await irys.withdrawBalance(irys.utils.toAtomic(new BigNumber(amount)));
 				setMessage("Withdraw successful");
 			} catch (e) {
 				setMessage("Error while withdrawing: " + e);
@@ -200,7 +200,7 @@ USAGE:
   <FundWithdraw />
 
 - To fix the node:
-  <FundWithdraw node = "https://node1.bundlr.network" />
+  <FundWithdraw node = "https://node1.irys.xyz" />
 
 - To fix the currency:
   <FundWithdraw currency= "ethereum"  />

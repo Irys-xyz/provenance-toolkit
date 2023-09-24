@@ -5,7 +5,7 @@ import { useRef, useState, useMemo } from "react";
 import Button from "./Button";
 import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
-import getBundlr from "../utils/getBundlr";
+import getIrys from "../utils/getIrys";
 
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
@@ -61,8 +61,8 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 	const showReceipt = async () => {
 		if (uploadTxId) {
 			try {
-				const bundlr = await getBundlr();
-				const receipt = await bundlr.utils.getReceipt(uploadTxId);
+				const irys = await getIrys();
+				const receipt = await irys.utils.getReceipt(uploadTxId);
 				setReceipt(JSON.stringify(receipt));
 			} catch (e) {
 				console.log("Error fetching receipt: " + e);
@@ -82,9 +82,9 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 		setProgress(0);
 
 		// Get a reference to our Bundlr singleton
-		const bundlr = await getBundlr();
+		const irys = await getIrys();
 
-		const uploader = bundlr.uploader.chunkedUploader;
+		const uploader = irys.uploader.chunkedUploader;
 		// Change the batch size to 1 to make testing easier (default is 5)
 		uploader.setBatchSize(1);
 		// Change the chunk size to something small to make testing easier (default is 25MB)

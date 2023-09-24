@@ -1,6 +1,6 @@
-import { WebBundlr } from "@bundlr-network/client";
+import { WebIrys } from "@irys/sdk";
 import fileReaderStream from "filereader-stream";
-import getBundlr from "./getBundlr";
+import getIrys from "../utils/getIrys";
 
 // Define the Tag type
 type Tag = {
@@ -63,14 +63,20 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 		body: selectedFile.size.toString(),
 	});
 
-	// Create a new WebBundlr object using the provider created with server info.
-	const bundlr = new WebBundlr(process.env.NEXT_PUBLIC_NODE || "", process.env.NEXT_PUBLIC_CURRENCY || "", provider);
+	// Create a new WebIrys object using the provider created with server info.
+	const irys = new WebIrys({
+		url: process.env.NEXT_PUBLIC_NODE || "",
+		token: process.env.NEXT_PUBLIC_TOKEN || "",
+		provider,
+		providerName: "ethersv5",
+	});
+
 	const w3signer = await provider.getSigner();
 	const address = (await w3signer.getAddress()).toLowerCase();
-	await bundlr.ready();
+	await irys.ready();
 
 	console.log("Uploading...");
-	const tx = await bundlr.uploadWithReceipt(dataStream, {
+	const tx = await irys.upload(dataStream, {
 		tags,
 	});
 	console.log(`Uploaded successfully. https://arweave.net/${tx.id}`);

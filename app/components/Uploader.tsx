@@ -8,9 +8,9 @@ import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
-import { fundAndUploadFolder, fundAndUploadFile } from "../utils/fundAndUpload";
+import { fundAndUpload } from "../utils/fundAndUpload";
 
-import getBundlr from "../utils/getBundlr";
+import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
@@ -83,7 +83,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			return;
 		}
 		setTxProcessing(true);
-		const bundlr = await getBundlr();
+		const irys = await getIrys();
 
 		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
 		if (files.length > 1) {
@@ -91,7 +91,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 				// Remove the File objects from the FileWrapper objects
 				const filesToUpload: File[] = files.map((file) => file.file);
 				console.log("Multi-file upload");
-				const [manifestId, receiptId] = await fundAndUploadFolder(filesToUpload, []);
+				const [manifestId, receiptId] = await fundAndUpload(filesToUpload, []);
 				console.log(`Upload success manifestId=${manifestId} receiptId=${receiptId}`);
 				// Now that the upload is done, update the FileWrapper objects with the preview URL
 				const updatedFiles = files.map((file) => ({
@@ -110,7 +110,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			try {
 				for (const file of files) {
 					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
-					const uploadedTx = await fundAndUploadFile(file.file, tags);
+					const uploadedTx = await fundAndUpload(file.file, tags);
 					file.id = uploadedTx;
 					file.isUploaded = true;
 					file.previewUrl = GATEWAY_BASE + uploadedTx;
@@ -127,8 +127,8 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 		updatedFiles[fileIndex].loadingReceipt = true;
 		setFiles(updatedFiles);
 		try {
-			const bundlr = await getBundlr();
-			const receipt = await bundlr.utils.getReceipt(files[fileIndex].id);
+			const irys = await getIrys();
+			const receipt = await irys.utils.getReceipt(files[fileIndex].id);
 			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
