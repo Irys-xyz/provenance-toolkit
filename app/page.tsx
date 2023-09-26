@@ -7,7 +7,7 @@ export default function Home() {
 				<div className="relative w-full pb-[56.25%]">
 					<iframe
 						className="absolute top-0 left-0 w-full h-full"
-						src="https://www.youtube.com/embed/wFBy_rAIXo4"
+						src="https://www.youtube.com/embed/IEs4ap7I-Kw"
 						frameBorder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowFullScreen

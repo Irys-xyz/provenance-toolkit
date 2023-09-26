@@ -1,8 +1,8 @@
 # Provenance Toolkit
 
-[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/Bundlr-Provenance-Toolkit.png?raw=true)](https://www.youtube.com/watch?v=wFBy_rAIXo4)
+[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/irys-provenance-toolkit?raw=true)](https://www.youtube.com/embed/IEs4ap7I-Kw)
 
-The [Bundlr Provenance Toolkit](https://docs.irys.xyz/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
+The [Irys Provenance Toolkit](https://docs.irys.xyz/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
 
 The toolkit is fully open source, you are welcome to use it any way you want with or without attribution.
 
@@ -74,6 +74,6 @@ Pay for user uploads server-side.
 
 ### Transaction feed
 
-Query Bundlr transactions.
+Query Irys transactions.
 
 ![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/transanaction-feed.png?raw=true)
