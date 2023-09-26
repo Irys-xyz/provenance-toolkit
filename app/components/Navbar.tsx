@@ -61,10 +61,11 @@ const Navbar: FC = () => {
 			<nav>
 				<div className="flex flex-col items-center justify-between w-full">
 					<div className="text-lg font-semibold bg-black w-full h-full py-2 text-white text-center">
-						<Link className="flex items-center gap-4 cursor-pointer justify-center items-center" href="/">
-							<IrysIcon /> <span className="">Provenance Toolkit</span>
+						<Link className="flex items-center gap-4 cursor-pointer justify-center" href="/">
+							<IrysIcon /> <span>Provenance Toolkit</span>
 						</Link>
 					</div>
+
 					{/* Wrap the navigation links in a container */}
 					<div className="flex pt-4 lg:overflow-hidden overflow-x-scroll w-full justify-center">
 						<div className="flex space-x-8 justify-center">

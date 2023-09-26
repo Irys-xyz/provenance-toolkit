@@ -64,12 +64,11 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 	});
 
 	// Create a new WebIrys object using the provider created with server info.
-	const irys = new WebIrys({
-		url: process.env.NEXT_PUBLIC_NODE || "",
-		token: process.env.NEXT_PUBLIC_TOKEN || "",
-		provider,
-		providerName: "ethersv5",
-	});
+	const url = process.env.NEXT_PUBLIC_NODE || "";
+	const token = process.env.NEXT_PUBLIC_TOKEN || "";
+
+	const wallet = { name: "ethersv5", provider: provider };
+	const irys = new WebIrys({ url, token, wallet });
 
 	const w3signer = await provider.getSigner();
 	const address = (await w3signer.getAddress()).toLowerCase();

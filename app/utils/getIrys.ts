@@ -22,11 +22,12 @@ const getIrys = async (
 ): Promise<WebIrys> => {
 	await (window as WindowWithEthereum).ethereum.enable();
 	const provider = new providers.Web3Provider((window as WindowWithEthereum).ethereum);
-	const providerName = "ethersv5";
-	const irys = new WebIrys({ url, token, provider, providerName });
-	await irys.ready();
-	console.log("Irys=", irys);
-	return irys;
+	const wallet = { name: "ethersv5", provider: provider };
+	const webIrys = new WebIrys({ url, token, wallet });
+	await webIrys.ready();
+
+	console.log(`Conected to webIrys from ${webIrys.address}`);
+	return webIrys;
 };
 
 export default getIrys;

@@ -42,7 +42,7 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 		console.log("folder uploaded ", receipt);
 		console.log(`Uploaded successfully. https://arweave.net/${receipt.manifestId}`);
 
-		return [receipt.manifestId, receipt.id];
+		return [receipt?.manifestId || "", receipt?.id || ""];
 	} catch (e) {
 		console.log("Error uploading single file ", e);
 	}
