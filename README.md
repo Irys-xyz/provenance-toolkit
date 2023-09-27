@@ -1,6 +1,8 @@
 # Provenance Toolkit
 
-[![Provenance toolkit video](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/irys-provenance-toolkit?raw=true)](https://www.youtube.com/embed/IEs4ap7I-Kw)
+<a href="https://www.youtube.com/embed/IEs4ap7I-Kw" target="_blank">
+  <img src="https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/irys-provenance-toolkit?raw=true" alt="Provenance toolkit video">
+</a>
 
 The [Irys Provenance Toolkit](https://docs.irys.xyz/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
 
