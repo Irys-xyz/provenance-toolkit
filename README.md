@@ -1,6 +1,6 @@
 # Provenance Toolkit
 
-<a href="https://www.youtube.com/IEs4ap7I-Kw" target="_blank">
+<a href="https://youtu.be/IEs4ap7I-Kw" target="_blank">
   <img src="https://raw.githubusercontent.com/Bundlr-Network/provenance-toolkit/feat/irys/assets/irys-provenance-toolkit.png" alt="Provenance toolkit video" />
 </a>
 
