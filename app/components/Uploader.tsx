@@ -122,13 +122,14 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 		setTxProcessing(false);
 	};
 
-	const showReceipt = async (fileIndex: number) => {
+	//	const showReceipt = async (fileIndex: number) => {
+	const showReceipt = async (fileIndex: number, receiptId: string) => {
 		let updatedFiles = [...files];
 		updatedFiles[fileIndex].loadingReceipt = true;
 		setFiles(updatedFiles);
 		try {
 			const irys = await getIrys();
-			const receipt = await irys.utils.getReceipt(files[fileIndex].id);
+			const receipt = await irys.utils.getReceipt(receiptId);
 			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {
@@ -223,7 +224,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 												{showReceiptView && (
 													<button
 														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => showReceipt(index)}
+														onClick={() => showReceipt(index, file.id)}
 													>
 														{file.loadingReceipt ? (
 															<Spinner color="text-background" />

@@ -22,7 +22,7 @@ The Provenance Toolkit is designed for intermediate to advanced developers and a
 
 ## Setup
 
-1. Fork or clone https://github.com/Bundlr-Network/provenance-toolkit
+1. Fork or clone https://github.com/Irys-xyz/provenance-toolkit
 2. Run `npm install` or `yarn` from within the project directory
 3. Rename `.env.local.example` to `.env.local` and follow the configuration instructions in that file
 4. Run `npm run start` from within the project directory
@@ -30,7 +30,7 @@ The Provenance Toolkit is designed for intermediate to advanced developers and a
 
 ## Project layout
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/provenace-toolkit-layout.png?raw=true)
+![Toolkit layout](./assets/provenace-toolkit-layout.png?raw=true)
 
 The project is broken into three main categories:
 
@@ -48,34 +48,34 @@ Included within the Provenance Toolkit are the following components:
 
 Manage node balances.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/fund-withdraw1.png?raw=true)
+![Toolkit layout](./assets/fund-withdraw1.png?raw=true)
 
 ### Uploader
 
 Upload single files or groups of files.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/uploader.png?raw=true)
+![Toolkit layout](./assets/uploader.png?raw=true)
 
 ### Progress bar uploader
 
 Upload large files, and provide feedback with a progress bar.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/progress-bar-uploader2.png?raw=true)
+![Toolkit layout](./assets/progress-bar-uploader2.png?raw=true)
 
 ### UDL uploader
 
 Upload files and attach a UDL.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/udl-uploader.png?raw=true)
+![Toolkit layout](./assets/udl-uploader.png?raw=true)
 
 ### Gassless uploader
 
 Pay for user uploads server-side.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/uploader.png?raw=true)
+![Toolkit layout](./assets/uploader.png?raw=true)
 
 ### Transaction feed
 
 Query Irys transactions.
 
-![Toolkit layout](https://github.com/Bundlr-Network/provenance-toolkit/blob/master/assets/transanaction-feed.png?raw=true)
+![Toolkit layout](./assets/transanaction-feed.png?raw=true)

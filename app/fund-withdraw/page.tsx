@@ -8,9 +8,9 @@ const Page: FC = () => {
 	return (
 		<div className="mx-auto py-10 bg-background text-text flex flex-col-reverse gap-10 md:flex-row justify-center items-center">
 			<div className="p-10 w-full md:w-1/3 md:p-0">
-				{/* <FundWithdraw /> */}
+				<FundWithdraw />
 				{/* <FundWithdraw node="https://node1.irys.xyz" /> */}
-				<FundWithdraw node="https://node1.irys.xyz" currency="matic" />
+				{/* <FundWithdraw node="https://node1.irys.xyz" currency="matic" /> */}
 			</div>
 
 			<div className="flex flex-col text-xs space-y-1 items-start">
