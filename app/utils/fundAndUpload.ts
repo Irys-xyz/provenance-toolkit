@@ -37,6 +37,7 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 		}
 
 		const receipt = await irys.uploadFolder(files, {
+			//@ts-ignore
 			tags,
 		});
 		console.log("folder uploaded ", receipt);
