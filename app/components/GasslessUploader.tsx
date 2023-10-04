@@ -8,7 +8,7 @@ import Spinner from "./Spinner";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import gasslessFundAndUpload from "../utils/gasslessFundAndUpload";
-import getBundlr from "../utils/getBundlr";
+import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
@@ -103,8 +103,8 @@ export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView 
 		updatedFiles[fileIndex].loadingReceipt = true;
 		setFiles(updatedFiles);
 		try {
-			const bundlr = await getBundlr();
-			const receipt = await bundlr.utils.getReceipt(files[fileIndex].id);
+			const irys = await getIrys();
+			const receipt = await irys.utils.getReceipt(files[fileIndex].id);
 			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {

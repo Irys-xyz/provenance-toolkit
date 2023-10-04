@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { Query } from "@irys/query";
 import Button from "./Button";
 import QueryResultsItem from "./QueryResultsItem";
 import Select, { SingleValue, ActionMeta } from "react-select";
-
 import Spinner from "./Spinner";
-import queryGraphQL from "../utils/queryGraphQL";
 
 interface OptionType {
 	value: string;
@@ -23,9 +21,9 @@ interface QueryResult {
 }
 
 const nodes: OptionType[] = [
-	{ value: "https://node1.bundlr.network/graphql", label: "node1.bundlr.network" },
-	{ value: "https://node2.bundlr.network/graphql", label: "node2.bundlr.network" },
-	{ value: "https://devnet.bundlr.network/graphql", label: "devnet.bundlr.network" },
+	{ value: "https://node1.irys.xyz/graphql", label: "node1.irys.xyz" },
+	{ value: "https://node2.irys.xyz/graphql", label: "node2.irys.xyz" },
+	{ value: "https://devnet.irys.xyz/graphql", label: "devnet.irys.xyz" },
 ];
 
 const currencies: OptionType[] = [
@@ -52,7 +50,7 @@ const contentTypes: OptionType[] = [
 
 export const TransactionFeed: React.FC = () => {
 	const [selectedNode, setSelectedNode] = useState<OptionType | null>(null);
-	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(null);
+	const [selectedToken, setSelectedToken] = useState<OptionType | null>(null);
 	const [selectedContentType, setSelectedContentType] = useState<OptionType | null>(null);
 	const [fromTimestamp, setFromTimestamp] = useState<string>("");
 	const [toTimestamp, setToTimestamp] = useState<string>("");
@@ -63,8 +61,8 @@ export const TransactionFeed: React.FC = () => {
 	const handleNodeChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
 		setSelectedNode(selectedOption as OptionType);
 	};
-	const handleCurrencyChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-		setSelectedCurrency(selectedOption as OptionType);
+	const handleTokenChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+		setSelectedToken(selectedOption as OptionType);
 	};
 
 	const handleContentTypeChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
@@ -101,15 +99,42 @@ export const TransactionFeed: React.FC = () => {
 		const toDate = toTimestamp ? new Date(toTimestamp) : null;
 
 		try {
-			const results = await queryGraphQL(
-				selectedNode.value,
-				selectedContentType?.value ?? null,
-				selectedCurrency?.value ?? null,
-				fromDate, // Use the converted Date object
-				toDate, // Use the converted Date object
-			);
+			const query = new Query({ url: selectedNode.value });
+			const myQuery = query.search("irys:transactions").limit(42);
 
-			setQueryResults(results);
+			// Set query params based on input in NavBar
+			if (selectedContentType?.value) {
+				console.log("Adding content type=", selectedContentType?.value);
+				myQuery.tags([{ name: "Content-Type", values: [selectedContentType?.value] }]);
+			}
+			if (selectedToken?.value) {
+				console.log("Adding token=", selectedToken?.value);
+				myQuery.token(selectedToken?.value);
+			}
+			if (fromDate) {
+				console.log("Adding fromDate=", fromDate);
+				myQuery.fromTimestamp(fromDate);
+			}
+			if (toDate) {
+				console.log("Adding fromDate=", toDate);
+				myQuery.toTimestamp(toDate);
+			}
+
+			// Having configured the query, call await on it to execute
+			const results = await myQuery;
+			console.log("Query results ", results);
+			let convertedResults: QueryResult[] = [];
+			for (const result of results) {
+				const transformedResult: QueryResult = {
+					txID: result.id, // adjust as necessary based on the structure of results
+					creationDate: result.timestamp.toString(),
+					token: result.token,
+					tags: result.tags,
+				};
+				convertedResults.push(transformedResult);
+			}
+
+			setQueryResults(convertedResults);
 		} catch (error) {
 			setError("Error executing the GraphQL query");
 		} finally {
@@ -129,21 +154,13 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleNodeChange}
 						value={selectedNode}
 						placeholder="Select a node..."
-						// styles={{
-						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						// }}
 					/>
 					<Select
 						className="mb-4"
 						options={currencies}
-						onChange={handleCurrencyChange}
-						value={selectedCurrency}
-						placeholder="Select a currency..."
-						// styles={{
-						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						// }}
+						onChange={handleTokenChange}
+						value={selectedToken}
+						placeholder="Select a token..."
 					/>
 					<Select
 						className="mb-4"
@@ -151,10 +168,6 @@ export const TransactionFeed: React.FC = () => {
 						onChange={handleContentTypeChange}
 						value={selectedContentType}
 						placeholder="Select a content type..."
-						// styles={{
-						// 	control: (base) => ({ ...base, backgroundColor: "#D3D9EF", borderRadius: "0.375rem" }),
-						// 	option: (base) => ({ ...base, backgroundColor: "#D3D9EF" }),
-						// }}
 					/>
 					<input
 						type="datetime-local"

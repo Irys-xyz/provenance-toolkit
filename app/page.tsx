@@ -7,7 +7,7 @@ export default function Home() {
 				<div className="relative w-full pb-[56.25%]">
 					<iframe
 						className="absolute top-0 left-0 w-full h-full"
-						src="https://www.youtube.com/embed/wFBy_rAIXo4"
+						src="https://www.youtube.com/embed/IEs4ap7I-Kw"
 						frameBorder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 						allowFullScreen
@@ -16,11 +16,11 @@ export default function Home() {
 			</div>
 			<div className="text-2xl font-semibold mt-10 leading-relaxed max-w-3xl">
 				<a
-					href="http://docs.bundlr.network/developer-docs/provenance-toolkit"
+					href="http://docs.irys.xyz/developer-docs/provenance-toolkit"
 					target="_blank"
 					className="text-blue-500 hover:text-blue-700 underline"
 				>
-					The Bundlr Provenance Toolkit
+					The Irys Provenance Toolkit
 				</a>{" "}
 				is a set of UI components to help kickstart your next project.
 			</div>
@@ -54,7 +54,7 @@ export default function Home() {
 					</li>
 					<li>
 						Transaction Feed:
-						<span className=""> Query Bundlr transactions.</span>
+						<span className=""> Query Irys transactions.</span>
 					</li>
 				</ul>
 			</div>
