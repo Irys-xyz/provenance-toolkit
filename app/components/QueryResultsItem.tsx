@@ -42,7 +42,7 @@ const QueryResultsItem: React.FC<QueryResultsItemProps> = ({ txID, creationDate,
 	return (
 		<div className="flex flex-col bg-white shadow-2xl m-2 p-4 rounded-lg">
 			{/* Display thumbnail image, if the content type is one of the image ones */}
-			{isImage(tags) && <img className="rounded-xl" src={"https://arweave.net/" + txID} alt="Thumbnail" />}
+			{isImage(tags) && <img className="rounded-xl" src={"https://gateway.irys.xyz/" + txID} alt="Thumbnail" />}
 			{/* Display truncated Transaction ID */}
 			<p className="text-text text-xs mt-5">
 				<span className="font-bold">Tx ID:</span> {txID.slice(0, 5).concat(".....", txID.slice(-5))}

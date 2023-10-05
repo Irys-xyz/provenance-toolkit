@@ -41,7 +41,7 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 			tags,
 		});
 		console.log("folder uploaded ", receipt);
-		console.log(`Uploaded successfully. https://arweave.net/${receipt.manifestId}`);
+		console.log(`Uploaded successfully. https://gateway.irys.xyz/${receipt.manifestId}`);
 
 		return [receipt?.manifestId || "", receipt?.id || ""];
 	} catch (e) {
@@ -68,7 +68,7 @@ async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string>
 		const receipt = await irys.upload(dataStream, {
 			tags,
 		});
-		console.log(`Uploaded successfully. https://arweave.net/${receipt.id}`);
+		console.log(`Uploaded successfully. https://gateway.irys.xyz/${receipt.id}`);
 
 		return receipt.id;
 	} catch (e) {

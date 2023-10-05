@@ -5,7 +5,6 @@ import Button from "./Button";
 import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
-import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import gasslessFundAndUpload from "../utils/gasslessFundAndUpload";
 import getIrys from "../utils/getIrys";
@@ -43,7 +42,7 @@ export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView 
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
 
-	const GATEWAY_BASE = "https://arweave.net/"; // Set to the base URL of any gateway
+	const GATEWAY_BASE = "https://gateway.irys.xyz/"; // Set to the base URL of any gateway
 
 	useEffect(() => {
 		setMessage("");

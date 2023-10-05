@@ -65,8 +65,8 @@ export const UDLUploader: React.FC = () => {
 		if (derivation) tags.push({ name: "Derivation", value: derivation });
 
 		const txId = await fundAndUpload(selectedFile, tags);
-		console.log(`File uploaded ==> https://arweave.net/${txId}`);
-		setMessage(`File <a class="underline" target="_blank" href="https://arweave.net/${txId}">uploaded</a>`);
+		console.log(`File uploaded ==> https://gateway.irys.xyz/${txId}`);
+		setMessage(`File <a class="underline" target="_blank" href="https://gateway.irys.xyz/${txId}">uploaded</a>`);
 		setTxProcessing(false);
 	};
 

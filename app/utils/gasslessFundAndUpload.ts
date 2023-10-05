@@ -78,7 +78,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 	const tx = await irys.upload(dataStream, {
 		tags,
 	});
-	console.log(`Uploaded successfully. https://arweave.net/${tx.id}`);
+	console.log(`Uploaded successfully. https://gateway.irys.xyz/${tx.id}`);
 
 	return tx.id;
 };

@@ -136,10 +136,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 			.then((res) => {
 				console.log(res);
 				setUploadTxId(res.data.id);
-				setFileUrl(`https://arweave.net/${res.data.id}`);
-				// setMessage(
-				// 	`File <a class="underline" target="_blank" href="https://arweave.net/${res.data.id}">uploaded</a>`,
-				// );
+				setFileUrl(`https://gateway.irys.xyz/${res.data.id}`);
 			})
 			.catch((e) => {
 				setMessage("Upload error " + e.message);
