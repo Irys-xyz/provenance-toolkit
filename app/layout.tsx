@@ -7,6 +7,7 @@ import { Inter, Roboto } from "next/font/google";
 
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
+import useGoogleTagManager from "./hooks/useGoogleTagManager";
 
 export const metadata: Metadata = {
 	title: "Irys Provenance Toolkit",
@@ -26,6 +27,8 @@ const inter = Inter({
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+	const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 	return (
 		<html lang="en" className={`${roboto.className} bg-background relative`}>
 			<body className={roboto.className}>

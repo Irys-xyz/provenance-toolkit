@@ -1,5 +1,4 @@
 import { WebIrys } from "@irys/sdk";
-import fileReaderStream from "filereader-stream";
 import getIrys from "../utils/getIrys";
 
 type Tag = {
@@ -54,7 +53,6 @@ async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string>
 	const irys = await getIrys();
 
 	try {
-		const dataStream = fileReaderStream(file);
 		const price = await irys.getPrice(file?.size);
 		const balance = await irys.getLoadedBalance();
 
@@ -65,7 +63,7 @@ async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string>
 			console.log("Funding not needed, balance sufficient.");
 		}
 
-		const receipt = await irys.upload(dataStream, {
+		const receipt = await irys.uploadFile(file, {
 			tags,
 		});
 		console.log(`Uploaded successfully. https://gateway.irys.xyz/${receipt.id}`);

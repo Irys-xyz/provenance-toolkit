@@ -26,7 +26,7 @@ const getIrys = async (
 	const webIrys = new WebIrys({ url, token, wallet });
 	await webIrys.ready();
 
-	console.log(`Conected to webIrys from ${webIrys.address}`);
+	console.log(`Connected to webIrys from ${webIrys.address}`);
 	return webIrys;
 };
 

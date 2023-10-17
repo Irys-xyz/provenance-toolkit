@@ -184,7 +184,7 @@ export const TransactionFeed: React.FC = () => {
 						placeholder="To Timestamp"
 					/>
 					<div className="flex">
-						<Button onClick={handleQuery} disabled={txProcessing}>
+						<Button onClick={handleQuery} disabled={txProcessing} checkConnect={false}>
 							{txProcessing ? <Spinner color="text-background" /> : "Query"}
 						</Button>
 					</div>

@@ -1,5 +1,4 @@
 import { WebIrys } from "@irys/sdk";
-import fileReaderStream from "filereader-stream";
 import getIrys from "../utils/getIrys";
 
 // Define the Tag type
@@ -53,11 +52,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 		_ready: () => {},
 	};
 
-	// 1. first create the datastream and get the size
-	const dataStream = fileReaderStream(selectedFile);
-
 	// You can delete the lazyFund route if you're prefunding all uploads
-	// 2. then pass the size to the lazyFund API route
 	const fundTx = await fetch("/api/lazyFund", {
 		method: "POST",
 		body: selectedFile.size.toString(),
@@ -75,7 +70,7 @@ const gasslessFundAndUpload = async (selectedFile: File, tags: Tag[]): Promise<s
 	await irys.ready();
 
 	console.log("Uploading...");
-	const tx = await irys.upload(dataStream, {
+	const tx = await irys.uploadFile(selectedFile, {
 		tags,
 	});
 	console.log(`Uploaded successfully. https://gateway.irys.xyz/${tx.id}`);
