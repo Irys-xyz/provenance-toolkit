@@ -7,7 +7,6 @@ import { Inter, Roboto } from "next/font/google";
 
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
-import useGoogleTagManager from "./hooks/useGoogleTagManager";
 
 export const metadata: Metadata = {
 	title: "Irys Provenance Toolkit",
