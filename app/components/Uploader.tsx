@@ -6,9 +6,11 @@ import { PiReceiptLight } from "react-icons/pi";
 import Button from "./Button";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
+import UploadViewer from "./UploadViewer";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import { fundAndUpload } from "../utils/fundAndUpload";
+import { encryptAndUploadFile } from "../utils/lit";
 
 import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
@@ -27,16 +29,21 @@ interface FileWrapper {
 	file: File;
 	isUploaded: boolean;
 	id: string;
-	previewUrl: string;
+	previewURL: string;
 	loadingReceipt: boolean;
 }
 
 interface UploaderConfigProps {
 	showImageView?: boolean;
 	showReceiptView?: boolean;
+	encryptData?: boolean;
 }
 
-export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
+export const Uploader: React.FC<UploaderConfigProps> = ({
+	showImageView = true,
+	showReceiptView = true,
+	encryptData = false,
+}) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -45,7 +52,9 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
 
-	const GATEWAY_BASE = "https://gateway.irys.xyz/"; // Set to the base URL of any gateway
+	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
+		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+		: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
 
 	useEffect(() => {
 		setMessage("");
@@ -58,7 +67,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 				file,
 				isUploaded: false,
 				id: "",
-				previewUrl: "",
+				previewURL: "",
 				loadingReceipt: false,
 			}));
 			setFiles(newUploadedFiles);
@@ -83,7 +92,15 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 			return;
 		}
 		setTxProcessing(true);
-		const irys = await getIrys();
+
+		if (encryptData) {
+			const uploadedTx = await encryptAndUploadFile(files[0].file);
+			files[0].id = uploadedTx;
+			files[0].isUploaded = true;
+			files[0].previewURL = uploadedTx;
+			setTxProcessing(false);
+			return;
+		}
 
 		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
 		if (files.length > 1) {
@@ -98,7 +115,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 					...file,
 					id: receiptId,
 					isUploaded: true,
-					previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
+					previewURL: manifestId + "/" + file.file.name,
 				}));
 				setFiles(updatedFiles);
 			} catch (e) {
@@ -113,7 +130,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 					const uploadedTx = await fundAndUpload(file.file, tags);
 					file.id = uploadedTx;
 					file.isUploaded = true;
-					file.previewUrl = GATEWAY_BASE + uploadedTx;
+					file.previewURL = uploadedTx;
 				}
 			} catch (e) {
 				console.log("Error on upload: ", e);
@@ -144,15 +161,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 	// Display only the last selected file's preview.
 	const memoizedPreviewURL = useMemo(() => {
 		if (previewURL) {
-			return (
-				<div>
-					<img
-						className="w-full h-full rounded-xl resize-none bg-primary object-cover"
-						src={previewURL}
-						alt="Thumbnail"
-					/>
-				</div>
-			);
+			return <UploadViewer previewURL={previewURL} checkEncrypted={encryptData} />;
 		}
 		return null;
 	}, [previewURL]);
@@ -184,7 +193,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 								file,
 								isUploaded: false,
 								id: "",
-								previewUrl: "",
+								previewURL: "",
 								loadingReceipt: false,
 							}));
 							setFiles(newUploadedFiles);
@@ -213,7 +222,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 												{showImageView && (
 													<button
 														className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => setPreviewURL(file.previewUrl)}
+														onClick={() => setPreviewURL(file.previewURL)}
 													>
 														<AiOutlineFileSearch className="white-2xl" />
 													</button>
@@ -223,7 +232,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 											<span className="ml-2">
 												{showReceiptView && (
 													<button
-														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
+														className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
 														onClick={() => showReceipt(index, file.id)}
 													>
 														{file.loadingReceipt ? (
@@ -247,12 +256,12 @@ export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, 
 						</div>
 					)}
 					{memoizedPreviewURL && (
-						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+						<div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
 							{memoizedPreviewURL}
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing}>
+					<Button onClick={handleUpload} disabled={txProcessing} requireLitAuth={encryptData}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>

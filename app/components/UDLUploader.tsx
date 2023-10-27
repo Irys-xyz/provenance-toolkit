@@ -27,6 +27,10 @@ export const UDLUploader: React.FC = () => {
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 
+	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
+		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+		: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
+
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files[0]) {
 			setSelectedFile(event.target.files[0]);
@@ -65,8 +69,8 @@ export const UDLUploader: React.FC = () => {
 		if (derivation) tags.push({ name: "Derivation", value: derivation });
 
 		const txId = await fundAndUpload(selectedFile, tags);
-		console.log(`File uploaded ==> https://gateway.irys.xyz/${txId}`);
-		setMessage(`File <a class="underline" target="_blank" href="https://gateway.irys.xyz/${txId}">uploaded</a>`);
+		console.log(`File uploaded ==> ${GATEWAY_BASE}${txId}`);
+		setMessage(`File <a class="underline" target="_blank" href="${GATEWAY_BASE}${txId}">uploaded</a>`);
 		setTxProcessing(false);
 	};
 

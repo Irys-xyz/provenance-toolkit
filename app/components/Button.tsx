@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Spinner from "./Spinner";
+import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children?: React.ReactNode;
 	scheme?: ButtonScheme;
 	checkConnect?: boolean;
+	requireLitAuth?: boolean;
 }
 
 export enum ButtonScheme {
@@ -13,9 +15,17 @@ export enum ButtonScheme {
 	white = "white",
 }
 
-const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, checkConnect = true, ...props }) => {
+const Button: React.FC<ButtonProps> = ({
+	children,
+	scheme,
+	onClick,
+	checkConnect = true,
+	requireLitAuth = false,
+	...props
+}) => {
 	const [connected, setConnected] = useState(false);
 	const [connecting, setConnecting] = useState(false);
+	const [hasLitToken, setHasLitToken] = useState(false);
 
 	useEffect(() => {
 		if (checkConnect) {
@@ -29,6 +39,13 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, checkConnect
 			checkConnection();
 		}
 	}, [checkConnect]);
+
+	// Separate useEffect for checking 'lit-auth-signature' in local storage
+	useEffect(() => {
+		if (localStorage.getItem("lit-auth-signature")) {
+			setHasLitToken(true);
+		}
+	}, []);
 
 	const handleConnect = async (event: React.MouseEvent) => {
 		event.preventDefault();
@@ -44,9 +61,24 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, checkConnect
 		setConnecting(false);
 	};
 
+	// Signs in with LitProtcol, only needed when used with the Uploader in Encrypted node
+	const signInLit = async () => {
+		const authSig = await checkAndSignAuthMessage({
+			chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+		});
+		console.log("authSig:", authSig);
+		if (authSig) {
+			setHasLitToken(true);
+		}
+	};
+
 	const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		if (!checkConnect || (connected && onClick)) {
-			onClick && onClick(event);
+			if (requireLitAuth && !hasLitToken) {
+				signInLit();
+			} else {
+				onClick && onClick(event);
+			}
 		} else {
 			handleConnect(event);
 		}
@@ -75,6 +107,8 @@ const Button: React.FC<ButtonProps> = ({ children, scheme, onClick, checkConnect
 				) : (
 					"Connect Wallet"
 				)
+			) : requireLitAuth && !hasLitToken ? (
+				"Sign In Lit"
 			) : (
 				children
 			)}

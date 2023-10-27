@@ -43,12 +43,16 @@ const Navbar: FC = () => {
 			text: "Progress Bar Uploader",
 		},
 		{
-			href: "/gassless-uploader",
-			text: "Gassless Uploader",
+			href: "/gasless-uploader",
+			text: "Gasless Uploader",
 		},
 		{
 			href: "/udl-uploader",
 			text: "UDL Uploader",
+		},
+		{
+			href: "/encrypted-uploader",
+			text: "Encrypted Uploader",
 		},
 		{
 			href: "/transaction-feed",
@@ -68,7 +72,7 @@ const Navbar: FC = () => {
 
 					{/* Wrap the navigation links in a container */}
 					<div className="flex pt-4 lg:overflow-hidden overflow-x-scroll w-full justify-center">
-						<div className="flex space-x-8 justify-center">
+						<div className="flex space-x-3 justify-center text-sm">
 							{NAV_LINKS.map((link, index) => (
 								<NavbarLink key={index} href={link.href}>
 									{link.text}

@@ -6,6 +6,10 @@ type Tag = {
 	value: string;
 };
 
+const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
+	? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+	: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
+
 // Function Overloading
 async function fundAndUpload(file: File, tags: Tag[]): Promise<string>;
 async function fundAndUpload(files: File[], tags: Tag[]): Promise<string[]>;
@@ -40,7 +44,7 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 			tags,
 		});
 		console.log("folder uploaded ", receipt);
-		console.log(`Uploaded successfully. https://gateway.irys.xyz/${receipt.manifestId}`);
+		console.log(`Uploaded successfully. ${GATEWAY_BASE}${receipt.manifestId}`);
 
 		return [receipt?.manifestId || "", receipt?.id || ""];
 	} catch (e) {
@@ -66,7 +70,7 @@ async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string>
 		const receipt = await irys.uploadFile(file, {
 			tags,
 		});
-		console.log(`Uploaded successfully. https://gateway.irys.xyz/${receipt.id}`);
+		console.log(`Uploaded successfully. ${GATEWAY_BASE}${receipt.id}`);
 
 		return receipt.id;
 	} catch (e) {

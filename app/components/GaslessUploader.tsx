@@ -33,7 +33,7 @@ interface UploaderConfigProps {
 	showReceiptView?: boolean;
 }
 
-export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
+export const GaslessUploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -42,7 +42,9 @@ export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView 
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
 
-	const GATEWAY_BASE = "https://gateway.irys.xyz/"; // Set to the base URL of any gateway
+	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
+		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+		: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
 
 	useEffect(() => {
 		setMessage("");
@@ -235,7 +237,7 @@ export const GasslessUploader: React.FC<UploaderConfigProps> = ({ showImageView 
 	);
 };
 
-export default GasslessUploader;
+export default GaslessUploader;
 
 /* 
 USAGE:

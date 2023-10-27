@@ -35,6 +35,10 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 
 	const totalChunks = useRef<number>(0);
 
+	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
+		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+		: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
+
 	const updatePreviewZone = async (sFile: boolean, sReceipt: boolean) => {
 		setShouldShowFile(sFile);
 		setShouldShowReceipt(sReceipt);
@@ -136,7 +140,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 			.then((res) => {
 				console.log(res);
 				setUploadTxId(res.data.id);
-				setFileUrl(`https://gateway.irys.xyz/${res.data.id}`);
+				setFileUrl(`${GATEWAY_BASE}${res.data.id}`);
 			})
 			.catch((e) => {
 				setMessage("Upload error " + e.message);

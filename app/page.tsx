@@ -53,6 +53,9 @@ export default function Home() {
 						Gasless Uploader:<span className=""> Pay for user uploads server-side.</span>
 					</li>
 					<li>
+						Encrypted Uploader:<span className=""> Encrypt files before uploading.</span>
+					</li>
+					<li>
 						Transaction Feed:
 						<span className=""> Query Irys transactions.</span>
 					</li>
