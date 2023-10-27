@@ -155,6 +155,7 @@ async function decryptFile(id: string, encryptedFileType: string): Promise<strin
 			litNodeClient: litNodeClient,
 			authSig: authSig, // Include this only if necessary
 		});
+		// @ts-ignore
 		const decryptedFile = result.decryptedFile;
 		// 5. Convert to a blob
 		const blob = arrayBufferToBlob(decryptedFile, encryptedFileType);
