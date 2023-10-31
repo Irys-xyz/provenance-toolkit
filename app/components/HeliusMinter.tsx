@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { useState } from "react";
+import Confetti from "react-confetti";
 
 import { Helius } from "helius-sdk";
 
@@ -47,6 +48,7 @@ export const HeliusMinter: React.FC = () => {
 	const [nftSymbol, setNftSymbol] = useState("");
 	const [nftDescription, setNftDescription] = useState("");
 	const [walletAddress, setWalletAddress] = useState("");
+	const [showConfetti, setShowConfetti] = useState(false);
 
 	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
 		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
@@ -56,12 +58,24 @@ export const HeliusMinter: React.FC = () => {
 		setMessage("");
 	}, []);
 
+	useEffect(() => {
+		if (showConfetti) {
+			const timer = setTimeout(() => {
+				setShowConfetti(false);
+			}, 5000);
+
+			// Clean up the timer when the component is unmounted
+			return () => clearTimeout(timer);
+		}
+	}, [showConfetti]);
+
 	// Add state to manage error messages
 	const [errors, setErrors] = useState({
 		nftName: "",
 		nftSymbol: "",
 		nftDescription: "",
 		walletAddress: "",
+		nftImage: "",
 	});
 
 	const validateForm = () => {
@@ -71,29 +85,30 @@ export const HeliusMinter: React.FC = () => {
 			nftSymbol: "",
 			nftDescription: "",
 			walletAddress: "",
+			nftImage: "",
 		};
 
 		// NFT Name validation
 		if (!nftName) {
-			newErrors.nftName = "NFT name is required.";
+			newErrors.nftName = " * required";
 			isValid = false;
 		}
 
 		// NFT Symbol validation
 		if (!nftSymbol) {
-			newErrors.nftSymbol = "NFT symbol is required";
+			newErrors.nftSymbol = " * required";
 			isValid = false;
 		}
 
 		// NFT Description validation
 		if (!nftDescription) {
-			newErrors.nftDescription = "NFT description is required";
+			newErrors.nftDescription = " * required";
 			isValid = false;
 		}
 
 		// Solana wallet address validation
 		if (!walletAddress) {
-			newErrors.walletAddress = "Wallet address is required";
+			newErrors.walletAddress = " * required";
 			isValid = false;
 		} else {
 			try {
@@ -102,6 +117,9 @@ export const HeliusMinter: React.FC = () => {
 				newErrors.walletAddress = "Invalid Solana wallet address";
 				isValid = false;
 			}
+		}
+		if (!files || files.length === 0) {
+			newErrors.nftImage = " * required";
 		}
 
 		setErrors(newErrors);
@@ -134,10 +152,6 @@ export const HeliusMinter: React.FC = () => {
 	const doMint = async () => {
 		setMessage("");
 		if (!validateForm()) {
-			return;
-		}
-		if (!files || files.length === 0) {
-			setMessage("Please select a file first");
 			return;
 		}
 		setTxProcessing(true);
@@ -173,17 +187,23 @@ export const HeliusMinter: React.FC = () => {
 				sellerFeeBasisPoints: 6900,
 			});
 			console.log("Minted asset: ", response);
+			setMessage("NFT minted! Check your wallet.");
 		} catch (e) {
 			console.log("Error minting asset ", e);
 		}
+		setShowConfetti(true);
 		setTxProcessing(false);
 	};
 
 	return (
 		<div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
+			{showConfetti && <Confetti />}
+
 			<h2 className="text-center text-xl font-bold p-4 bg-[#EEF0F6]/60">Helius NFT Minter</h2>
 
 			<div className="flex flex-col p-5 space-y-4">
+				{message && <h2 className="text-center font-bold p-4 bg-[#EEF0F6]/60">{message}</h2>}
+
 				{/* NFT Name */}
 				<div className="bg-[#EEF0F6]/60 p-2 rounded-lg">
 					<label htmlFor="nftName" className="block text-sm font-bold text-gray-700">
@@ -221,16 +241,15 @@ export const HeliusMinter: React.FC = () => {
 
 				{/* NFT Symbol */}
 				<div className="bg-[#EEF0F6]/60 p-2 rounded-lg">
-					<label htmlFor="nftSymbol" className="block text-sm font-bold text-gray-700">
+					<label htmlFor="nftDescription" className="block text-sm font-bold text-gray-700">
 						Description:{" "}
 						{errors.nftDescription && <span className="text-red-500 text-xs">{errors.nftDescription}</span>}
 					</label>
 
 					<input
 						type="text"
-						id="nftSymbol"
-						name="nftSymbol"
-						maxLength={5}
+						id="nftDescription"
+						name="nftDescription"
 						value={nftDescription}
 						onChange={(e) => setNftDescription(e.target.value.toUpperCase())}
 						required
@@ -289,6 +308,7 @@ export const HeliusMinter: React.FC = () => {
 							accept=".jpg,.jpeg,.png,.gif" // File types
 							className="hidden"
 						/>
+
 						<button
 							onClick={resetFilesAndOpenFileDialog}
 							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
@@ -297,6 +317,7 @@ export const HeliusMinter: React.FC = () => {
 							disabled={txProcessing}
 						>
 							{txProcessing ? <Spinner color="text-background" /> : "NFT image"}
+							{errors.nftImage && <span className="text-red-500 text-xs"> {errors.nftImage}</span>}
 						</button>
 					</div>
 
@@ -306,6 +327,7 @@ export const HeliusMinter: React.FC = () => {
 							<span className="text-text font-bold">{files[0].file.name}</span>
 						</div>
 					)}
+
 					<Button onClick={doMint} disabled={txProcessing} requireLitAuth={false}>
 						{txProcessing ? <Spinner color="text-background" /> : "Mint"}
 					</Button>
