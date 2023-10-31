@@ -167,7 +167,7 @@ export const HeliusMinter: React.FC = () => {
 			console.log("Error on upload: ", e);
 		}
 
-		console.log(`File uploaded to33 ${GATEWAY_BASE}${files[0].id}`);
+		console.log(`File uploaded to ${GATEWAY_BASE}${files[0].id}`);
 		console.log("Minting asset");
 		const imageURL = `${GATEWAY_BASE}${files[0].id}`;
 		const heliusAPI = process.env.NEXT_PUBLIC_HELIUS_API || "";
@@ -191,6 +191,14 @@ export const HeliusMinter: React.FC = () => {
 		} catch (e) {
 			console.log("Error minting asset ", e);
 		}
+		// Clear form
+		setNftName("");
+		setNftSymbol("");
+		setNftDescription("");
+		setWalletAddress("");
+		setFiles([]);
+		setMessage("NFT minted! Check your wallet.");
+
 		setShowConfetti(true);
 		setTxProcessing(false);
 	};
@@ -251,7 +259,7 @@ export const HeliusMinter: React.FC = () => {
 						id="nftDescription"
 						name="nftDescription"
 						value={nftDescription}
-						onChange={(e) => setNftDescription(e.target.value.toUpperCase())}
+						onChange={(e) => setNftDescription(e.target.value)}
 						required
 						className="mt-1 p-2 w-full border rounded-md"
 					/>
@@ -322,7 +330,7 @@ export const HeliusMinter: React.FC = () => {
 					</div>
 
 					{/* Display the selected file name */}
-					{files[0] && (
+					{files.length > 0 && (
 						<div className="text-center p-4 bg-[#EEF0F6]/60 rounded-lg">
 							<span className="text-text font-bold">{files[0].file.name}</span>
 						</div>
