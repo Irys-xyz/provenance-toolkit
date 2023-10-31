@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import { HeliusMinter } from "../components/HeliusMinter";
+import { SolanaNFTMinter } from "../components/SolanaNFTMinter";
 
 const Page: FC = () => {
 	return (
 		<div className="mx-auto py-10 bg-background text-text flex flex-col-reverse gap-10 md:flex-row justify-center items-start">
 			<div className="p-10 w-full md:w-1/3 md:p-0">
-				<HeliusMinter />
+				<SolanaNFTMinter />
 			</div>
 
 			<div className="flex flex-col space-y-4 p-5 rounded-lg border">
@@ -30,7 +30,7 @@ const Page: FC = () => {
 				</div>
 				<h1 className="text-start text-xl font-bold p-1 rounded-lg bg-[#EEF0F6]/60 mt-5">Usage</h1>
 				<div className="bg-[#EEF0F6]/60 rounded-lg">
-					<code className="rounded bg-[#D8CFCA] px-2 py-1 text-xs ">{"<HeliusMinter />"}</code>
+					<code className="rounded bg-[#D8CFCA] px-2 py-1 text-xs ">{"<SolanaNFTMinter />"}</code>
 					<p className="mt-2">
 						Before testing, set the <span className="bg-gray-200 p-1 text-xs">NEXT_PUBLIC_HELIUS_API</span>{" "}
 						variable in <span className="bg-gray-200 p-1 text-xs">.env.local</span>

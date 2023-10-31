@@ -37,7 +37,7 @@ interface FileWrapper {
 	loadingReceipt: boolean;
 }
 
-export const HeliusMinter: React.FC = () => {
+export const SolanaNFTMinter: React.FC = () => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -206,7 +206,7 @@ export const HeliusMinter: React.FC = () => {
 		<div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
 			{showConfetti && <Confetti />}
 
-			<h2 className="text-center text-xl font-bold p-4 bg-[#EEF0F6]/60">Helius NFT Minter</h2>
+			<h2 className="text-center text-xl font-bold p-4 bg-[#EEF0F6]/60">Solana NFT Minter</h2>
 
 			<div className="flex flex-col p-5 space-y-4">
 				{message && <h2 className="text-center font-bold p-4 bg-[#EEF0F6]/60">{message}</h2>}
@@ -344,7 +344,7 @@ export const HeliusMinter: React.FC = () => {
 	);
 };
 
-export default HeliusMinter;
+export default SolanaNFTMinter;
 
 /* 
 USAGE:
