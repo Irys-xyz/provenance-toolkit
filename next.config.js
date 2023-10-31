@@ -5,7 +5,7 @@
 module.exports = {
 	webpack: (config, { isServer }) => {
 		if (!isServer) {
-			config.resolve.alias.fs = "browserify-fs"; // Point fs to the polyfill
+			config.resolve.alias.fs = "browserify-fs";
 		}
 		return config;
 	},

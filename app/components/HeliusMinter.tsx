@@ -173,7 +173,6 @@ export const HeliusMinter: React.FC = () => {
 		const heliusAPI = process.env.NEXT_PUBLIC_HELIUS_API || "";
 
 		// Change below if you're working on mainnet
-		//const url = `https://mainnet.helius-rpc.com/?api-key=${heliusAPI}`;
 		try {
 			const helius = new Helius(heliusAPI, "devnet");
 			const response = await helius.mintCompressedNft({
@@ -184,7 +183,7 @@ export const HeliusMinter: React.FC = () => {
 				attributes: [],
 				imageUrl: imageURL,
 				externalUrl: "",
-				sellerFeeBasisPoints: 6900,
+				sellerFeeBasisPoints: 0,
 			});
 			console.log("Minted asset: ", response);
 			setMessage("NFT minted! Check your wallet.");
