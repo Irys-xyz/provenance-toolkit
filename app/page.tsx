@@ -35,28 +35,37 @@ export default function Home() {
 				</a>{" "}
 				and use the components to build your project.
 				<span>The toolkit contains the following components.</span>
-				<ul className="list-disc mt-4 ml-4">
+				<ul className="list-disc  mt-4 ml-4">
 					<li>
-						Fund / Withdraw:<span className=""> Manages node balances.</span>
+						<span className="rounded bg-[#D8CFCA]">Fund / Withdraw</span>:
+						<span className=""> Manages node balances.</span>
 					</li>
 					<li>
-						Uploader:<span className=""> Upload single files or groups of files.</span>
+						<span className="rounded bg-[#D8CFCA]">Uploader</span>:
+						<span className=""> Upload single files or groups of files.</span>
 					</li>
 					<li>
-						Progress Bar Uploader:
+						<span className="rounded bg-[#D8CFCA]">Progress Bar Uploader</span>:
 						<span className=""> Upload large files, and provide feedback with a progress bar.</span>
 					</li>
 					<li>
-						UDL Uploader:<span className=""> Upload files and attach a UDL.</span>
+						<span className="rounded bg-[#D8CFCA]">UDL Uploader</span>:
+						<span className=""> Upload files and attach a UDL.</span>
 					</li>
 					<li>
-						Gasless Uploader:<span className=""> Pay for user uploads server-side.</span>
+						<span className="rounded bg-[#D8CFCA]">Gasless Uploader</span>:
+						<span className=""> Pay for user uploads server-side.</span>
 					</li>
 					<li>
-						Encrypted Uploader:<span className=""> Encrypt files before uploading.</span>
+						<span className="rounded bg-[#D8CFCA]">Encrypted Uploader</span>:
+						<span className=""> Encrypt files before uploading.</span>
 					</li>
 					<li>
-						Transaction Feed:
+						<span className="rounded bg-[#D8CFCA]">Solana NFT Minter</span>:
+						<span className=""> Mints an image as a Solana NFT.</span>
+					</li>
+					<li>
+						<span className="rounded bg-[#D8CFCA]">Transaction Feed</span>:
 						<span className=""> Query Irys transactions.</span>
 					</li>
 				</ul>

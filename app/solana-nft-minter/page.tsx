@@ -27,14 +27,14 @@ const Page: FC = () => {
 					</ul>
 					<p>Once complete, the NFT will be visible in your wallet.</p>
 					<p className="text-red-500 text-sm">* The NFT is minted on Solana Devnet</p>
-				</div>
-				<h1 className="text-start text-xl font-bold p-1 rounded-lg bg-[#EEF0F6]/60 mt-5">Usage</h1>
-				<div className="bg-[#EEF0F6]/60 rounded-lg">
-					<code className="rounded bg-[#D8CFCA] px-2 py-1 text-xs ">{"<SolanaNFTMinter />"}</code>
 					<p className="mt-2">
 						Before testing, set the <span className="bg-gray-200 p-1 text-xs">NEXT_PUBLIC_HELIUS_API</span>{" "}
 						variable in <span className="bg-gray-200 p-1 text-xs">.env.local</span>
 					</p>
+				</div>
+				<h1 className="text-start text-xl font-bold p-1 rounded-lg bg-[#EEF0F6]/60 mt-5">Usage</h1>
+				<div className="bg-[#EEF0F6]/60 rounded-lg">
+					<code className="rounded bg-[#D8CFCA] px-2 py-1 text-xs ">{"<SolanaNFTMinter />"}</code>
 				</div>
 				<h1 className="text-start text-xl font-bold p-1 rounded-lg bg-[#EEF0F6]/60">Docs</h1>
 				<div className="bg-[#EEF0F6]/60 rounded-lg">
@@ -45,7 +45,7 @@ const Page: FC = () => {
 								href="https://docs.irys.xyz/developer-docs/provenance-toolkit"
 								target="_blank"
 							>
-								Provenance Toolkit Docs
+								Provenance Toolkit docs
 							</a>
 						</li>{" "}
 						<li>
@@ -63,7 +63,7 @@ const Page: FC = () => {
 								href="https://docs.helius.dev/resources/sdks"
 								target="_blank"
 							>
-								Helius Docs
+								Helius docs
 							</a>
 						</li>
 					</ul>
