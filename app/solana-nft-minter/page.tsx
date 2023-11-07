@@ -42,7 +42,7 @@ const Page: FC = () => {
 						<li>
 							<a
 								className="text-blue-500 hover:text-blue-700 underline"
-								href="https://docs.irys.xyz/developer-docs/provenance-toolkit"
+								href="https://docs.irys.xyz/developer-docs/provenance-toolkit/solana-nft-minter"
 								target="_blank"
 							>
 								Provenance Toolkit docs
