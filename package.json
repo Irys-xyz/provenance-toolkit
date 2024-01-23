@@ -14,6 +14,7 @@
 		"@irys/query": "^0.0.1",
 		"@irys/sdk": "^0.0.1",
 		"@lit-protocol/lit-node-client": "^3.0.2",
+		"@next/third-parties": "^14.1.0",
 		"@solana/web3.js": "^1.87.3",
 		"@types/node": "20.5.6",
 		"@types/react": "18.2.21",
