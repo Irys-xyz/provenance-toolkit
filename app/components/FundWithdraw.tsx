@@ -13,10 +13,9 @@ interface OptionType {
 	label: string;
 }
 
-const nodes: OptionType[] = [
-	{ value: "https://node1.irys.xyz", label: "node1.irys.xyz" },
-	{ value: "https://node2.irys.xyz", label: "node2.irys.xyz" },
-	{ value: "https://devnet.irys.xyz", label: "devnet.irys.xyz" },
+const networks: OptionType[] = [
+	{ value: "mainnet", label: "Mainnet" },
+	{ value: "devnet", label: "Devnet" },
 ];
 
 const currencies: OptionType[] = [
@@ -36,25 +35,25 @@ const currencies: OptionType[] = [
 ];
 
 interface FundWithdrawConfigProps {
-	node?: string;
+	network?: string;
 	currency?: string;
 	fundOnly?: boolean;
 	withdrawOnly?: boolean;
 }
 
 export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
-	node = "",
+	network = "",
 	currency = "",
 	fundOnly = false,
 	withdrawOnly = false,
 }) => {
-	const initialSelectedNode = node ? nodes.find((n) => n.value === node) || null : null;
+	const initialSelectedNetwork = network ? networks.find((n) => n.value === network) || null : null;
 	const initialSelectedCurrency = currency ? currencies.find((c) => c.value === currency) || null : null;
 
 	let initialIsFunding = fundOnly || !withdrawOnly;
 	if (withdrawOnly) initialIsFunding = false;
 
-	const [selectedNode, setSelectedNode] = useState<OptionType | null>(initialSelectedNode);
+	const [selectedNetwork, setSelectedNetwork] = useState<OptionType | null>(initialSelectedNetwork);
 	const [selectedCurrency, setSelectedCurrency] = useState<OptionType | null>(initialSelectedCurrency);
 	const [amount, setAmount] = useState<string>("0.0");
 	const [isFunding, setIsFunding] = useState<boolean>(initialIsFunding);
@@ -62,7 +61,7 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 	const [txProcessing, setTxProcessing] = useState<boolean>(false);
 
 	const handleNodeChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
-		setSelectedNode(selectedOption as OptionType);
+		setSelectedNetwork(selectedOption as OptionType);
 	};
 
 	const handleCurrencyChange = (selectedOption: SingleValue<OptionType>, _actionMeta: ActionMeta<OptionType>) => {
@@ -77,7 +76,7 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 		setAmount("0");
 		const getCurBalance = async () => {
 			try {
-				const irys = await getIrys(selectedNode?.value, selectedCurrency?.value);
+				const irys = await getIrys(selectedNetwork?.value, selectedCurrency?.value);
 				const loadedBalance = await irys.getLoadedBalance();
 				// Show currently funded balance iff we're in withdraw mode
 				if (!isFunding) setAmount(irys.utils.fromAtomic(loadedBalance).toString());
@@ -85,14 +84,14 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 				console.log("Error connecting to Irys:", error);
 			}
 		};
-		if (selectedNode && selectedCurrency) getCurBalance();
-	}, [selectedNode, selectedCurrency, isFunding]);
+		if (selectedNetwork && selectedCurrency) getCurBalance();
+	}, [selectedNetwork, selectedCurrency, isFunding]);
 
 	const handleFundWithdraw = async () => {
 		setMessage("");
 		// Validate input
-		if (!selectedNode) {
-			setMessage("Please select a node to fund");
+		if (!selectedNetwork) {
+			setMessage("Please select a network to fund");
 			return;
 		}
 		if (!selectedCurrency) {
@@ -104,8 +103,8 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 			return;
 		}
 
-		// Validation passed, get a reference to an Irys node
-		const irys = await getIrys(selectedNode?.value, selectedCurrency?.value);
+		// Validation passed, get a reference to an Irys object
+		const irys = await getIrys(selectedNetwork?.value, selectedCurrency?.value);
 		console.log(irys);
 		setTxProcessing(true);
 
@@ -133,13 +132,13 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
 
 	return (
 		<div className="bg-white rounded-lg p-5 border w-full shadow-xl">
-			{!node && (
+			{!network && (
 				<Select
 					className="mb-4"
-					options={nodes}
+					options={networks}
 					onChange={handleNodeChange}
-					value={selectedNode}
-					placeholder="Select a node..."
+					value={selectedNetwork}
+					placeholder="Select a network..."
 				/>
 			)}
 			{!currency && (
@@ -199,8 +198,8 @@ USAGE:
 - Default: 
   <FundWithdraw />
 
-- To fix the node:
-  <FundWithdraw node = "https://node1.irys.xyz" />
+- To fix the network:
+  <FundWithdraw network = "mainnet" />
 
 - To fix the currency:
   <FundWithdraw currency= "ethereum"  />

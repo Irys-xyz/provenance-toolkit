@@ -17,13 +17,13 @@ interface WindowWithEthereum extends Window {
  * @returns {Promise<WebIrys>} - A reference to the initialized Irys object.
  */
 const getIrys = async (
-	url: string = process.env.NEXT_PUBLIC_NODE || "",
+	network: string = process.env.NEXT_PUBLIC_NETWORK || "devnet",
 	token: string = process.env.NEXT_PUBLIC_TOKEN || "",
 ): Promise<WebIrys> => {
 	await (window as WindowWithEthereum).ethereum.enable();
 	const provider = new providers.Web3Provider((window as WindowWithEthereum).ethereum);
 	const wallet = { name: "ethersv5", provider: provider };
-	const webIrys = new WebIrys({ url, token, wallet });
+	const webIrys = new WebIrys({ network, token, wallet });
 	await webIrys.ready();
 
 	console.log(`Connected to webIrys from ${webIrys.address}`);

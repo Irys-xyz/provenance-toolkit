@@ -22,7 +22,7 @@ const UploadViewer: React.FC<UploadViewerProps> = ({ previewURL, checkEncrypted 
 
 	useEffect(() => {
 		async function fetchMetadataTags() {
-			const myQuery = new Query({ url: `${process.env.NEXT_PUBLIC_NODE}/graphql` });
+			const myQuery = new Query({ network: process.env.NEXT_PUBLIC_NETWORK });
 			const results = await myQuery.search("irys:transactions").ids([previewURL]);
 			// If <1 tx not found, if >1 we have a problem
 			if (results.length === 1) {

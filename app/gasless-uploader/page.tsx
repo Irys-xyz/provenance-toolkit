@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import GaslessUploader from "../components/GaslessUploader";
+import Uploader from "../components/Uploader";
 
 const Page: FC = () => {
 	return (
 		<div className="mx-auto py-10 bg-background text-text flex flex-col-reverse gap-10 md:flex-row justify-center items-start">
 			<div className="p-10 w-full md:w-1/3 md:p-0">
-				<GaslessUploader showImageView={true} showReceiptView={true} />
+				<Uploader gasless={true} />
 			</div>
 
 			<div className="flex flex-col space-y-4 p-5 rounded-lg border">
@@ -28,18 +28,18 @@ const Page: FC = () => {
 					<div className="flex flex-col gap-4 text-xs">
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">Default:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<GaslessUploader />"}</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<Uploader gasless={true} />"}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To hide the image preview:</p>
 							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{"<GaslessUploader showImageView={ false } />"}
+								{"<Uploader gasless={true} showImageView={ false } />"}
 							</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To hide the receipt preview:</p>
 							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{"<GaslessUploader showReceiptView={ false } />"}
+								{"<Uploader gasless={true} showReceiptView={ false } />"}
 							</code>
 						</div>
 						<div className="gap-2">

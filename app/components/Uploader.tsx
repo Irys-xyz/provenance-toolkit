@@ -10,6 +10,7 @@ import UploadViewer from "./UploadViewer";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import { fundAndUpload } from "../utils/fundAndUpload";
+import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
 import { encryptAndUploadFile } from "../utils/lit";
 
 import getIrys from "../utils/getIrys";
@@ -37,12 +38,14 @@ interface UploaderConfigProps {
 	showImageView?: boolean;
 	showReceiptView?: boolean;
 	encryptData?: boolean;
+	gasless?: boolean;
 }
 
 export const Uploader: React.FC<UploaderConfigProps> = ({
 	showImageView = true,
 	showReceiptView = true,
 	encryptData = false,
+	gasless = false,
 }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -108,7 +111,14 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 				// Remove the File objects from the FileWrapper objects
 				const filesToUpload: File[] = files.map((file) => file.file);
 				console.log("Multi-file upload");
-				const [manifestId, receiptId] = await fundAndUpload(filesToUpload, []);
+				let [manifestId, receiptId] = "";
+				if (gasless) {
+					console.log("Gasless upload");
+					[manifestId, receiptId] = await gaslessFundAndUpload(filesToUpload, []);
+				} else {
+					console.log("Standard upload");
+					[manifestId, receiptId] = await fundAndUpload(filesToUpload, []);
+				}
 				console.log(`Upload success manifestId=${manifestId} receiptId=${receiptId}`);
 				// Now that the upload is done, update the FileWrapper objects with the preview URL
 				const updatedFiles = files.map((file) => ({
@@ -127,7 +137,14 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 			try {
 				for (const file of files) {
 					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
-					const uploadedTx = await fundAndUpload(file.file, tags);
+					let uploadedTx = "";
+					if (gasless) {
+						console.log("Gasless upload");
+						uploadedTx = await gaslessFundAndUpload(file.file, tags);
+					} else {
+						console.log("Standard upload");
+						uploadedTx = await fundAndUpload(file.file, tags);
+					}
 					file.id = uploadedTx;
 					file.isUploaded = true;
 					file.previewURL = uploadedTx;
@@ -261,7 +278,12 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing} requireLitAuth={encryptData}>
+					<Button
+						onClick={handleUpload}
+						disabled={txProcessing}
+						requireLitAuth={encryptData}
+						checkConnect={!gasless}
+					>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>
