@@ -63,13 +63,13 @@ const Button: React.FC<ButtonProps> = ({
 
 	// Signs in with LitProtcol, only needed when used with the Uploader in Encrypted node
 	const signInLit = async () => {
-		const authSig = await checkAndSignAuthMessage({
-			chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-		});
-		console.log("authSig:", authSig);
-		if (authSig) {
-			setHasLitToken(true);
-		}
+		// const authSig = await checkAndSignAuthMessage({
+		// 	chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+		// });
+		// console.log("authSig:", authSig);
+		// if (authSig) {
+		// 	setHasLitToken(true);
+		// }
 	};
 
 	const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
