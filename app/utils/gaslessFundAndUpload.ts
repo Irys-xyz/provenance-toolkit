@@ -78,6 +78,7 @@ const gaslessFundAndUploadSingleFile = async (selectedFile: File, tags: Tag[]): 
 	const token = process.env.NEXT_PUBLIC_TOKEN || "";
 
 	const wallet = { name: "ethersv5", provider: provider };
+	//@ts-ignore
 	const irys = new WebIrys({ network, token, wallet });
 
 	const w3signer = await provider.getSigner();
@@ -151,6 +152,7 @@ const gaslessFundAndUploadMultipleFiles = async (files: File[], tags: Tag[]): Pr
 	const token = process.env.NEXT_PUBLIC_TOKEN || "";
 
 	const wallet = { name: "ethersv5", provider: provider };
+	//@ts-ignore
 	const irys = new WebIrys({ network, token, wallet });
 
 	const w3signer = await provider.getSigner();

@@ -16,6 +16,7 @@ async function lazyFund(filesize: string): Promise<string> {
 	const providerUrl = getRpcUrl(token || "");
 
 	const serverIrys = new Irys({
+		//@ts-ignore
 		network, // mainnet || devnet
 		token, // Token used for payment and signing
 		key: key,

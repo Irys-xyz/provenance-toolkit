@@ -23,6 +23,7 @@ const getIrys = async (
 	await (window as WindowWithEthereum).ethereum.enable();
 	const provider = new providers.Web3Provider((window as WindowWithEthereum).ethereum);
 	const wallet = { name: "ethersv5", provider: provider };
+	//@ts-ignore
 	const webIrys = new WebIrys({ network, token, wallet });
 	await webIrys.ready();
 
