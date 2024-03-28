@@ -22,6 +22,7 @@ const UploadViewer: React.FC<UploadViewerProps> = ({ previewURL, checkEncrypted 
 
 	useEffect(() => {
 		async function fetchMetadataTags() {
+			//@ts-ignore
 			const myQuery = new Query({ network: process.env.NEXT_PUBLIC_NETWORK });
 			const results = await myQuery.search("irys:transactions").ids([previewURL]);
 			// If <1 tx not found, if >1 we have a problem

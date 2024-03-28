@@ -20,10 +20,10 @@ async function encryptFile(file: File) {
 	});
 	await litNodeClient.connect();
 
-	// 2. Ensure we have a wallet signature
-	const authSig = await LitJsSdk.checkAndSignAuthMessage({
-		chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-	});
+	// // 2. Ensure we have a wallet signature
+	// const authSig = await LitJsSdk.checkAndSignAuthMessage({
+	// 	chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+	// });
 
 	// 3. Define access control conditions.
 	// This defines who can decrypt, current settings allow for
@@ -44,16 +44,16 @@ async function encryptFile(file: File) {
 	];
 
 	// 4. Create a zip blob containing the encrypted file and associated metadata
-	const zipBlob = await LitJsSdk.encryptFileAndZipWithMetadata({
-		chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-		authSig,
-		accessControlConditions,
-		file,
-		litNodeClient,
-		readme: "This file was encrypted using LitProtocol and the Irys Provenance Toolkit.",
-	});
+	// const zipBlob = await LitJsSdk.encryptFileAndZipWithMetadata({
+	// 	chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+	// 	authSig,
+	// 	accessControlConditions,
+	// 	file,
+	// 	litNodeClient,
+	// 	readme: "This file was encrypted using LitProtocol and the Irys Provenance Toolkit.",
+	// });
 
-	return zipBlob;
+	return null; //zipBlob;
 }
 
 // Uploads the encrypted File (with metadata) to Irys
@@ -105,6 +105,7 @@ async function uploadFile(file: File): Promise<string> {
 // Encrypts and then uploads a File
 async function encryptAndUploadFile(file: File): Promise<string> {
 	const encryptedData = await encryptFile(file);
+	//@ts-ignore
 	return await uploadFile(encryptedData);
 }
 
@@ -145,16 +146,16 @@ async function decryptFile(id: string, encryptedFileType: string): Promise<strin
 		await litNodeClient.connect();
 
 		// 3.5 You might need to get authSig or sessionSigs here if required
-		const authSig = await LitJsSdk.checkAndSignAuthMessage({
-			chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-		});
+		// const authSig = await LitJsSdk.checkAndSignAuthMessage({
+		// 	chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+		// });
 
-		// 4. Decrypt the zipBlob
-		const result = await LitJsSdk.decryptZipFileWithMetadata({
-			file: zipBlob,
-			litNodeClient: litNodeClient,
-			authSig: authSig, // Include this only if necessary
-		});
+		// // 4. Decrypt the zipBlob
+		// const result = await LitJsSdk.decryptZipFileWithMetadata({
+		// 	file: zipBlob,
+		// 	litNodeClient: litNodeClient,
+		// 	authSig: authSig, // Include this only if necessary
+		// });
 		// @ts-ignore
 		const decryptedFile = result.decryptedFile;
 		// 5. Convert to a blob

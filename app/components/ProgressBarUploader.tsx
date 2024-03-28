@@ -135,7 +135,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 		await uploader
 			.uploadData(dataStream, {
 				tags: [{ name: "Content-Type", value: fileType }],
-				upload: { getReceiptSignature: true },
+				// upload: { getReceiptSignature: true },
 			})
 			.then((res) => {
 				console.log(res);
