@@ -1,11 +1,13 @@
+"use client";
+
 import React, { FC } from "react";
-import Uploader from "../components/Uploader";
+import Uploader from "../../components/Uploader";
 
 const Page: FC = () => {
 	return (
 		<div className="mx-auto py-10 bg-background text-text flex flex-col-reverse gap-10 md:flex-row justify-center items-start">
 			<div className="p-10 w-full md:w-1/3 md:p-0">
-				<Uploader showImageView={true} showReceiptView={true} encryptData={true} />
+				<Uploader showImageView={true} showReceiptView={true} />
 			</div>
 
 			<div className="flex flex-col space-y-4 p-5 rounded-lg border">
@@ -13,17 +15,7 @@ const Page: FC = () => {
 				<div className="bg-[#EEF0F6]/60 rounded-lg">
 					<h2 className="font-bold">This component:</h2>
 					<ul className="list-decimal pl-5">
-						<li>
-							Encrypts a file using{" "}
-							<a
-								className="text-blue-500 hover:text-blue-700 underline"
-								href="https://litprotocol.com/"
-								target="_blank"
-							>
-								Lit Protocol
-							</a>
-						</li>
-						<li>Uploads a file</li>
+						<li>Uploads file(s)</li>
 						<li>Funds the upload (if necessary)</li>
 						<li>Displays the uploaded file(s) (optionally)</li>
 						<li>Displays the upload receipt (optionally)</li>
@@ -34,19 +26,15 @@ const Page: FC = () => {
 					<div className="flex flex-col gap-4 text-xs">
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">Default:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<Uploader encryptData={true}/>"}</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<Uploader />"}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To hide the image preview:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{"<Uploader encryptData={true} showImageView={ false } />"}
-							</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<Uploader showImageView={ false } />"}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To hide the receipt preview:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{"<Uploader encryptData={true} showReceiptView={ false } />"}
-							</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<Uploader showReceiptView={ false } />"}</code>
 						</div>
 					</div>
 				</div>
@@ -56,7 +44,7 @@ const Page: FC = () => {
 						<li>
 							<a
 								className="text-blue-500 hover:text-blue-700 underline"
-								href="https://docs.irys.xyz/developer-docs/provenance-toolkit/encrypted-uploader"
+								href="https://docs.irys.xyz/developer-docs/provenance-toolkit/uploader"
 								target="_blank"
 							>
 								Provenance Toolkit docs
@@ -69,15 +57,6 @@ const Page: FC = () => {
 								target="_blank"
 							>
 								Provenance Toolkit GitHub
-							</a>
-						</li>
-						<li>
-							<a
-								className="text-blue-500 hover:text-blue-700 underline"
-								href="https://developer.litprotocol.com/v3/"
-								target="_blank"
-							>
-								Lit Protocol docs
 							</a>
 						</li>
 					</ul>

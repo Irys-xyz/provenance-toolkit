@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import TransactionFeed from "../components/TransactionFeed";
+import TransactionFeed from "../../components/TransactionFeed";
 
 const Page: FC = () => {
 	return (

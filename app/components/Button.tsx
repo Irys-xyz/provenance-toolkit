@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Spinner from "./Spinner";
-import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
+// import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children?: React.ReactNode;

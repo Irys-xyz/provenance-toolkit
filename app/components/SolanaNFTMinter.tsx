@@ -11,7 +11,7 @@ import UploadViewer from "./UploadViewer";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import { fundAndUpload } from "../utils/fundAndUpload";
-import { encryptAndUploadFile } from "../utils/lit";
+// import { encryptAndUploadFile } from "../utils/lit";
 
 import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
