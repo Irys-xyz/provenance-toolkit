@@ -13,7 +13,7 @@ const GTM_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
 
 export const metadata: Metadata = {
 	title: "Irys Provenance Toolkit",
-	description: "UI toolkit to kickstart your next projet",
+	description: "UI toolkit to kickstart your next project",
 };
 
 const roboto = Roboto({

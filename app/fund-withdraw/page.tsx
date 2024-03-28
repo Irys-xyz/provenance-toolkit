@@ -25,29 +25,21 @@ const Page: FC = () => {
 							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<FundWithdraw  />"}</code>
 						</div>
 						<div className="flex flex-col gap-2">
-							<p className="text-base text-neutral-700">To fix the node:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{'<FundWithdraw node="https://node1.irys.xyz" />'}
-							</code>
+							<p className="text-base text-neutral-700">To fix the network:</p>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{'<FundWithdraw network="mainnet" />'}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To fix the currency:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{'<FundWithdraw currency="ethereum" />'}
-							</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{'<FundWithdraw currency="ethereum" />'}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To set component to fund-only:</p>
-							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								{"<FundWithdraw fundOnly={ true } />"}
-							</code>
+							<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<FundWithdraw fundOnly={ true } />"}</code>
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="text-base text-neutral-700">To set the component to withdraw-only:</p>
 							<code className="rounded bg-[#D8CFCA] px-2 py-1">
-								<code className="rounded bg-[#D8CFCA] px-2 py-1">
-									{"<FundWithdraw withdrawOnly={ true } />"}
-								</code>
+								<code className="rounded bg-[#D8CFCA] px-2 py-1">{"<FundWithdraw withdrawOnly={ true } />"}</code>
 							</code>
 						</div>
 					</div>

@@ -22,6 +22,7 @@ import { useState } from "react";
 import Confetti from "react-confetti";
 
 import { Helius } from "helius-sdk";
+import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
 
 // Define the Tag type
 type Tag = {
@@ -37,7 +38,11 @@ interface FileWrapper {
 	loadingReceipt: boolean;
 }
 
-export const SolanaNFTMinter: React.FC = () => {
+interface SolanaNFTConfigProps {
+	gasless?: boolean;
+}
+
+export const SolanaNFTMinter: React.FC<SolanaNFTConfigProps> = ({ gasless = false }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [previewURL, setPreviewURL] = useState<string>("");
@@ -159,7 +164,12 @@ export const SolanaNFTMinter: React.FC = () => {
 		console.log("Single file upload");
 		try {
 			const tags: Tag[] = [{ name: "Content-Type", value: files[0].file.type }];
-			const uploadedTx = await fundAndUpload(files[0].file, tags);
+			let uploadedTx = "";
+			if (gasless) {
+				uploadedTx = await gaslessFundAndUpload(files[0].file, tags);
+			} else {
+				uploadedTx = await fundAndUpload(files[0].file, tags);
+			}
 			files[0].id = uploadedTx;
 			files[0].isUploaded = true;
 			files[0].previewURL = uploadedTx;
@@ -335,7 +345,7 @@ export const SolanaNFTMinter: React.FC = () => {
 						</div>
 					)}
 
-					<Button onClick={doMint} disabled={txProcessing} requireLitAuth={false}>
+					<Button onClick={doMint} disabled={txProcessing} requireLitAuth={false} checkConnect={!gasless}>
 						{txProcessing ? <Spinner color="text-background" /> : "Mint"}
 					</Button>
 				</div>

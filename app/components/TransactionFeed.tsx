@@ -20,10 +20,9 @@ interface QueryResult {
 	tags: any[];
 }
 
-const nodes: OptionType[] = [
-	{ value: "https://node1.irys.xyz/graphql", label: "node1.irys.xyz" },
-	{ value: "https://node2.irys.xyz/graphql", label: "node2.irys.xyz" },
-	{ value: "https://devnet.irys.xyz/graphql", label: "devnet.irys.xyz" },
+const networks: OptionType[] = [
+	{ value: "mainnet", label: "mainnet" },
+	{ value: "devnet", label: "devnet" },
 ];
 
 const currencies: OptionType[] = [
@@ -49,7 +48,7 @@ const contentTypes: OptionType[] = [
 ];
 
 export const TransactionFeed: React.FC = () => {
-	const [selectedNode, setSelectedNode] = useState<OptionType | null>(null);
+	const [selectedNetwork, setSelectedNetwork] = useState<OptionType | null>(null);
 	const [selectedToken, setSelectedToken] = useState<OptionType | null>(null);
 	const [selectedContentType, setSelectedContentType] = useState<OptionType | null>(null);
 	const [fromTimestamp, setFromTimestamp] = useState<string>("");
@@ -58,8 +57,8 @@ export const TransactionFeed: React.FC = () => {
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [queryResults, setQueryResults] = useState<QueryResult[]>([]);
 
-	const handleNodeChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-		setSelectedNode(selectedOption as OptionType);
+	const handleNetworkChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+		setSelectedNetwork(selectedOption as OptionType);
 	};
 	const handleTokenChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
 		setSelectedToken(selectedOption as OptionType);
@@ -72,7 +71,8 @@ export const TransactionFeed: React.FC = () => {
 	const [error, setError] = useState("");
 
 	useEffect(() => {
-		setSelectedNode(nodes[0]);
+		setSelectedContentType(contentTypes[0]);
+		setSelectedNetwork(networks[0]);
 	}, []);
 
 	const handleFromTimestampChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,9 +88,9 @@ export const TransactionFeed: React.FC = () => {
 		setQueryResults([]);
 
 		setError("");
-		if (selectedNode === null) {
+		if (selectedNetwork === null) {
 			// Should never happen, but better to check
-			setError("Please select a node");
+			setError("Please select a network");
 			return;
 		}
 
@@ -99,7 +99,8 @@ export const TransactionFeed: React.FC = () => {
 		const toDate = toTimestamp ? new Date(toTimestamp) : null;
 
 		try {
-			const query = new Query({ url: selectedNode.value });
+			//@ts-ignore
+			const query = new Query({ network: selectedNetwork.value });
 			const myQuery = query.search("irys:transactions").limit(42);
 
 			// Set query params based on input in NavBar
@@ -136,6 +137,7 @@ export const TransactionFeed: React.FC = () => {
 
 			setQueryResults(convertedResults);
 		} catch (error) {
+			console.log(error);
 			setError("Error executing the GraphQL query");
 		} finally {
 			setTxProcessing(false);
@@ -150,10 +152,10 @@ export const TransactionFeed: React.FC = () => {
 
 					<Select
 						className="mb-4"
-						options={nodes}
-						onChange={handleNodeChange}
-						value={selectedNode}
-						placeholder="Select a node..."
+						options={networks}
+						onChange={handleNetworkChange}
+						value={selectedNetwork}
+						placeholder="Select a network..."
 					/>
 					<Select
 						className="mb-4"
