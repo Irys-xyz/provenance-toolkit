@@ -7,11 +7,10 @@ import Button from "./Button";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import UploadViewer from "./UploadViewer";
-import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import { fundAndUpload } from "../utils/fundAndUpload";
 import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
-// import { encryptAndUploadFile } from "../utils/lit";
+import { encryptAndUploadFile } from "../utils/lit";
 
 import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
@@ -97,14 +96,15 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 		}
 		setTxProcessing(true);
 
-		// if (encryptData) {
-		// 	const uploadedTx = await encryptAndUploadFile(files[0].file);
-		// 	files[0].id = uploadedTx;
-		// 	files[0].isUploaded = true;
-		// 	files[0].previewURL = uploadedTx;
-		// 	setTxProcessing(false);
-		// 	return;
-		// }
+		if (encryptData) {
+			console.log("calling encryptAndUploadFile files[0]=", files[0]);
+			const uploadedTx = await encryptAndUploadFile(files[0].file);
+			files[0].id = uploadedTx;
+			files[0].isUploaded = true;
+			files[0].previewURL = uploadedTx;
+			setTxProcessing(false);
+			return;
+		}
 
 		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
 		if (files.length > 1) {

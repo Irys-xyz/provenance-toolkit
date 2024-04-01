@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Spinner from "./Spinner";
 import Query from "@irys/query";
 import { FaLock } from "react-icons/fa";
-// import { decryptFile } from "../utils/lit";
+import { decryptFile } from "../utils/lit";
 
 type UploadViewerProps = {
 	previewURL: string; // The latter half of the URL, not including the GATEWAY address
@@ -25,6 +25,7 @@ const UploadViewer: React.FC<UploadViewerProps> = ({ previewURL, checkEncrypted 
 			//@ts-ignore
 			const myQuery = new Query({ network: process.env.NEXT_PUBLIC_NETWORK });
 			const results = await myQuery.search("irys:transactions").ids([previewURL]);
+			console.log({ results });
 			// If <1 tx not found, if >1 we have a problem
 			if (results.length === 1) {
 				const tags = results[0].tags;
@@ -42,10 +43,10 @@ const UploadViewer: React.FC<UploadViewerProps> = ({ previewURL, checkEncrypted 
 
 	const doDecrypt = async () => {
 		setTxProcessing(true);
-		// const result = await decryptFile(previewURL, encryptedFileType);
-		// setIsDecrypted(true);
-		// setDecryptedURL(result);
-		// //setMessage("Your wallet is not eligible to decrypt");
+		const result = await decryptFile(previewURL, encryptedFileType);
+		setIsDecrypted(true);
+		setDecryptedURL(result);
+		//setMessage("Your wallet is not eligible to decrypt");
 		setTxProcessing(false);
 	};
 
