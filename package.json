@@ -11,8 +11,8 @@
 	},
 	"dependencies": {
 		"@fontsource/roboto-mono": "^5.0.8",
-		"@irys/query": "^0.0.5",
-		"@irys/sdk": "^0.1.20",
+		"@irys/query": "^0.0.6",
+		"@irys/sdk": "^0.1.21",
 		"@solana/web3.js": "^1.87.3",
 		"@types/node": "20.5.6",
 		"@types/react": "18.2.21",

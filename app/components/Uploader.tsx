@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { useState } from "react";
+import getReceipt from "../utils/getReceipt";
 
 // Define the Tag type
 type Tag = {
@@ -156,14 +157,12 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 		setTxProcessing(false);
 	};
 
-	//	const showReceipt = async (fileIndex: number) => {
 	const showReceipt = async (fileIndex: number, receiptId: string) => {
 		let updatedFiles = [...files];
 		updatedFiles[fileIndex].loadingReceipt = true;
 		setFiles(updatedFiles);
 		try {
-			const irys = await getIrys();
-			const receipt = await irys.utils.getReceipt(receiptId);
+			const receipt = await getReceipt(receiptId);
 			setReceipt(JSON.stringify(receipt));
 			setPreviewURL(""); // Only show one or the other
 		} catch (e) {

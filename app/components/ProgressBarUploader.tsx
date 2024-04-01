@@ -10,6 +10,7 @@ import getIrys from "../utils/getIrys";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
+import getReceipt from "../utils/getReceipt";
 
 interface ProgressBarUploaderProps {
 	showImageView?: boolean;
@@ -65,8 +66,7 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 	const showReceipt = async () => {
 		if (uploadTxId) {
 			try {
-				const irys = await getIrys();
-				const receipt = await irys.utils.getReceipt(uploadTxId);
+				const receipt = await getReceipt(uploadTxId);
 				setReceipt(JSON.stringify(receipt));
 			} catch (e) {
 				console.log("Error fetching receipt: " + e);

@@ -617,6 +617,14 @@
     async-retry "^1.3.3"
     axios "^1.4.0"
 
+"@irys/query@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.npmjs.org/@irys/query/-/query-0.0.6.tgz"
+  integrity sha512-aXSZ2ya7qyJw4clihkqywt+vCGJnYYJC1UMtR0Y/GxPuc6L17SaVjtI8QnKHqbBaEQOZpBvFpuXXaqRbcJ/lrg==
+  dependencies:
+    async-retry "^1.3.3"
+    axios "^1.4.0"
+
 "@irys/sdk@^0.0.3":
   version "0.0.3"
   resolved "https://registry.npmjs.org/@irys/sdk/-/sdk-0.0.3.tgz"
@@ -648,10 +656,10 @@
     mime-types "^2.1.34"
     near-seed-phrase "^0.2.0"
 
-"@irys/sdk@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.npmjs.org/@irys/sdk/-/sdk-0.1.20.tgz"
-  integrity sha512-prwukjVh9tgRoVJHnESRZaw1pNWhDm5iGJgLl34HAcvcD82FqfLn/8toxl6pdZQK37LdoR3THDjxP8tFQk6WDA==
+"@irys/sdk@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.npmjs.org/@irys/sdk/-/sdk-0.1.21.tgz"
+  integrity sha512-efW00ynWZkVGfFhOwONZGYLoME6r4yMty/y/v5vXNhlgc24D3AxUpW5ciaUpYN/pl6rDmAOLivJsoPcxdlhgMg==
   dependencies:
     "@aptos-labs/ts-sdk" "^1.9.0"
     "@ethersproject/bignumber" "^5.7.0"
