@@ -142,35 +142,34 @@ const decryptFile = async (id: string, encryptedFileType: string): Promise<strin
 		// 2. Extract the zipBlob
 		const zipBlob = await response.blob();
 
-		// // 3. Connect to a Lit node
-		// const litNodeClient = new LitJsSdk.LitNodeClient({
-		// 	litNetwork: "cayenne",
-		// 	debug: false,
-		// });
-		// await litNodeClient.connect();
+		// 3. Connect to a Lit node
+		const litNodeClient = new LitJsSdk.LitNodeClient({
+			litNetwork: "cayenne",
+			debug: false,
+		});
+		await litNodeClient.connect();
 
-		// // 3.5 You might need to get authSig or sessionSigs here if required
-		// const authSig = await LitJsSdk.checkAndSignAuthMessage({
-		// 	chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-		// 	nonce: litNodeClient.getLatestBlockhash(),
-		// });
+		// 3.5 You might need to get authSig or sessionSigs here if required
+		const authSig = await LitJsSdk.checkAndSignAuthMessage({
+			chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+			nonce: litNodeClient.getLatestBlockhash(),
+		});
 
-		// // 4. Decrypt the zipBlob
-		// const result = await LitJsSdk.decryptZipFileWithMetadata({
-		// 	file: zipBlob,
-		// 	//@ts-ignore
-		// 	litNodeClient,
-		// 	authSig,
-		// });
-		// // @ts-ignore
-		// const decryptedFile = result.decryptedFile;
-		// // 5. Convert to a blob
-		// const blob = arrayBufferToBlob(decryptedFile, encryptedFileType);
-		// // 6. Build a dynamic URL
-		// const dataUrl = await blobToDataURL(blob);
+		// 4. Decrypt the zipBlob
+		const result = await LitJsSdk.decryptZipFileWithMetadata({
+			file: zipBlob,
+			//@ts-ignore
+			litNodeClient,
+			authSig,
+		});
+		// @ts-ignore
+		const decryptedFile = result.decryptedFile;
+		// 5. Convert to a blob
+		const blob = arrayBufferToBlob(decryptedFile, encryptedFileType);
+		// 6. Build a dynamic URL
+		const dataUrl = await blobToDataURL(blob);
 
-		// return dataUrl;
-		return "";
+		return dataUrl;
 	} catch (e) {
 		console.error("Error decrypting file:", e);
 	}
