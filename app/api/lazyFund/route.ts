@@ -1,5 +1,5 @@
 import Irys from "@irys/sdk";
-import getRpcUrl from "@/app/utils/getRpcUrl";
+import getRpcUrl from "../../../utils/getRpcUrl";
 import { NextResponse } from "next/server";
 import { ReadableStream } from "stream/web";
 

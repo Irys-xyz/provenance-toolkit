@@ -8,17 +8,16 @@ import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import UploadViewer from "./UploadViewer";
 import fileReaderStream from "filereader-stream";
-import { fundAndUpload } from "../utils/fundAndUpload";
-import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
-import { encryptAndUploadFile } from "../utils/lit";
+import { fundAndUpload } from "../../utils/fundAndUpload";
+import { gaslessFundAndUpload } from "../../utils/gaslessFundAndUpload";
 
-import getIrys from "../utils/getIrys";
+import getIrys from "../../utils/getIrys";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import getReceipt from "../utils/getReceipt";
+import getReceipt from "../../utils/getReceipt";
 
 // Define the Tag type
 type Tag = {
@@ -37,14 +36,12 @@ interface FileWrapper {
 interface UploaderConfigProps {
 	showImageView?: boolean;
 	showReceiptView?: boolean;
-	encryptData?: boolean;
 	gasless?: boolean;
 }
 
 export const Uploader: React.FC<UploaderConfigProps> = ({
 	showImageView = true,
 	showReceiptView = true,
-	encryptData = false,
 	gasless = false,
 }) => {
 	const [files, setFiles] = useState<FileWrapper[]>([]);
@@ -95,16 +92,6 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 			return;
 		}
 		setTxProcessing(true);
-
-		if (encryptData) {
-			console.log("calling encryptAndUploadFile files[0]=", files[0]);
-			const uploadedTx = await encryptAndUploadFile(files[0].file);
-			files[0].id = uploadedTx;
-			files[0].isUploaded = true;
-			files[0].previewURL = uploadedTx;
-			setTxProcessing(false);
-			return;
-		}
 
 		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
 		if (files.length > 1) {
@@ -177,7 +164,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 	// Display only the last selected file's preview.
 	const memoizedPreviewURL = useMemo(() => {
 		if (previewURL) {
-			return <UploadViewer previewURL={previewURL} checkEncrypted={encryptData} />;
+			return <UploadViewer previewURL={previewURL} checkEncrypted={false} />;
 		}
 		return null;
 	}, [previewURL]);
@@ -277,7 +264,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing} requireLitAuth={encryptData} checkConnect={!gasless}>
+					<Button onClick={handleUpload} disabled={txProcessing} requireLitAuth={false} checkConnect={!gasless}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
 					</Button>
 				</div>

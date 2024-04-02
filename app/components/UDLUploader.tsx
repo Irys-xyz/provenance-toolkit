@@ -2,7 +2,7 @@
 
 import Button from "./Button";
 import Spinner from "./Spinner";
-import { fundAndUpload } from "../utils/fundAndUpload";
+import { fundAndUpload } from "../../utils/fundAndUpload";
 import { useState } from "react";
 
 // Define the Tag type
@@ -106,9 +106,7 @@ export const UDLUploader: React.FC = () => {
 								<input type="file" id="fileInput" onChange={handleFileUpload} className="hidden" />
 							</div>
 						) : (
-							<span className="px-4 py-2 bg-primary text-text rounded-md border-1">
-								{selectedFile.name}
-							</span>
+							<span className="px-4 py-2 bg-primary text-text rounded-md border-1">{selectedFile.name}</span>
 						)}
 					</div>
 				</div>

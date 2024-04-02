@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import Select, { SingleValue, ActionMeta } from "react-select";
 import Spinner from "./Spinner";
-import getIrys from "../utils/getIrys";
+import getIrys from "../../utils/getIrys";
 import BigNumber from "bignumber.js";
 
 interface OptionType {

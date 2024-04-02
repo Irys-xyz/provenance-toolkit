@@ -1,5 +1,5 @@
 import { WebIrys } from "@irys/sdk";
-import getIrys from "../utils/getIrys";
+import getIrys from "./getIrys";
 
 type Tag = {
 	name: string;

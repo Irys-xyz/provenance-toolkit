@@ -5,12 +5,12 @@ import { useRef, useState, useMemo } from "react";
 import Button from "./Button";
 import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
-import getIrys from "../utils/getIrys";
+import getIrys from "../../utils/getIrys";
 
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
-import getReceipt from "../utils/getReceipt";
+import getReceipt from "../../utils/getReceipt";
 
 interface ProgressBarUploaderProps {
 	showImageView?: boolean;
