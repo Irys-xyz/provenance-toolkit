@@ -3,7 +3,7 @@
 	"version": "0.1.1",
 	"private": true,
 	"scripts": {
-		"preinstall": "typesync || :",
+		"preinstall": "npx typesync || :",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
