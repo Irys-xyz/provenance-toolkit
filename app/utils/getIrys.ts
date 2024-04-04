@@ -54,8 +54,11 @@ const getIrysEvm = async (
 	await window.ethereum.enable();
 	const provider = new ethers.BrowserProvider(window.ethereum);
 	const wallet = { name: "ethersv6", provider: provider };
-	//@ts-ignore
 	const webIrys = new WebIrys({ network, token, wallet });
+	//@ts-ignore
+	webIrys.tokenConfig.getFee = async (): Promise<any> => {
+		return 0;
+	};
 	await webIrys.ready();
 
 	console.log(`Connected to webIrys from ${webIrys.address}`);

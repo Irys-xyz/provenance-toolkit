@@ -34,7 +34,7 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 
 		if (price.isGreaterThanOrEqualTo(balance)) {
 			console.log("Funding node.");
-			await irys.fund(price);
+			await irys.fund(price, 1.2);
 		} else {
 			console.log("Funding not needed, balance sufficient.");
 		}
@@ -55,14 +55,14 @@ async function fundAndUploadMultipleFiles(files: File[], tags: Tag[]): Promise<s
 
 async function fundAndUploadSingleFile(file: File, tags: Tag[]): Promise<string> {
 	const irys = await getIrys();
-
+	console.log(irys);
 	try {
 		const price = await irys.getPrice(file?.size);
 		const balance = await irys.getLoadedBalance();
 
 		if (price.isGreaterThanOrEqualTo(balance)) {
 			console.log("Funding node.");
-			await irys.fund(price);
+			await irys.fund(price, 1.2);
 		} else {
 			console.log("Funding not needed, balance sufficient.");
 		}
