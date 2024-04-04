@@ -3,21 +3,21 @@
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
 
-import Button from "./Button";
+import MultiButton from "./MultiButton";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import UploadViewer from "./UploadViewer";
 import fileReaderStream from "filereader-stream";
-import { fundAndUpload } from "../../utils/fundAndUpload";
-import { gaslessFundAndUpload } from "../../utils/gaslessFundAndUpload";
+import { fundAndUpload } from "../utils/fundAndUpload";
+import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
 
-import getIrys from "../../utils/getIrys";
+import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import getReceipt from "../../utils/getReceipt";
+import getReceipt from "../utils/getReceipt";
 
 // Define the Tag type
 type Tag = {
@@ -52,9 +52,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 	const [txProcessing, setTxProcessing] = useState(false);
 	const [message, setMessage] = useState<string>("");
 
-	const GATEWAY_BASE = (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/").endsWith("/")
-		? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
-		: (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
+	const GATEWAY_BASE = "https://gateway.irys.xyz/";
 
 	useEffect(() => {
 		setMessage("");
@@ -171,7 +169,6 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 
 	// Display only the receipt JSON when available.
 	const memoizedReceiptView = useMemo(() => {
-		console.log("memoizedReceiptView called");
 		if (receipt && !previewURL) {
 			return (
 				<div className="w-full">
@@ -264,9 +261,9 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
 						</div>
 					)}
 
-					<Button onClick={handleUpload} disabled={txProcessing} requireLitAuth={false} checkConnect={!gasless}>
+					<MultiButton onClick={handleUpload} disabled={txProcessing} requireLitAuth={false} checkConnect={!gasless}>
 						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-					</Button>
+					</MultiButton>
 				</div>
 			</div>
 		</div>

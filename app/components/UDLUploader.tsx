@@ -1,8 +1,8 @@
 "use client";
 
-import Button from "./Button";
+import Button from "./MultiButton";
 import Spinner from "./Spinner";
-import { fundAndUpload } from "../../utils/fundAndUpload";
+import { fundAndUpload } from "../utils/fundAndUpload";
 import { useState } from "react";
 
 // Define the Tag type

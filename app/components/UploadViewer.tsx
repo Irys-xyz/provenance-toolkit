@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Spinner from "./Spinner";
 import Query from "@irys/query";
 import { FaLock } from "react-icons/fa";
-import { decryptFile } from "../../utils/lit";
+import { decryptFile } from "../utils/lit";
 
 type UploadViewerProps = {
 	previewURL: string; // The latter half of the URL, not including the GATEWAY address

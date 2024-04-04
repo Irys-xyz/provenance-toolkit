@@ -27,7 +27,7 @@ export default function Home() {
 			<div className="text-xl mb-6 leading-relaxed max-w-3xl mt-5">
 				To build with the toolkit, clone or fork{" "}
 				<a
-					href="https://github.com/Bundlr-Network/provenance-toolkit"
+					href="https://github.com/Irys-xyz/provenance-toolkit"
 					target="_blank"
 					className="text-blue-500 hover:text-blue-700 underline"
 				>

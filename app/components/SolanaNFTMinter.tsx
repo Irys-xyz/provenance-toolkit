@@ -4,15 +4,15 @@ import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
 import { PublicKey } from "@solana/web3.js";
 
-import Button from "./Button";
+import Button from "./MultiButton";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
 import UploadViewer from "./UploadViewer";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
-import { fundAndUpload } from "../../utils/fundAndUpload";
+import { fundAndUpload } from "../utils/fundAndUpload";
 
-import getIrys from "../../utils/getIrys";
+import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ import { useState } from "react";
 import Confetti from "react-confetti";
 
 import { Helius } from "helius-sdk";
-import { gaslessFundAndUpload } from "../../utils/gaslessFundAndUpload";
+import { gaslessFundAndUpload } from "../utils/gaslessFundAndUpload";
 
 // Define the Tag type
 type Tag = {

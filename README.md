@@ -1,7 +1,7 @@
 # Provenance Toolkit
 
 <a href="https://youtu.be/IEs4ap7I-Kw" rel="noopener" target="_blank">
-  <img src="https://raw.githubusercontent.com/Bundlr-Network/provenance-toolkit/feat/irys/assets/irys-provenance-toolkit.png" alt="Provenance toolkit video" />
+  <img src="/assets/irys-provenance-toolkit.png" alt="Provenance toolkit video" />
 </a>
 
 The [Irys Provenance Toolkit](https://docs.irys.xyz/developer-docs/provenance-toolkit) is a collection of UI components you can use to kickstart your next application. It contains UI components for managing node balances, uploading files, performing gassless uploads, and querying transactions.
@@ -28,15 +28,24 @@ The Provenance Toolkit is designed for intermediate to advanced developers and a
 4. Run `npm run start` from within the project directory
 5. Launch the Provenance Toolkit at http://localhost:3000/
 
+## Wallets / providers
+
+You can use the Provenance Toolkit with the following wallets:
+
+- Metamask
+- Phantom (Solana)
+
+Once you have connected any of those wallets, the toolkit will continue to prompt you to sign transactions using that wallet. If you want to test with a different provider, first disconnect your wallet and then reconnect.
+
 ## Project layout
 
 ![Toolkit layout](./assets/provenace-toolkit-layout.png?raw=true)
 
 The project is broken into three main categories:
 
--   Components: The UI components. These can be added to your project and used as is.
--   Navigation routes: NextJS navigation routing. If you’re building your own project on top of the Provenance Toolkit, you can delete these routes and create your own.
--   Utils: Utility functions used by the UI components.
+- Components: The UI components. These can be added to your project and used as is.
+- Navigation routes: NextJS navigation routing. If you’re building your own project on top of the Provenance Toolkit, you can delete these routes and create your own.
+- Utils: Utility functions used by the UI components.
 
 These are further detailed in our [docs](https://docs.irys.xyz/developer-docs/provenance-toolkit).
 

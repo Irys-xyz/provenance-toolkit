@@ -1,5 +1,5 @@
 import React from "react";
-import toTitleCase from "../../utils/titleCase";
+import toTitleCase from "../utils/titleCase";
 
 // Describes the structure of a metadata tag
 export interface Tag {

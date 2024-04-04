@@ -2,15 +2,15 @@
 
 import { useRef, useState, useMemo } from "react";
 
-import Button from "./Button";
+import MultiButton from "./MultiButton";
 import Spinner from "./Spinner";
 import fileReaderStream from "filereader-stream";
-import getIrys from "../../utils/getIrys";
+import getIrys from "../utils/getIrys";
 
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { PiReceiptLight } from "react-icons/pi";
 import ReceiptJSONView from "./ReceiptJSONView";
-import getReceipt from "../../utils/getReceipt";
+import getReceipt from "../utils/getReceipt";
 
 interface ProgressBarUploaderProps {
 	showImageView?: boolean;
@@ -85,8 +85,19 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 		// Reset the progress bar
 		setProgress(0);
 
-		// Get a reference to our Bundlr singleton
+		// Get a reference to our Irys singleton
 		const irys = await getIrys();
+
+		console.log(`Getting price for ${selectedFile.size} bytes`);
+		const price = await irys.getPrice(selectedFile.size);
+		const balance = await irys.getLoadedBalance();
+
+		if (price.isGreaterThanOrEqualTo(balance)) {
+			console.log("Funding node.");
+			await irys.fund(price);
+		} else {
+			console.log("Funding not needed, balance sufficient.");
+		}
 
 		const uploader = irys.uploader.chunkedUploader;
 		// Change the batch size to 1 to make testing easier (default is 5)
@@ -229,9 +240,9 @@ export const ProgressBarUploader: React.FC<ProgressBarUploaderProps> = ({
 					</>
 				)}
 				{message && <div className="text-red-500" dangerouslySetInnerHTML={{ __html: message }} />}{" "}
-				<Button onClick={handleUpload} disabled={txProcessing}>
+				<MultiButton onClick={handleUpload} disabled={txProcessing}>
 					{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-				</Button>
+				</MultiButton>
 			</div>
 		</div>
 	);

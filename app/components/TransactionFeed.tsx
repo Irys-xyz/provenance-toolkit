@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Query } from "@irys/query";
-import Button from "./Button";
+import MultiButton from "./MultiButton";
 import QueryResultsItem from "./QueryResultsItem";
 import Select, { SingleValue, ActionMeta } from "react-select";
 import Spinner from "./Spinner";
@@ -186,9 +186,9 @@ export const TransactionFeed: React.FC = () => {
 						placeholder="To Timestamp"
 					/>
 					<div className="flex">
-						<Button onClick={handleQuery} disabled={txProcessing} checkConnect={false}>
+						<MultiButton onClick={handleQuery} disabled={txProcessing} checkConnect={false}>
 							{txProcessing ? <Spinner color="text-background" /> : "Query"}
-						</Button>
+						</MultiButton>
 					</div>
 				</div>
 				{queryResults && queryResults.length > 0 && (
