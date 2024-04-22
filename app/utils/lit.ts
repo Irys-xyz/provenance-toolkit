@@ -1,6 +1,6 @@
-import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { WebIrys } from "@irys/sdk";
 import getIrys from "./getIrys";
+import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { AccessControlConditions, ILitNodeClient } from "@lit-protocol/types";
 import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
 
