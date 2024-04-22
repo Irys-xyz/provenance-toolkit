@@ -152,7 +152,7 @@ const decryptFile = async (id: string, encryptedFileType: string): Promise<strin
 		// 3.5 You might need to get authSig or sessionSigs here if required
 		const authSig = await LitJsSdk.checkAndSignAuthMessage({
 			chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-			nonce: litNodeClient.getLatestBlockhash(),
+			nonce: await litNodeClient.getLatestBlockhash(),
 		});
 
 		// 4. Decrypt the zipBlob
