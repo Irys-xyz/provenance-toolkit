@@ -1,12 +1,10 @@
-"use client";
-
 import React, { FC } from "react";
-// import EncryptedUploader from "../../components/EncryptedUploader";
+import EncryptedUploader from "../../components/EncryptedUploader";
 
 const Page: FC = () => {
 	return (
 		<div className="mx-auto py-10 bg-background text-text flex flex-col-reverse gap-10 md:flex-row justify-center items-start">
-			{/* <div className="p-10 w-full md:w-1/3 md:p-0">
+			<div className="p-10 w-full md:w-1/3 md:p-0">
 				<EncryptedUploader showImageView={true} showReceiptView={true} />
 			</div>
 			<div className="flex flex-col space-y-4 p-5 rounded-lg border">
@@ -83,7 +81,7 @@ const Page: FC = () => {
 						</li>
 					</ul>
 				</div>
-			</div> */}
+			</div>
 		</div>
 	);
 };
