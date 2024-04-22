@@ -13,7 +13,7 @@
 		"@fontsource/roboto-mono": "^5.0.8",
 		"@irys/query": "^0.0.6",
 		"@irys/sdk": "^0.1.21",
-		"@lit-protocol/lit-node-client": "^4.2.0",
+		"@lit-protocol/lit-node-client": "^5.0.0",
 		"@radix-ui/react-checkbox": "^1.0.4",
 		"@radix-ui/react-dialog": "^1.0.5",
 		"@radix-ui/react-dropdown-menu": "^2.0.6",

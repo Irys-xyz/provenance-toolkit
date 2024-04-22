@@ -45,10 +45,10 @@ const UploadViewer: React.FC<UploadViewerProps> = ({ previewURL, checkEncrypted 
 
 	const doDecrypt = async () => {
 		setTxProcessing(true);
-		// const result = await decryptFile(previewURL, encryptedFileType);
-		// setIsDecrypted(true);
-		// setDecryptedURL(result);
-		// setMessage("Your wallet is not eligible to decrypt");
+		const result = await decryptFile(previewURL, encryptedFileType);
+		setIsDecrypted(true);
+		setDecryptedURL(result);
+		setMessage("Your wallet is not eligible to decrypt");
 		setTxProcessing(false);
 	};
 

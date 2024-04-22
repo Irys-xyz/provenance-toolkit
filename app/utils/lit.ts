@@ -1,13 +1,13 @@
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
 import { WebIrys } from "@irys/sdk";
 import getIrys from "./getIrys";
+import { AccessControlConditions, ILitNodeClient } from "@lit-protocol/types";
+import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
 
 type Tag = {
 	name: string;
 	value: string;
 };
-
-import { AccessControlConditions, ILitNodeClient } from "@lit-protocol/types";
 
 // Get the URL of the Irys gateway this instance is configured to use
 // Ensure it has a trailing slash
@@ -19,14 +19,14 @@ const encryptFile = async (file: File) => {
 	// 1. Connect to a Lit node
 	const litNodeClient = new LitJsSdk.LitNodeClient({
 		litNetwork: "cayenne",
-		debug: false,
+		// debug: false,
 	});
 	await litNodeClient.connect();
 
 	// // 2. Ensure we have a wallet signature
-	const authSig = await LitJsSdk.checkAndSignAuthMessage({
-		chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
-		nonce: litNodeClient.getLatestBlockhash(),
+	const authSig = await checkAndSignAuthMessage({
+		chain: "ethereum",
+		nonce: await litNodeClient.getLatestBlockhash(),
 	});
 
 	// 3. Define access control conditions.
@@ -49,7 +49,7 @@ const encryptFile = async (file: File) => {
 
 	// 4. Create a zip blob containing the encrypted file and associated metadata
 	const zipBlob = await LitJsSdk.encryptFileAndZipWithMetadata({
-		chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "polygon",
+		chain: process.env.NEXT_PUBLIC_LIT_CHAIN || "ethereum",
 		authSig,
 		accessControlConditions,
 		file,
