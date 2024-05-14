@@ -23,7 +23,7 @@ const encryptFile = async (file: File) => {
 	});
 	await litNodeClient.connect();
 
-	// // 2. Ensure we have a wallet signature
+	// 2. Ensure we have a wallet signature
 	const authSig = await checkAndSignAuthMessage({
 		chain: "ethereum",
 		nonce: await litNodeClient.getLatestBlockhash(),

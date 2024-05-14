@@ -1,5 +1,6 @@
 import React from "react";
 import toTitleCase from "../utils/titleCase";
+import Link from "next/link";
 
 // Describes the structure of a metadata tag
 export interface Tag {
@@ -45,7 +46,10 @@ const QueryResultsItem: React.FC<QueryResultsItemProps> = ({ txID, creationDate,
 			{isImage(tags) && <img className="rounded-xl" src={"https://gateway.irys.xyz/" + txID} alt="Thumbnail" />}
 			{/* Display truncated Transaction ID */}
 			<p className="text-text text-xs mt-5">
-				<span className="font-bold">Tx ID:</span> {txID.slice(0, 5).concat(".....", txID.slice(-5))}
+				<span className="font-bold">Tx ID: </span>{" "}
+				<Link className="underline" href={`https://gateway.irys.xyz/${txID}`} target="_blank">
+					{txID.slice(0, 5).concat(".....", txID.slice(-5))}
+				</Link>
 			</p>
 
 			{/* Display creation date */}
