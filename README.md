@@ -53,7 +53,7 @@ These are further detailed in our [docs](https://docs.irys.xyz/developer-docs/pr
 
 Included within the Provenance Toolkit are the following components:
 
-### Fund / withdaw
+### Fund / withdraw
 
 Manage node balances.
 
