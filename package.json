@@ -13,6 +13,10 @@
 		"@fontsource/roboto-mono": "^5.0.8",
 		"@irys/query": "^0.0.6",
 		"@irys/sdk": "^0.1.21",
+		"@irys/upload-ethereum": "^0.0.14",
+		"@irys/web-upload": "^0.0.14",
+		"@irys/web-upload-ethereum": "^0.0.14",
+		"@irys/web-upload-ethereum-viem-v2": "^0.0.15",
 		"@lit-protocol/lit-node-client": "^5.0.0",
 		"@radix-ui/react-checkbox": "^1.0.4",
 		"@radix-ui/react-dialog": "^1.0.5",
@@ -49,6 +53,7 @@
 		"tailwind-merge": "^2.2.2",
 		"tailwindcss-animate": "^1.0.7",
 		"tweetnacl": "^1.0.3",
+		"viem": "^2.21.37",
 		"zod": "^3.22.4"
 	},
 	"overrides": {},
@@ -57,8 +62,10 @@
 		"@types/node": "^20.12.4",
 		"@types/react-input-mask": "^3.0.2",
 		"next": "^14.1.4",
+		"tailwind-scrollbar": "^3.1.0",
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.4.3",
 		"typesync": "^0.12.1"
-	}
+	},
+	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
