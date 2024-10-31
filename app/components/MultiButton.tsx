@@ -61,7 +61,7 @@ const MultiButton: React.FC<ButtonProps> = ({
 			<button
 				{...props}
 				type="button"
-				className="w-full justify-center text-md flex items-center gap-2 rounded-full px-4 py-3 font-robotoMono uppercase hover:font-bold lg:px-6 lg:py-5 bg-black text-white"
+				className="w-full disabled:opacity-50 disabled:cursor-not-allowed justify-center text-md flex items-center gap-2 rounded-full px-4 py-3 font-robotoMono uppercase hover:font-bold lg:px-6 lg:py-5 bg-black text-white"
 				onClick={onClick}
 			>
 				{children}
@@ -71,6 +71,7 @@ const MultiButton: React.FC<ButtonProps> = ({
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button
+
 					onClick={() => setIsOpen(true)} // Open the dialog when the button is clicked
 					variant={"secondary"}
 					className="w-full justify-center text-md flex items-center gap-2 rounded-full px-4 py-3 font-robotoMono uppercase hover:font-bold lg:px-6 lg:py-5 bg-black text-white"

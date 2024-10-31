@@ -32,11 +32,9 @@ const Dropdown: FC<DropdownProps> = ({ title, links }) => {
 			}}
 		>
 			<button
-				className={`w-20 flex items-center justify-center text-base whitespace-nowrap font-satoshi pb-4 px-3 text-neutral-500  ${
-					isOpen ? "!font-black" : ""
-				} ${
-					links.some((link) => isOptionActive(link.href)) ? "!font-black !text-black !border-b-2 !border-black" : ""
-				}`}
+				className={`w-20 flex items-center justify-center text-base whitespace-nowrap font-satoshi pb-4 px-3 text-neutral-500  ${isOpen ? "!font-black" : ""
+					} ${links.some((link) => isOptionActive(link.href)) ? "!font-black !text-black !border-b-2 !border-black" : ""
+					}`}
 			>
 				{title}
 			</button>
@@ -46,9 +44,8 @@ const Dropdown: FC<DropdownProps> = ({ title, links }) => {
 						<Link
 							key={link.href}
 							href={link.href}
-							className={`text-base cursor-pointer block px-4 py-2 text-gray-700 ${
-								hoveredItem === link.href ? "!font-black !text-black" : ""
-							} ${isOptionActive(link.href) ? "!font-black" : ""}`}
+							className={`text-base cursor-pointer block px-4 py-2 text-gray-700 ${hoveredItem === link.href ? "!font-black !text-black" : ""
+								} ${isOptionActive(link.href) ? "!font-black" : ""}`}
 							onMouseEnter={() => setHoveredItem(link.href)}
 							onMouseLeave={() => setHoveredItem(null)}
 						>
@@ -74,9 +71,8 @@ const NavbarLink: FC<NavbarLinkProps> = ({ href, children }) => {
 	const isActive = pathname === href;
 	return (
 		<Link
-			className={`w-32 flex items-center justify-center text-base whitespace-nowrap font-satoshi hover:font-bold pb-4 px-3 text-neutral-500 ${
-				isActive ? "!text-black font-bold border-b-2 border-black" : ""
-			}`}
+			className={`w-32 flex items-center justify-center text-base whitespace-nowrap font-satoshi hover:font-bold pb-4 px-3 text-neutral-500 ${isActive ? "!text-black font-bold border-b-2 border-black" : ""
+				}`}
 			href={href}
 		>
 			{children}
@@ -94,6 +90,7 @@ const Navbar: FC = () => {
 			title: "Uploading",
 			links: [
 				{ href: "/uploader", text: "Standard Uploader" },
+				{ href: "/folder", text: "Folder Uploader" },
 				{ href: "/progress-bar-uploader", text: "Progress Bar Uploader" },
 				{ href: "/gasless-uploader", text: "Gasless Uploader" },
 				{ href: "/udl-uploader", text: "UDL Uploader" },
